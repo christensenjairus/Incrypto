@@ -14,7 +14,7 @@ You can learn more about each of these components within the [Quick Start Guide]
 
 ## To Use
 
-To clone and run this repository you'll need Git and Node.js (and .NET frameworks for Windows). I'll go over that on Linux, but on Windows use these links [Git (ps, when installing, use the default options)](https://git-scm.com), [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)), [.Net framework (get latest framework developer pack](https://dotnet.microsoft.com/download/visual-studio-sdks) to install them all on your computer. 
+To clone and run this repository you'll need Git, Node.js and Visual Studio Build tools. I'll go over that on Linux, but on Windows use these links [Git (ps, when installing, use the default options)](https://git-scm.com), [Node.js (Current version, choose to install additional tools!)](https://nodejs.org/en/download/current/) (which comes with [npm](http://npmjs.com)), [Visual Studio build tools (scroll down, tools for visual studio > Build Tools](https://visualstudio.microsoft.com/downloads/) to install them all on your computer.
 
 From your command line:
 
@@ -24,6 +24,7 @@ git clone https://github.com/christensenjairus/Incrypto.git
 # Go into the repository
 cd Incrypto
 # On Windows (from a seperate, admin powershell!) install npm global items to allow you to develop on your computer
+        npm update!
         npm install --global --production --verbose windows-build-tools -vs2017
         npm install --global node-gyp
         # Verify that python.exe is there by running
