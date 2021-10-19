@@ -14,7 +14,7 @@ You can learn more about each of these components within the [Quick Start Guide]
 
 ## To Use
 
-To clone and run this repository you'll need Git, Node.js and Visual Studio Build tools. I'll go over that on Linux, but on Windows use these links [Git (ps, when installing, use the default options)](https://git-scm.com), [Node.js (Current version, choose to install additional tools!)](https://nodejs.org/en/download/current/) (which comes with [npm](http://npmjs.com)), [Visual Studio build tools (scroll down, tools for visual studio > Build Tools](https://visualstudio.microsoft.com/downloads/) to install them all on your computer.
+To clone and run this repository you'll need Git, Node.js and Visual Studio Build tools. I'll go over that on Linux, but on Windows use these links [Git (ps, when installing, use the default options)](https://git-scm.com), [Node.js (Current version, choose to automatically install additional/necessary tools!)](https://nodejs.org/en/download/current/) (which comes with [npm](http://npmjs.com)), [Visual Studio build tools (scroll down, tools for visual studio > Build Tools](https://visualstudio.microsoft.com/downloads/) to install them all on your computer.
 
 From your command line:
 
