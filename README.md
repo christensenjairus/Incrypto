@@ -1,4 +1,4 @@
-# electron-quick-start
+# Incrypto
 
 **Clone and run for a quick way to see Electron in action.**
 
@@ -22,9 +22,12 @@ To clone and run this repository you'll need [Git](https://git-scm.com) and [Nod
 # Clone this repository
 git clone https://github.com/electron/electron-quick-start
 # Go into the repository
-cd electron-quick-start
+cd Incrypto
+# Make sure npm is installed (ubuntu)
+sudo apt install aptitude
+sudo aptitude install npm
 # Install dependencies
-npm install
+npm install && npm audit fox --force && npm install --save typescript
 # Run the app
 npm start
 ```
