@@ -1,7 +1,5 @@
 # Incrypto
 
-**Clone and run for a quick way to see Electron in action.**
-
 This is a minimal Electron application based on the [Quick Start Guide](http://electron.atom.io/docs/tutorial/quick-start) within the Electron documentation.
 
 **Use this app along with the [Electron API Demos](http://electron.atom.io/#get-started) app for API code examples to help you get started.**
@@ -47,7 +45,3 @@ Note: If you're using Linux Bash for Windows, [see this guide](https://www.howto
 
 ## Building Windows App
 - [How to found here](https://ourcodeworld.com/articles/read/365/how-to-create-a-windows-installer-for-an-application-built-with-electron-framework) - some online document that might work
-
-## License
-
-[CC0 1.0 (Public Domain)](LICENSE.md)
