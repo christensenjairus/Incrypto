@@ -14,20 +14,29 @@ You can learn more about each of these components within the [Quick Start Guide]
 
 ## To Use
 
-To clone and run this repository you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
+To clone and run this repository you'll need Git and Node.js (and .NET frameworks for Windows). I'll go over that on Linux, but on Windows use these links [Git (ps, when installing, use the default options)](https://git-scm.com), [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)), [.Net framework (get latest framework developer pack](https://dotnet.microsoft.com/download/visual-studio-sdks) to install them all on your computer. 
+
+From your command line:
 
 ```bash
 # Clone this repository
 git clone https://github.com/christensenjairus/Incrypto.git
 # Go into the repository
 cd Incrypto
-# Make sure npm is installed (ubuntu & debian based linux)
+# On Windows (from a seperate, admin powershell!) install npm global items to allow you to develop on your computer
+        npm install --global --production --verbose windows-build-tools -vs2017
+        npm install --global node-gyp
+        # Verify that python.exe is there by running
+        ls C:\Users\$env:username\.windows-build-tools\python27\
+        # if so, close the admin window, and from your other (non admin) shell, run...
+        setx PYTHON "%USERPROFILE%\.windows-build-tools\python27\python.exe"
+# On Linux, make sure git and npm is installed
 #  -> (on Ubuntu)
-        sudo apt install aptitude
-        sudo aptitude install nodejs npm
+        sudo apt install aptitude git
+        sudo aptitude install nodejs npm git
 #  -> (on Manjaro)
-        sudo pacman -S nodejs npm
-# Install dependencies
+        sudo pacman -S nodejs npm git
+# Install dependencies 
 npm install
         # You may need `npm audit fix` --force and/or `npm install --save typescript`
 # Run the app
@@ -37,6 +46,7 @@ node ./server.js
 # Run the client-cli
 node ./client.js
 ```
+For Npm-gyp issues on Windows, consult [this article](https://spin.atomicobject.com/2019/03/27/node-gyp-windows/) 
 
 Note: If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
 
