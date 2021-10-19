@@ -21,6 +21,7 @@
         "electron": "^15.2.0"
     },
     "dependencies": {
+        "axios": "^0.23.0",
         "sqlite3": "^4.2.0",
         "svg.draggable.js": "^2.2.1",
         "svg.js": "^2.6.3",
