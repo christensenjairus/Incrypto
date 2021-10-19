@@ -46,7 +46,7 @@ Note: If you're using Linux Bash for Windows, [see this guide](https://www.howto
 - [hokein/electron-sample-apps](https://github.com/hokein/electron-sample-apps) - small demo apps for the various Electron APIs
 
 ## Building Windows App
-- [https://ourcodeworld.com/articles/read/365/how-to-create-a-windows-installer-for-an-application-built-with-electron-framework](How to here)
+- [How to found here](https://ourcodeworld.com/articles/read/365/how-to-create-a-windows-installer-for-an-application-built-with-electron-framework) - some online document that might work
 
 ## License
 
