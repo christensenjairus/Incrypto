@@ -23,9 +23,9 @@ To clone and run this repository you'll need [Git](https://git-scm.com) and [Nod
 git clone https://github.com/christensenjairus/Incrypto.git
 # Go into the repository
 cd Incrypto
-# Make sure npm is installed (ubuntu)
+# Make sure npm is installed (ubuntu & debian based linux)
 sudo apt install aptitude
-sudo aptitude install npm
+sudo aptitude install nodejs npm
 # Install dependencies
 npm install && npm audit fox --force && npm install --save typescript
 # Run the app
