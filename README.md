@@ -28,7 +28,8 @@ cd Incrypto
 #  -> (on Manjaro)
         sudo pacman -S nodejs npm
 # Install dependencies
-npm install && npm audit fix --force && npm install --save typescript
+npm install
+        # You may need `npm audit fix` --force and/or `npm install --save typescript`
 # Run the app
 npm start
 ```
