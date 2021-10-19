@@ -14,7 +14,7 @@ You can learn more about each of these components within the [Quick Start Guide]
 
 ## To Use
 
-To clone and run this repository you'll need Git, Node.js (and all it's tools). I'll go over that on Linux, but on Windows use these links [Git](https://git-scm.com) (when installing, use the default options)), [Node.js](https://nodejs.org/en/download/current/) (Current version, choose to automatically install additional/necessary tools! which comes with [npm](http://npmjs.com)) to install them all on your computer.
+To clone and run this repository you'll need Git and Node.js. I'll go over that on Linux, but on Windows use these links [Git](https://git-scm.com) (when installing, use the default options)), [Node.js](https://nodejs.org/en/download/current/) (comes with [npm](http://npmjs.com)) to install them all on your computer.
 
 From your command line:
 
@@ -29,7 +29,7 @@ cd Incrypto
         sudo aptitude install nodejs npm git
 #  -> (on Manjaro)
         sudo pacman -S nodejs npm git
-# Install dependencies 
+# Install dependencies (node_modules)
 npm install
         # You may need `npm audit fix` --force and/or `npm install --save typescript`
 # Run the app
@@ -39,7 +39,6 @@ node ./server.js
 # Run the client-cli
 node ./client.js
 ```
-For Npm-gyp issues on Windows, consult [this article](https://spin.atomicobject.com/2019/03/27/node-gyp-windows/) 
 
 Note: If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
 
