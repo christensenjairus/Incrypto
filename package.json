@@ -1,29 +1,35 @@
 {
-    "name": "electron-quick-start",
-    "version": "1.0.0",
-    "description": "A minimal Electron application",
-    "main": "main.js",
-    "scripts": {
-        "prestart": "tsc --target ES5 --outDir dist/ src/*.ts",
-        "start": "electron ."
-    },
-    "repository": "https://github.com/electron/electron-quick-start",
-    "keywords": [
-        "Electron",
-        "quick",
-        "start",
-        "tutorial",
-        "demo"
-    ],
-    "author": "GitHub",
-    "license": "CC0-1.0",
-    "devDependencies": {
-        "electron": "^15.2.0"
-    },
-    "dependencies": {
-        "axios": "^0.23.0",
-        "svg.draggable.js": "^2.2.1",
-        "svg.js": "^2.6.3",
-        "typescript": "^4.4.4"
-    }
+  "name": "incrypto",
+  "version": "1.0.0",
+  "description": "A minimal Electron application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/electron/electron-quick-start.git"
+  },
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^15.2.0"
+  },
+  "dependencies": {
+    "axios": "^0.23.0",
+    "svg.draggable.js": "^2.2.1",
+    "svg.js": "^2.6.3",
+    "typescript": "^4.4.4"
+  },
+  "bugs": {
+    "url": "https://github.com/electron/electron-quick-start/issues"
+  },
+  "homepage": "https://github.com/electron/electron-quick-start#readme"
 }
