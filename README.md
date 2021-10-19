@@ -53,3 +53,6 @@ Note: If you're using Linux Bash for Windows, [see this guide](https://www.howto
 
 ## Building Windows App
 - [How to found here](https://ourcodeworld.com/articles/read/365/how-to-create-a-windows-installer-for-an-application-built-with-electron-framework) - some online document that might work
+
+## Client-Server Javascript Communication Resources
+- [WebSocket Example](https://www.cronj.com/blog/node-js-websocket-examples-chat-features-client-server-communication/)
