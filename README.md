@@ -14,7 +14,7 @@ You can learn more about each of these components within the [Quick Start Guide]
 
 ## To Use
 
-To clone and run this repository you'll need Git, Node.js and Visual Studio Build tools. I'll go over that on Linux, but on Windows use these links [Git (ps, when installing, use the default options)](https://git-scm.com), [Node.js (Current version, choose to automatically install additional/necessary tools!)](https://nodejs.org/en/download/current/) (which comes with [npm](http://npmjs.com)), [Visual Studio build tools (scroll down, tools for visual studio > Build Tools](https://visualstudio.microsoft.com/downloads/) to install them all on your computer.
+To clone and run this repository you'll need Git, Node.js (and all it's tools). I'll go over that on Linux, but on Windows use these links [Git](https://git-scm.com) (when installing, use the default options)), [Node.js](https://nodejs.org/en/download/current/) (Current version, choose to automatically install additional/necessary tools! which comes with [npm](http://npmjs.com)) to install them all on your computer.
 
 From your command line:
 
@@ -23,14 +23,6 @@ From your command line:
 git clone https://github.com/christensenjairus/Incrypto.git
 # Go into the repository
 cd Incrypto
-# On Windows (from a seperate, admin powershell!) install npm global items to allow you to develop on your computer
-        npm update!
-        npm install --global --production --verbose windows-build-tools -vs2017
-        npm install --global node-gyp
-        # Verify that python.exe is there by running
-        ls C:\Users\$env:username\.windows-build-tools\python27\
-        # if so, close the admin window, and from your other (non admin) shell, run...
-        setx PYTHON "%USERPROFILE%\.windows-build-tools\python27\python.exe"
 # On Linux, make sure git and npm is installed
 #  -> (on Ubuntu)
         sudo apt install aptitude git
