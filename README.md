@@ -26,6 +26,8 @@ cd Incrypto
 # Make sure npm is installed (ubuntu & debian based linux)
 sudo apt install aptitude
 sudo aptitude install nodejs npm
+# (Manjaro)
+sudo pacman -S nodejs npm
 # Install dependencies
 npm install && npm audit fix --force && npm install --save typescript
 # Run the app
@@ -42,6 +44,9 @@ Note: If you're using Linux Bash for Windows, [see this guide](https://www.howto
 - [electron/simple-samples](https://github.com/electron/simple-samples) - small applications with ideas for taking them further
 - [electron/electron-api-demos](https://github.com/electron/electron-api-demos) - an Electron app that teaches you how to use Electron
 - [hokein/electron-sample-apps](https://github.com/hokein/electron-sample-apps) - small demo apps for the various Electron APIs
+
+## Building Windows App
+- [https://ourcodeworld.com/articles/read/365/how-to-create-a-windows-installer-for-an-application-built-with-electron-framework](How to here)
 
 ## License
 
