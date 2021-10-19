@@ -22,10 +22,11 @@ git clone https://github.com/christensenjairus/Incrypto.git
 # Go into the repository
 cd Incrypto
 # Make sure npm is installed (ubuntu & debian based linux)
-sudo apt install aptitude
-sudo aptitude install nodejs npm
-# (Manjaro)
-sudo pacman -S nodejs npm
+#  -> (on Ubuntu)
+        sudo apt install aptitude
+        sudo aptitude install nodejs npm
+#  -> (on Manjaro)
+        sudo pacman -S nodejs npm
 # Install dependencies
 npm install && npm audit fix --force && npm install --save typescript
 # Run the app
