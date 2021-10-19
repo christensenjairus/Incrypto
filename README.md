@@ -27,7 +27,7 @@ cd Incrypto
 sudo apt install aptitude
 sudo aptitude install nodejs npm
 # Install dependencies
-npm install && npm audit fox --force && npm install --save typescript
+npm install && npm audit fix --force && npm install --save typescript
 # Run the app
 npm start
 ```
