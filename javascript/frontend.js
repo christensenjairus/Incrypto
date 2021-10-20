@@ -21,7 +21,6 @@ $(function () { // jquery format for function() {} but only once document is rea
         return;
     }
     // handle incoming message
-
     };
 
 });
