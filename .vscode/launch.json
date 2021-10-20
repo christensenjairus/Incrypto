@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "name": "Debug Main Process",
+        "name": "Debug Main Electron Process",
         "type": "node",
         "request": "launch",
         "cwd": "${workspaceFolder}",
@@ -12,6 +12,13 @@
         },
         "args" : ["."],
         "outputCapture": "std"
+      },
+      {
+        "type": "pwa-chrome",
+        "request": "launch",
+        "name": "Launch index.html",
+        "url": "http://localhost:8000",
+        "file": "${workspaceFolder}/index.html"
       }
     ]
   }

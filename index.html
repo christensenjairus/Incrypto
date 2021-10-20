@@ -1,33 +1,37 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style>
-      h1 {text-align: center;}
-      p {text-align: center;}
-      div {text-align: center;}
-    </style>
-    <script src="./messager.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <!-- <script src="./messager.js"></script> -->
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <link href="./styles.css" rel="stylesheet">
-    <title>Hello World!</title>
+    <title>Incrypto - Chat</title>
   </head>
   <body>
     <h1>Encrypted Messaging App</h1>
-    <div>
+    <!-- <div>
       <textarea id="ChatText" name="ChatText" rows="26" cols="90">chat here</textarea>
     </div>
     <div>
       <textarea id="SendText" name="SendText" rows="5" cols="90">type here</textarea>
       <button id="SendButton" name="SendButton">Send</button>
-    </div>
-    <!-- We are using Node.js <span id="node-version"></span>,
-    Chromium <span id="chrome-version"></span>,
-    and Electron <span id="electron-version"></span>. -->
+    </div> -->
 
+    <div id="content">chat here</div>
+    <div>
+      <span id="status">Connecting...</span>
+      <input type="text" id="input" disabled="disabled" />
+    </div>
+    <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+    <script type="text/javascript" src="jqueryFromOnline.js"></script> <!-- This is the same as the previous line but local-->
+    <script type="text/javascript" src="frontend.js"></script> <!-- used to update this page with new chats -->
+      
+    <div><p>We are using Node.js <span id="node-version"></span>, Chromium <span id="chrome-version"></span>, and Electron <span id="electron-version"></span></p></div>
+    
     <footer>Created by Jairus Christensen, Blake Porter, Dan Smith, and Daniel Bischoff</footer>
     <!-- You can also require other files to run in this process -->
-    <script src="./renderer.js"></script>
+    <script type="text/javascript" src="./renderer.js"></script>
   </body>
 </html>
