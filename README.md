@@ -37,7 +37,7 @@ npm install
 # Run the app
 npm start
 # Run the server-cli
-node ./server.js
+node ./Server_Standalone/server.js
 # Also, use Visual Studio's launch function to run the app in Electron or index.html in a chrome page.
 ```
 
