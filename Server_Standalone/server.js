@@ -1,39 +1,20 @@
+/*____ _                  _       _                    _____                          
+/  ___| |                | |     | |                  /  ___|                         
+\ `--.| |_ __ _ _ __   __| | __ _| | ___  _ __   ___  \ `--.  ___ _ ____   _____ _ __ 
+ `--. \ __/ _` | '_ \ / _` |/ _` | |/ _ \| '_ \ / _ \  `--. \/ _ \ '__\ \ / / _ \ '__|
+/\__/ / || (_| | | | | (_| | (_| | | (_) | | | |  __/ /\__/ /  __/ |   \ V /  __/ |   
+\____/ \__\__,_|_| |_|\__,_|\__,_|_|\___/|_| |_|\___| \____/ \___|_|    \_/ \___|_|   
+*/
+
 var WebSocketServer = require('websocket').server;
 var WebSocketClient = require('websocket').client;
 var WebSocketFrame  = require('websocket').frame;
 var WebSocketRouter = require('websocket').router;
 var W3CWebSocket = require('websocket').w3cwebsocket;
-// const http = require('http');
-
-// const server = http.createServer(function(request, response) {
-// 	// process HTTP request. Since we're writing just WebSockets
-// 	// server we don't have to implement anything.
-// });
-
-// server.listen(4040, function() { });
-//  // create the server
-// wsServer = new WebSocketServer({
-// 	httpServer: server
-// });
-//  // WebSocket server
-
-// wsServer.on('request', function(request) {
-// 	var connection = request.accept(null, request.origin);
-// 	// This is the most important callback for us, we'll handle
-// 	// all messages from users here.
-// 	connection.on('message', function(message) {
-// 		if (message.type === 'utf8') {
-// 			// process WebSocket message
-// 		}
-// 	});
-// 	connection.on('close', function(connection) {
-// 		// close user connection
-// 	});
-// });
 
 "use strict";
 process.title = 'node-chat';
-const webSocketsServerPort = 4040;
+const webSocketsServerPort = 42069;
 const webSocketServer = require('websocket').server;
 const http = require('http');
 var history = [ ];

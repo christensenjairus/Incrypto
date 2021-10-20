@@ -3,7 +3,7 @@
 $(function () { // jquery format for function() {} but only once document is ready
     // if user is running mozilla then use it's built-in WebSocket
     window.WebSocket = window.WebSocket || window.MozWebSocket;
-    var connection = new WebSocket('ws://127.0.0.1:4040');
+    var connection = new WebSocket('ws://127.0.0.1:42069');
     connection.onopen = function () {
     // connection is opened and ready to use
     };
@@ -27,7 +27,6 @@ $(function () { // jquery format for function() {} but only once document is rea
 });
 
 $(function() {
-
     "use strict";
     // for better performance - to avoid searching in DOM
     var content = $('#content');
@@ -49,7 +48,7 @@ $(function() {
         return;
     }
     // open connection
-    var connection = new WebSocket('ws://127.0.0.1:4040');
+    var connection = new WebSocket('ws://127.0.0.1:42069');
     connection.onopen = function () {
     // first we want users to enter their names
     input.removeAttr('disabled');
