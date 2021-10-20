@@ -18,7 +18,7 @@
         "request": "launch",
         "name": "Launch index.html",
         "url": "http://localhost:8000",
-        "file": "${workspaceFolder}/index.html"
+        "file": "${workspaceFolder}/html/index.html"
       }
     ]
   }
