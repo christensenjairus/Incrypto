@@ -1,8 +1,4 @@
-// const electron = require('electron')
-//     // Module to control application life.
-// const {app, Menu, MenuItem} = electron.app
-//     // Module to create native browser window.
-// const BrowserWindow = electron.BrowserWindow
+
 const {app, BrowserWindow, Menu, MenuItem} = require('electron')
 const shell = require('electron').shell
 // used for opening a script
@@ -56,86 +52,50 @@ function createWindow() {
     function createCustomMenu() {
         const template = [
             {
+                label: 'File',
+                submenu: [
+                    {label: "Log out",
+                        click() {
+                            app.relaunch(); // will make app relaunch the next time it closes
+                            app.quit();}},
+                    {label: "Change Chatroom"},
+                    {label: "Quit",
+                        click() {
+                            app.quit();}}
+                ]
+            },{
                 label: 'Edit',
                 submenu: [
-                    {
-                        role: 'undo'
-                    },
-                    {
-                        role: 'redo'
-                    },
-                    {
-                        type: 'separator'
-                    },
-                    {
-                        role: 'cut'
-                    },
-                    {
-                        role: 'copy'
-                    },
-                    {
-                        role: 'paste'
-                    }
+                    {role: 'undo'},
+                    {role: 'redo'},
+                    {type: 'separator'},
+                    {role: 'cut'},
+                    {role: 'copy'},
+                    {role: 'paste'}
                 ]
-                },
-                
-                {
+                },{
                 label: 'View',
                 submenu: [
-                    {
-                        role: 'reload'
-                    },
-                    {
-                        role: 'toggledevtools'
-                    },
-                    {
-                        type: 'separator'
-                    },
-                    {
-                        role: 'resetzoom'
-                    },
-                    {
-                        role: 'zoomin'
-                    },
-                    {
-                        role: 'zoomout'
-                    },
-                    {
-                        type: 'separator'
-                    },
-                    {
-                        role: 'togglefullscreen'
-                    }
+                    { role: 'reload'},
+                    { role: 'toggledevtools'},
+                    { type: 'separator'},
+                    { role: 'resetzoom'},
+                    { role: 'zoomin'},
+                    { role: 'zoomout'},
+                    { type: 'separator'},
+                    {role: 'togglefullscreen'}
                 ]
-                },
-                
-                {
+                },{
                 role: 'window',
                 submenu: [
-                    {
-                        role: 'minimize'
-                    },
-                    {
-                        role: 'close'
-                    }
+                    {role: 'minimize'},
+                    {role: 'close'}
                 ]
-                },
-                
-                {
-                role: 'help',
-                submenu: [
-                    {
-                        label: 'Learn More'
-                    }
-                ]
-                },
-                {
-                    label: 'Encryption Settings',
+                },{
+                    label: 'Encryption',
                     submenu: [
-                        {
-                            label: 'Enter algorithms (requires VS Code)',
+                        {label: 'Enter algorithms (requires VS Code)',
                             click() {
-                                // shell.openExternal("./menu.js");(
                                 // shell.openPath(path.join(__dirname, "./javascript/menu.js"));
                                 editor.open('./javascript/Encryption.js')
                                 .then(function() {
@@ -146,7 +106,12 @@ function createWindow() {
                             }
                         }
                     ]
-                    }
+                },{
+                    role: 'help',
+                    submenu: [
+                        {label: 'Learn More'}
+                    ]
+                }
             ]
             
             const menu = Menu.buildFromTemplate(template)
@@ -154,8 +119,6 @@ function createWindow() {
         }
         createCustomMenu();
 }
-
-
 
 
 // This method will be called when Electron has finished
@@ -182,5 +145,3 @@ app.on('activate', function() {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-
-// edit Bar Menu
