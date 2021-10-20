@@ -36,8 +36,7 @@ npm install
 npm start
 # Run the server-cli
 node ./server.js
-# Run the client-cli
-node ./client.js
+# Also, use Visual Studio's launch function to run the app in Electron or index.html in a chrome page.
 ```
 
 Note: If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
