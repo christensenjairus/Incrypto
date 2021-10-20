@@ -13,7 +13,7 @@ let mainWindow
 
 function createWindow() {
     // Create the browser window.
-    mainWindow = new BrowserWindow({ width: 535, height: 620 })
+    mainWindow = new BrowserWindow({webPreferences: {allowRunningInsecureContent: true, width: 535, height: 620},}) // this setting is not ideal, but for now, necessary
 
     // and load the index.html of the app.
     mainWindow.loadURL(url.format({
