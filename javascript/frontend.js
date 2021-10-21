@@ -3,17 +3,22 @@
 const serverIPandPortNum = 'localhost:42069'; // <---- Insert hostname or IP of server here
 
 const DEBUG = true;
+var myName = false;
+var content = $('#content');
+var input = $('#input');
+var mystatus = $('#status');
+var myColor = false;
 
 $(function() { // this syntax means it's a function that will be run once once document.ready is true
     "use strict";
     // for better performance - to avoid searching in DOM
-    var content = $('#content');
-    var input = $('#input');
-    var status = $('#status');
+    content = $('#content');
+    input = $('#input');
+    mystatus = $('#status');
     // my color assigned by the server
-    var myColor = false;
+    myColor = false;
     // my name sent to the server
-    var myName = false;
+    myName = false;
     // if user is running mozilla then use it's built-in WebSocket
     window.WebSocket = window.WebSocket || window.MozWebSocket;
     // if browser doesn't support WebSocket, just show some notification and exit
@@ -31,8 +36,9 @@ $(function() { // this syntax means it's a function that will be run once once d
     */
     connection.onopen = function () {
         // first we want users to enter their names
-        input.removeAttr('disabled');
-        status.text('Choose name:');
+        // input.removeAttr('disabled');
+        // mystatus.text('Choose name:');
+        mystatus.text("Login please");
     };
 
     /*
@@ -63,7 +69,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         // first response from the server with user's color
         if (json.type === 'color') {
             myColor = json.data;
-            status.text(myName + ': ').css('color', myColor);
+            mystatus.text(myName + ': ').css('color', myColor);
             input.removeAttr('disabled').focus();
             // from now user can start sending messages
         } else if (json.type === 'history') { // entire message history
@@ -96,9 +102,9 @@ $(function() { // this syntax means it's a function that will be run once once d
             // disable the input field to make the user wait until server sends back response
             input.attr('disabled', 'disabled');
             // we know that the first message sent from a user their name
-            if (myName === false) {
-                myName = msg;
-            }
+            // if (myName === false) {
+            //     myName = msg;
+            // }
         }
     });
 
@@ -109,7 +115,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     */
     setInterval(function() {
         if (connection.readyState !== 1) {
-            status.text('Error');
+            mystatus.text('Error');
             input.attr('disabled', 'disabled').val('Unable to communicate with the WebSocket server.');
         }
     }, 3000);
@@ -125,4 +131,16 @@ $(function() { // this syntax means it's a function that will be run once once d
         ? '0' + dt.getMinutes() : dt.getMinutes())
         + ': ' + message + '</p>');
     }
+
+    
 });
+function login () {
+    // var username = $('#username');
+    // var password = $('#password');
+    myName = document.getElementById('username').value;
+    console.log("Name is: " + myName);
+    // alert('Form submitted!');
+    document.getElementById("status").innerHTML = myName + ': '; // THIS IS DANGEROUS - fix it
+    input.removeAttr('disabled').focus();
+}
+

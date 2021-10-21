@@ -179,7 +179,7 @@ function openEncryptionFileForEditing() {
         editor: codeEditor
     });
     editor.open('./javascript/Encryption.js:0:0').then(function() {
-        console.log('Success!');
+        // console.log('Success!');
     }, function(err) {
         // console.error('Something went wrong: ' + err);
 
