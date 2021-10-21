@@ -1,19 +1,14 @@
 
 const {app, BrowserWindow, Menu, MenuItem} = require('electron')
 const shell = require('electron').shell
+const {dialog} = require('electron')
 // used for opening a script
 var openInEditor = require('open-in-editor');
-var editor = openInEditor.configure({
-  // options
-    editor: 'code'
-    // editor: 'atom'
-    // editor: 'visualstudio'
-}, function(err) {
-    console.error('Something went wrong: ' + err);
-});
 
 const path = require('path')
 const url = require('url')
+
+let codeEditor = "code";
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -54,11 +49,11 @@ function createWindow() {
             {
                 label: 'File',
                 submenu: [
-                    {label: "Log out",
-                        click() {
-                            app.relaunch(); // will make app relaunch the next time it closes
-                            app.quit();}},
-                    {label: "Change Chatroom"},
+                    // {label: "Log out",
+                    //     click() {
+                    //         app.relaunch(); // will make app relaunch the next time it closes
+                    //         app.quit();}},
+                    // {label: "Change Chatroom"},
                     {label: "Quit",
                         click() {
                             app.quit();}}
@@ -94,17 +89,50 @@ function createWindow() {
                 },{
                     label: 'Encryption',
                     submenu: [
-                        {label: 'Enter algorithms (requires VS Code)',
+                        {label: 'Change code editor',
+                            submenu: [
+                                {label: "VS Code",
+                                    click() {
+                                        codeEditor = "code"
+                                    }},
+                                {label: "Visual Studio",
+                                    click() {
+                                        codeEditor = "visualstudio"
+                                    }},
+                                {label: "Atom Editor",
+                                    click() {
+                                        codeEditor = "atom"
+                                    }},
+                                {label: "Sublime Text",
+                                    click() {
+                                        codeEditor = "sublime"
+                                    }},
+                                {label: "Web Storm",
+                                    click() {
+                                        codeEditor = "webstorm"
+                                    }},
+                                {label: "Php Storm",
+                                    click() {
+                                        codeEditor = "phpstorm"
+                                    }},
+                                {label: "Idea 14 CE",
+                                    click() {
+                                        codeEditor = "idea14ce"
+                                    }},
+                                {label: "Vim (MacOS only)",
+                                    click() {
+                                        codeEditor = "vim"
+                                    }},
+                                {label: "Emacs (MacOS only)",
+                                    click() {
+                                        codeEditor = "emacs"
+                                    }}
+                            ]
+                        },
+                        {label: 'Enter algorithm',
                             click() {
-                                // shell.openPath(path.join(__dirname, "./javascript/menu.js"));
-                                editor.open('./javascript/Encryption.js')
-                                .then(function() {
-                                    // console.log('Success!');
-                                }, function(err) {
-                                    console.error('Please install VSCode');
-                                });
-                            }
-                        }
+                                openEncryptionFileForEditing();
+                            }}
                     ]
                 },{
                     role: 'help',
@@ -145,3 +173,25 @@ app.on('activate', function() {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+function openEncryptionFileForEditing() {
+    var editor = openInEditor.configure({
+        editor: codeEditor
+    });
+    editor.open('./javascript/Encryption.js:0:0').then(function() {
+        console.log('Success!');
+    }, function(err) {
+        // console.error('Something went wrong: ' + err);
+
+        const options = {
+            type: 'question',
+            buttons: ['I understand'],
+            defaultId: 0,
+            title: "Can't open that editor",
+            message: "You don't seem to have the selected code editor installed"
+        }
+        console.log(dialog.showMessageBox(null, options, (response) => {
+        //can do something here with the response
+        }))
+    });
+}

@@ -13,18 +13,16 @@ var WebSocketRouter = require('websocket').router;
 var W3CWebSocket = require('websocket').w3cwebsocket;
 
 "use strict";
-process.title = 'node-chat';
+process.title = 'Chat_Server';
 const webSocketsServerPort = 42069;
 const webSocketServer = require('websocket').server;
 const http = require('http');
 var history = [ ];
 var clients = [ ];
 function htmlEntities(str) {
-	return String(str)
-	.replace(/&/g, '&').replace(/</g, '<')
-	.replace(/>/g, '>').replace(/"/g, '"');
+	return String(str).replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"');
 }
-var colors = ['purple', 'plum', 'orange', 'red', 'green', 'blue', 'magenta' ];
+var colors = ['purple', 'plum', 'orange', 'red', 'green', 'blue', 'magenta'];
 colors.sort(function(a,b) {
 	return Math.random() > 0.5;	
 });
@@ -42,41 +40,40 @@ wsServer.on('request', function(request) {
 	var index = clients.push(connection) - 1;
 	var userName = false;
 	var userColor = false;
-	console.log(' Connection is accepted.');
+	console.log(connection.remoteAddress + 'is connected.');
 	if (history.length > 0) {
 		connection.sendUTF(JSON.stringify({ type: 'history', data: history} ));
 	}
 	connection.on('message', function(message) {
-	if (message.type === 'utf8') {
-		if (userName === false) {
-			userName = htmlEntities(message.utf8Data);
-			userColor = colors.shift();
-			connection.sendUTF(
-				JSON.stringify({ type:'color', data: userColor }));
-			console.log(' User is known as: ' + userName + ' with ' + userColor + ' color.');
+		if (message.type === 'utf8') {
+			if (userName === false) {
+				userName = htmlEntities(message.utf8Data);
+				userColor = colors.shift();
+				connection.sendUTF(JSON.stringify({ type:'color', data: userColor }));
+				console.log(' User is known as: ' + userName + ' with ' + userColor + ' color.');
 			} else {
-			console.log(' Received Message from ' + userName + ': ' + message.utf8Data);
-			var obj = {
-				time: (new Date()).getTime(),
-				text: htmlEntities(message.utf8Data),
-				author: userName,
-				color: userColor
-			};
-			history.push(obj);
-			history = history.slice(-100);
-			var json = JSON.stringify({ type:'message', data: obj });
-			for (var i=0; i < clients.length; i++) {
-				clients[i].sendUTF(json);
+				console.log(' Received Message from ' + userName + ': ' + message.utf8Data);
+				var obj = {
+					time: (new Date()).getTime(),
+					text: htmlEntities(message.utf8Data),
+					author: userName,
+					color: userColor
+				};
+				history.push(obj);
+				history = history.slice(-100);
+				var json = JSON.stringify({ type:'message', data: obj });
+				for (var i=0; i < clients.length; i++) {
+					clients[i].sendUTF(json);
+				}
 			}
 		}
-	}
 	});
 	connection.on('close', function(connection) {
-	if (userName !== false && userColor !== false) {
-		console.log(connection.remoteAddress + " was disconnected.");
-		clients.splice(index, 1);
-		colors.push(userColor);
-	}
+		if (userName !== false && userColor !== false) {
+			console.log(connection + " was disconnected.");
+			clients.splice(index, 1);
+			colors.push(userColor);
+		}
 	});
 });
 
