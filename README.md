@@ -14,7 +14,7 @@ You can learn more about each of these components within the [Quick Start Guide]
 
 ## To Use
 
-To clone and run this repository you'll need Git and Node.js. I'll go over that on Linux, but on Windows use these links [Git](https://git-scm.com) (when installing, use the default options)), [Node.js](https://nodejs.org/en/download/current/) (comes with [npm](http://npmjs.com)) to install them all on your computer.
+To clone and run this repository you'll need Git and Node.js. I'll go over that on Linux, but on Mac and Windows use these links [Git](https://git-scm.com) (when installing, the default options are fine)), [Node.js](https://nodejs.org/en/download/current/) (comes with [npm](http://npmjs.com)) to install them all on your computer.
 
 From your command line:
 
