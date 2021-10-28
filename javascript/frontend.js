@@ -1,4 +1,5 @@
-// {<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>}
+const Store = require('electron-store');
+const store = new Store();
 
 const serverIPandPortNum = 'localhost:42069'; // <---- Insert hostname or IP of server here
 
@@ -38,7 +39,16 @@ $(function() { // this syntax means it's a function that will be run once once d
         // first we want users to enter their names
         // input.removeAttr('disabled');
         // mystatus.text('Choose name:');
-        mystatus.text("Login please");
+        let name = store.get("lastUser", "");
+        if (name != "") {
+            mystatus.text(name);
+            connection.send(name); // first message sent tells the server your name
+            myName = name;
+        }
+        else {
+            input.removeAttr('disabled');
+            mystatus.text('Error occurred. Username unknown. Please log out and log back in.');
+        }
     };
 
     /*
