@@ -77,95 +77,95 @@ wsServer.on('request', function(request) {
 	});
 });
 
-// what I had before -------------------------------------
+// // what I had before -------------------------------------
 
-// const { Console } = require('console');
-// const net = require('net');
-// const { exit } = require('process');
-// // const sqlite3 = require('sqlite3').verbose();
-// // let db = new sqlite3.Database(':memory:', (err) => {
-// //     if (err) {
-// //     return console.error(err.message);
+// // const { Console } = require('console');
+// // const net = require('net');
+// // const { exit } = require('process');
+// // // const sqlite3 = require('sqlite3').verbose();
+// // // let db = new sqlite3.Database(':memory:', (err) => {
+// // //     if (err) {
+// // //     return console.error(err.message);
+// // //     }
+// // //     console.log('Connected to the in-memory SQlite database.');
+// // // });
+
+// // let chats = null;
+
+// // // ________________________________ OBJECTS _________________________________________
+// // class Chat {
+// //     constructor() {
+// //         this.chatText = null;
+// // 		this.people = new Array();
+// // 		this.numPeople = this.people.length;
 // //     }
-// //     console.log('Connected to the in-memory SQlite database.');
-// // });
+// //     addTextToChat(stringToAdd) {
+// // 		if (this.chatText === null) {
+// // 			this.chatText = stringToAdd + '\n';
+// // 		}
+// // 		else {
+// // 			this.chatText += stringToAdd + '\n';
+// // 		}
+// //         // console.log(stringToAdd + " added to chat");
+// //     }
+// // 	addPersonToChat(person) {
+// // 		this.people.push(person);
+// // 		this.numPeople++;
+// // 	}
+// // 	removePersonFromChat(person) {
+// // 		const index = this.people.indexOf(person);
+// // 		if (index > -1) {
+// // 			this.people.splice(index, 1);
+// // 			// console.log("person removed from chat");
+// // 		}
+// // 		else {
+// // 			// console.log("person NOT removed from chat");
+// // 		}
+// // 	}
+// // }
 
-// let chats = null;
+// // class Person {
+// // 	constructor(socket, chatroom) {
+// // 		Object.assign(this, { socket, chatroom });
+// // 		this.name = "User" + getRandomArbitrary(0, 100000);
+// // 		chats[this.chatroom].addPersonToChat(this);
+// // 		this.sendOldChat();
+// // 		this.sendOthers(this.name + ' entered the chat at ' + new Date().toLocaleTimeString());
 
-// // ________________________________ OBJECTS _________________________________________
-// class Chat {
-//     constructor() {
-//         this.chatText = null;
-// 		this.people = new Array();
-// 		this.numPeople = this.people.length;
-//     }
-//     addTextToChat(stringToAdd) {
-// 		if (this.chatText === null) {
-// 			this.chatText = stringToAdd + '\n';
-// 		}
-// 		else {
-// 			this.chatText += stringToAdd + '\n';
-// 		}
-//         // console.log(stringToAdd + " added to chat");
-//     }
-// 	addPersonToChat(person) {
-// 		this.people.push(person);
-// 		this.numPeople++;
-// 	}
-// 	removePersonFromChat(person) {
-// 		const index = this.people.indexOf(person);
-// 		if (index > -1) {
-// 			this.people.splice(index, 1);
-// 			// console.log("person removed from chat");
-// 		}
-// 		else {
-// 			// console.log("person NOT removed from chat");
-// 		}
-// 	}
-// }
+// // 		socket.on('data', (buffer) => {
+// // 			const command = buffer.toString('utf-8').trim();
 
-// class Person {
-// 	constructor(socket, chatroom) {
-// 		Object.assign(this, { socket, chatroom });
-// 		this.name = "User" + getRandomArbitrary(0, 100000);
-// 		chats[this.chatroom].addPersonToChat(this);
-// 		this.sendOldChat();
-// 		this.sendOthers(this.name + ' entered the chat at ' + new Date().toLocaleTimeString());
+// // 			// console.log(command.substr(0,4).toUpperCase());
+// // 			// console.log('name changed to ' + command.substr(5));
 
-// 		socket.on('data', (buffer) => {
-// 			const command = buffer.toString('utf-8').trim();
+// // 			if (command.toUpperCase() === '() quit'.toUpperCase()) {
+// // 				socket.destroy();
+// // 			} else if (command.toUpperCase() === "() fill".toUpperCase()) {
+// // 				this.sendOldChat();
+// // 			} else if (command.toUpperCase() === "() clear".toUpperCase()) {
+// // 				console.log("clear chat here");
+// // 			} else if (command.substr(0,5).toUpperCase() === "NAME=") {
+// // 				this.sendOthers(this.name + " changed name to " + command.substr(5));
+// // 				this.name = command.substr(5);
+// // 			} else if (isNumeric(command)) {
+// // 				if (command > 1000 || command < 0) {
+// // 					this.send('Chatroom number not in range\n');
+// // 				}
+// // 				else {
+// // 					this.send('Switching to chatroom ' + command + '\n');
+// // 					this.switchChatroom(command);
+// // 				}
+// // 			} else if (command != "") {
+// // 				try {
+// // 					chats[this.chatroom].addTextToChat(this.name + ": " + command);
+// // 					this.sendOthers(this.name + ": " + command);
 
-// 			// console.log(command.substr(0,4).toUpperCase());
-// 			// console.log('name changed to ' + command.substr(5));
-
-// 			if (command.toUpperCase() === '() quit'.toUpperCase()) {
-// 				socket.destroy();
-// 			} else if (command.toUpperCase() === "() fill".toUpperCase()) {
-// 				this.sendOldChat();
-// 			} else if (command.toUpperCase() === "() clear".toUpperCase()) {
-// 				console.log("clear chat here");
-// 			} else if (command.substr(0,5).toUpperCase() === "NAME=") {
-// 				this.sendOthers(this.name + " changed name to " + command.substr(5));
-// 				this.name = command.substr(5);
-// 			} else if (isNumeric(command)) {
-// 				if (command > 1000 || command < 0) {
-// 					this.send('Chatroom number not in range\n');
-// 				}
-// 				else {
-// 					this.send('Switching to chatroom ' + command + '\n');
-// 					this.switchChatroom(command);
-// 				}
-// 			} else if (command != "") {
-// 				try {
-// 					chats[this.chatroom].addTextToChat(this.name + ": " + command);
-// 					this.sendOthers(this.name + ": " + command);
-
-// 				}
-// 				catch (e) {
-// 					this.send("Can't send message\nError: " + e + ".\n");
-// 				}
-// 			}
-// 		});
+// // 				}
+// // 				catch (e) {
+// // 					this.send("Can't send message\nError: " + e + ".\n");
+// // 				}
+// // 			}
+// // 		});
 
 // 		socket.on('close', () => {
 // 			try { 

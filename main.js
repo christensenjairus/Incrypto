@@ -2,36 +2,77 @@
 const {app, BrowserWindow, Menu, MenuItem} = require('electron')
 const shell = require('electron').shell
 const {dialog} = require('electron')
+const Store = require('electron-store')
+const store = new Store()
+// const appConfig = require('electron-settings')
 // used for opening a script
 var openInEditor = require('open-in-editor');
+const {ipcMain} = require('electron')
 
 const path = require('path')
 const url = require('url')
 
 let codeEditor = "code";
 
+// const store = new Store({
+//     // We'll call our data file 'user-preferences'
+//     configName: 'user-preferences',
+//     defaults: {
+//       // 800x600 is the default size of our window
+//         windowBounds: { width: 800, height: 600 },
+//         username: ""
+//     }
+// });
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-function createWindow() {
+function createWindow(width, height, bounds) {
+
+    
     // Create the browser window.
     mainWindow = new BrowserWindow({
         webPreferences: {
+            preload: path.join(__dirname, './javascript/preload.js'),
             allowRunningInsecureContent: true, // this setting is not ideal, but for now, necessary
-            // nodeIntegration: true,
-            // contextIsolation: false,
+            nodeIntegration: true,
+            contextIsolation: false,
         },
-        width: 1050,
-        height: 620
+        // width: 1050,
+        // height: 620
+        width: width,
+        height: height,
+        windowBounds: bounds
     }) 
 
     // and load the index.html of the app.
-    mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'html/index.html'),
-        protocol: 'file:',
-        slashes: true
-    }))
+    if (store.get("lastUser", "") == "") {
+        mainWindow.loadURL(url.format({
+            // pathname: path.join(__dirname, 'html/index.html'),
+            pathname: path.join(__dirname, 'html/register.html'), // start with registration page if noone has logged in
+            protocol: 'file:',
+            slashes: true
+        }))
+    }
+    else {
+        mainWindow.loadURL(url.format({
+            // pathname: path.join(__dirname, 'html/index.html'),
+            pathname: path.join(__dirname, 'html/login.html'), // start with login page if previous user
+            protocol: 'file:',
+            slashes: true
+        }))
+    }
+
+    mainWindow.on('resize', () => {
+        // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with
+        // the height, width, and x and y coordinates.
+        let { width, height } = mainWindow.getBounds();
+        
+        // Now that we have them, save them using the `set` method.
+        store.set('windowWidth', width);
+        store.set('windowHeight', height);
+    });
 
     // Open the DevTools.
     mainWindow.webContents.openDevTools(); // uncomment this for DevTools
@@ -49,11 +90,22 @@ function createWindow() {
             {
                 label: 'File',
                 submenu: [
-                    // {label: "Log out",
-                    //     click() {
-                    //         app.relaunch(); // will make app relaunch the next time it closes
-                    //         app.quit();}},
+                    {label: "Log out",
+                        click() {
+                            // app.relaunch(); // will make app relaunch the next time it closes
+                            // app.quit();
+                            switchToLoginPage();
+                        }},
                     // {label: "Change Chatroom"},
+                    {label: "Account Registration",
+                        click() {
+                            switchToRegistrationPage();
+                        }},
+                    {label: "Clear All Local User Data",
+                        click() {
+                            store.clear();
+                            switchToRegistrationPage();
+                        }},
                     {label: "Quit",
                         click() {
                             app.quit();}}
@@ -152,7 +204,11 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', () => {
+    let width = store.get('windowWidth', 800); // use size of last use, but 800 is default
+    let height = store.get('windowHeight', 600); // use size of last use, but 600 is default
+    createWindow(width, height);
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
@@ -182,7 +238,6 @@ function openEncryptionFileForEditing() {
         // console.log('Success!');
     }, function(err) {
         // console.error('Something went wrong: ' + err);
-
         const options = {
             type: 'question',
             buttons: ['I understand'],
@@ -194,4 +249,20 @@ function openEncryptionFileForEditing() {
         //can do something here with the response
         }))
     });
+}
+
+function switchToLoginPage() {
+    mainWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'html/login.html'),
+        protocol: 'file:',
+        slashes: true
+    }))
+}
+
+function switchToRegistrationPage() {
+    mainWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'html/register.html'),
+        protocol: 'file:',
+        slashes: true
+    }))
 }
