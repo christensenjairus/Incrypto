@@ -75,7 +75,7 @@ function createWindow(width, height, bounds) {
     });
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools(); // uncomment this for DevTools
+    // mainWindow.webContents.openDevTools(); // uncomment this for DevTools
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function() {

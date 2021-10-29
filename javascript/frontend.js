@@ -1,7 +1,10 @@
 const Store = require('electron-store');
+const { server } = require('websocket');
 const store = new Store();
 
-const serverIPandPortNum = 'localhost:42069'; // <---- Insert hostname or IP of server here
+const serverName = store.get("serverName", ""); // default to "" if no valid input
+const portNum = '42069'
+const serverIPandPortNum = serverName + ':' + portNum; // <---- Insert hostname or IP of server here
 
 const DEBUG = true;
 var myName = false;
@@ -25,6 +28,12 @@ $(function() { // this syntax means it's a function that will be run once once d
     // if browser doesn't support WebSocket, just show some notification and exit
     if (!window.WebSocket) {
         content.html($('<p>', { text: 'Sorry, but your browser doesn’t support WebSocket.' }));
+        input.hide();
+        $('span').hide();
+        return;
+    }
+    if (serverName === "") {
+        content.html($('<p>', { text: 'Please log in to a valid server.' }));
         input.hide();
         $('span').hide();
         return;
