@@ -53,6 +53,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             mystatus.text(name);
             connection.send(name); // first message sent tells the server your name
             myName = name;
+            input.removeAttr('disabled');
         }
         else {
             input.removeAttr('disabled');
