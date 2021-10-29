@@ -21,19 +21,11 @@ $(function() { // this syntax means it's a function that will be run once once d
     mystatus = $('#status');
     // my color assigned by the server
     myColor = false;
-    // my name sent to the server
-    myName = false;
     // if user is running mozilla then use it's built-in WebSocket
     window.WebSocket = window.WebSocket || window.MozWebSocket;
     // if browser doesn't support WebSocket, just show some notification and exit
     if (!window.WebSocket) {
         content.html($('<p>', { text: 'Sorry, but your browser doesn’t support WebSocket.' }));
-        input.hide();
-        $('span').hide();
-        return;
-    }
-    if (serverName === "") {
-        content.html($('<p>', { text: 'Please log in to a valid server.' }));
         input.hide();
         $('span').hide();
         return;
@@ -45,18 +37,14 @@ $(function() { // this syntax means it's a function that will be run once once d
     * What to do when connection is first made
     */
     connection.onopen = function () {
-        // first we want users to enter their names
-        // input.removeAttr('disabled');
-        // mystatus.text('Choose name:');
+        input.removeAttr('disabled');
         let name = store.get("lastUser", "");
         if (name != "") {
+            myName = name;
             mystatus.text(name);
             connection.send(name); // first message sent tells the server your name
-            myName = name;
-            input.removeAttr('disabled');
         }
         else {
-            input.removeAttr('disabled');
             mystatus.text('Error occurred. Username unknown. Please log out and log back in.');
         }
     };
