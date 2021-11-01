@@ -45,7 +45,8 @@ $(function() { // this syntax means it's a function that will be run once once d
             myName = name;
             mystatus.text(name);
             connection.send(name); // first message sent tells the server your name
-            input.removeAttr("disabled")
+            // input.removeAttr("disabled")
+            input.prop("disabled", false);
             if (DEBUG) console.log("end of connection initialization, should be able to type")
             input.focus();
         }
@@ -84,7 +85,8 @@ $(function() { // this syntax means it's a function that will be run once once d
         if (json.type === 'color') {
             myColor = json.data;
             mystatus.text(myName + ': ').css('color', myColor);
-            input.removeAttr('disabled').focus();
+            input.prop("disabled", false);
+            // input.removeAttr('disabled').focus();
             // from now user can start sending messages
             if (DEBUG) console.log("user should be able to type now")
         } else if (json.type === 'history') { // entire message history
@@ -94,7 +96,8 @@ $(function() { // this syntax means it's a function that will be run once once d
             }
         } else if (json.type === 'message') { // it's a single message
             // let the user write another message
-            input.removeAttr('disabled');
+            // input.removeAttr('disabled');
+            input.prop("disabled", false)
             addMessage(json.data.author, json.data.text, json.data.color, new Date(json.data.time));
             if (DEBUG) console.log("should be able to type - message received")
         } else {
