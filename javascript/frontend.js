@@ -37,12 +37,14 @@ $(function() { // this syntax means it's a function that will be run once once d
     * What to do when connection is first made
     */
     connection.onopen = function () {
-        input.removeAttr('disabled')
+        // input.removeAttr('disabled')
+        input.attr("disabled='true'")
         let name = store.get("lastUser", "");
         if (name != "") {
             myName = name;
             mystatus.text(name);
             connection.send(name); // first message sent tells the server your name
+            input.removeAttr("disabled")
         }
         else {
             input.hide();
