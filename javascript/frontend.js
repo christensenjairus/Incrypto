@@ -49,6 +49,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             input.prop("disabled", false);
             if (DEBUG) console.log("end of connection initialization, should be able to type")
             input.focus();
+            input.click();
         }
         else {
             input.hide();
@@ -89,6 +90,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             // input.removeAttr('disabled').focus();
             // from now user can start sending messages
             if (DEBUG) console.log("user should be able to type now")
+            input.click();
         } else if (json.type === 'history') { // entire message history
             // insert every single message to the chat window
             for (var i=0; i < json.data.length; i++) {
