@@ -62,6 +62,7 @@ function createWindow(width, height, bounds) {
             allowRunningInsecureContent: true, // this setting is not ideal, but for now, necessary
             nodeIntegration: true,
             contextIsolation: false,
+            webgl: true,
         },
         // width: 1050,
         // height: 620
