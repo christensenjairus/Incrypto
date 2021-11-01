@@ -140,16 +140,5 @@ $(function() { // this syntax means it's a function that will be run once once d
         ? '0' + dt.getMinutes() : dt.getMinutes())
         + ': ' + message + '</p>');
     }
-
-    
 });
-// function login () {
-//     // var username = $('#username');
-//     // var password = $('#password');
-//     myName = document.getElementById('username').value;
-//     console.log("Name is: " + myName);
-//     // alert('Form submitted!');
-//     document.getElementById("status").innerHTML = myName + ': '; // THIS IS DANGEROUS - fix it
-//     input.removeAttr('disabled').focus();
-// }
 
