@@ -26,6 +26,7 @@
     "axios": "^0.23.0",
     "electron-store": "^8.0.1",
     "open-in-editor": "^2.2.0",
+    "source-map-support": "^0.5.20",
     "svg.draggable.js": "^2.2.1",
     "svg.js": "^2.6.3",
     "typescript": "^4.4.4",

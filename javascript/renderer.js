@@ -5,3 +5,4 @@
 // selectively enable features needed in the rendering
 // process.
 
+require('source-map-support').install();
