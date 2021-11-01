@@ -47,6 +47,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             connection.send(name); // first message sent tells the server your name
             input.removeAttr("disabled")
             if (DEBUG) console.log("end of connection initialization, should be able to type")
+            input.focus();
         }
         else {
             input.hide();
