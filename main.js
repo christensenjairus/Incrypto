@@ -63,6 +63,7 @@ function createWindow(width, height, bounds) {
             nodeIntegration: true,
             contextIsolation: false,
             webgl: true,
+            // sandbox: true,
         },
         // width: 1050,
         // height: 620
