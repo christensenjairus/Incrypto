@@ -6,7 +6,7 @@ const serverName = store.get("serverName", ""); // default to "" if no valid inp
 const portNum = '42069'
 const serverIPandPortNum = serverName + ':' + portNum; // <---- Insert hostname or IP of server here
 
-const DEBUG = true;
+const DEBUG = false; // turn this on & use it with 'if(DEBUG)' to display more console.log info
 var myName = false;
 var content = $('#content');
 var input = $('#input');
@@ -38,15 +38,15 @@ $(function() { // this syntax means it's a function that will be run once once d
     */
     connection.onopen = function () {
         // input.removeAttr('disabled')
-        console.log("connection made")
-        input.attr("disabled", "disabled")
+        if (DEBUG) console.log("connection made")
+        // input.attr("disabled", "disabled")
         let name = store.get("lastUser", "");
         if (name != "") {
             myName = name;
             mystatus.text(name);
             connection.send(name); // first message sent tells the server your name
             input.removeAttr("disabled")
-            console.log("end of connection initialization, should be able to type")
+            if (DEBUG) console.log("end of connection initialization, should be able to type")
         }
         else {
             input.hide();
