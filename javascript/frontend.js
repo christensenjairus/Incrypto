@@ -38,13 +38,15 @@ $(function() { // this syntax means it's a function that will be run once once d
     */
     connection.onopen = function () {
         // input.removeAttr('disabled')
-        input.attr("disabled='true'")
+        console.log("connection made")
+        input.attr("disabled", "disabled")
         let name = store.get("lastUser", "");
         if (name != "") {
             myName = name;
             mystatus.text(name);
             connection.send(name); // first message sent tells the server your name
             input.removeAttr("disabled")
+            console.log("end of connection initialization, should be able to type")
         }
         else {
             input.hide();
@@ -83,6 +85,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             mystatus.text(myName + ': ').css('color', myColor);
             input.removeAttr('disabled').focus();
             // from now user can start sending messages
+            if (DEBUG) console.log("user should be able to type now")
         } else if (json.type === 'history') { // entire message history
             // insert every single message to the chat window
             for (var i=0; i < json.data.length; i++) {
@@ -92,6 +95,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             // let the user write another message
             input.removeAttr('disabled');
             addMessage(json.data.author, json.data.text, json.data.color, new Date(json.data.time));
+            if (DEBUG) console.log("should be able to type - message received")
         } else {
             console.log('Unexpected Json Value: ', json);
         }
@@ -112,6 +116,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             $(this).val('');
             // disable the input field to make the user wait until server sends back response
             input.attr('disabled', 'disabled');
+            if (DEBUG) console.log("Input turned off until response is received")
             // we know that the first message sent from a user their name
             // if (myName === false) {
             //     myName = msg;
