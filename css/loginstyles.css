@@ -67,7 +67,7 @@ color: black;
 input[type=button]{
 font-size: 16px;
 background: linear-gradient(#202020 5%, #000000 100%);
-border: 1px solid #e50000;
+border: 2px solid orange;
 color: #ffffff;
 font-weight: bold;
 cursor: pointer;
