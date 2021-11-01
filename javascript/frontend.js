@@ -6,7 +6,7 @@ const serverName = store.get("serverName", ""); // default to "" if no valid inp
 const portNum = '42069'
 const serverIPandPortNum = serverName + ':' + portNum; // <---- Insert hostname or IP of server here
 
-const DEBUG = false; // turn this on & use it with 'if(DEBUG)' to display more console.log info
+const DEBUG = true; // turn this on & use it with 'if(DEBUG)' to display more console.log info
 var myName = false;
 var content = $('#content');
 var input = $('#input');
