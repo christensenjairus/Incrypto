@@ -114,7 +114,7 @@ function createWindow(width, height, bounds) {
             {
                 label: 'File',
                 submenu: [
-                    {label: "Log out",
+                    {label: "Log in/Log out",
                         click() {
                             // app.relaunch(); // will make app relaunch the next time it closes
                             // app.quit();
