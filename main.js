@@ -4,29 +4,19 @@ const shell = require('electron').shell
 const {dialog} = require('electron')
 const Store = require('electron-store')
 const store = new Store()
-// const appConfig = require('electron-settings')
-// used for opening a script
 var openInEditor = require('open-in-editor');
 const {ipcMain} = require('electron')
+require('electron-reload')(__dirname) // this will allow electron to reload on changes
 
 const path = require('path')
 const url = require('url')
 
-let codeEditor = "code";
-
-// const store = new Store({
-//     // We'll call our data file 'user-preferences'
-//     configName: 'user-preferences',
-//     defaults: {
-//       // 800x600 is the default size of our window
-//         windowBounds: { width: 800, height: 600 },
-//         username: ""
-//     }
-// });
+let codeEditor = store.get("codeEditor", "code"); // VS Code is the default
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+const windows = new Set();
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -54,7 +44,7 @@ app.on('activate', function() {
     }
 })
 
-function createWindow(width, height, bounds) {
+function createWindow(width, height) {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         webPreferences: {
@@ -63,13 +53,9 @@ function createWindow(width, height, bounds) {
             nodeIntegration: true,
             contextIsolation: false,
             webgl: true,
-            // sandbox: true,
         },
-        // width: 1050,
-        // height: 620
         width: width,
         height: height,
-        windowBounds: bounds
     }) 
 
     // and load the index.html of the app.
@@ -100,6 +86,10 @@ function createWindow(width, height, bounds) {
         store.set('windowHeight', height);
     });
 
+    mainWindow.once('ready-to-show', () => {
+        mainWindow.show();
+    });
+
     // Open the DevTools.
     // mainWindow.webContents.openDevTools(); // uncomment this for DevTools
 
@@ -108,6 +98,7 @@ function createWindow(width, height, bounds) {
         // Dereference the window object, usually you would store windows
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
+        windows.delete(mainWindow)
         mainWindow = null
     })
 
@@ -172,38 +163,47 @@ function createWindow(width, height, bounds) {
                                 {label: "VS Code",
                                     click() {
                                         codeEditor = "code"
+                                        store.set("codeEditor", "code");
                                     }},
                                 {label: "Visual Studio",
                                     click() {
                                         codeEditor = "visualstudio"
+                                        store.set("codeEditor", "visualstudio");
                                     }},
                                 {label: "Atom Editor",
                                     click() {
                                         codeEditor = "atom"
+                                        store.set("codeEditor", "atom");
                                     }},
                                 {label: "Sublime Text",
                                     click() {
                                         codeEditor = "sublime"
+                                        store.set("codeEditor", "sublime");
                                     }},
                                 {label: "Web Storm",
                                     click() {
                                         codeEditor = "webstorm"
+                                        store.set("codeEditor", "webstorm");
                                     }},
                                 {label: "Php Storm",
                                     click() {
                                         codeEditor = "phpstorm"
+                                        store.set("codeEditor", "phpstorm");
                                     }},
                                 {label: "Idea 14 CE",
                                     click() {
                                         codeEditor = "idea14ce"
+                                        store.set("codeEditor", "idea14ce");
                                     }},
                                 {label: "Vim (MacOS only)",
                                     click() {
                                         codeEditor = "vim"
+                                        store.set("codeEditor", "vim");
                                     }},
                                 {label: "Emacs (MacOS only)",
                                     click() {
                                         codeEditor = "emacs"
+                                        store.set("codeEditor", "emacs");
                                     }}
                             ]
                         },
@@ -223,6 +223,7 @@ function createWindow(width, height, bounds) {
             const menu = Menu.buildFromTemplate(template)
             Menu.setApplicationMenu(menu)
         }
+        windows.add(mainWindow);
         createCustomMenu();
 }
 
@@ -251,17 +252,53 @@ function openEncryptionFileForEditing() {
 }
 
 function switchToLoginPage() {
-    mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'html/login.html'),
-        protocol: 'file:',
-        slashes: true
-    }))
+    // mainWindow.loadURL(url.format({
+    //     pathname: path.join(__dirname, 'html/login.html'),
+    //     protocol: 'file:',
+    //     slashes: true
+    // }))
+    let { width, height } = mainWindow.getBounds();
+    createChildWindow(width, height, "login.html")
 }
 
 function switchToRegistrationPage() {
+    // mainWindow.loadURL(url.format({
+    //     pathname: path.join(__dirname, 'html/register.html'),
+    //     protocol: 'file:',
+    //     slashes: true
+    // }))
+    let { width, height } = mainWindow.getBounds();
+    createChildWindow(width, height, "register.html")
+}
+
+function createChildWindow(width, height, file) {
+    childWindow = new BrowserWindow({
+        width: width,
+        height: height,
+        modal: true,
+        show: false,
+        parent: mainWindow, // Make sure to add parent window here
+    
+      // Make sure to add webPreferences with below configuration
+        webPreferences: {
+            preload: path.join(__dirname, './javascript/preload.js'),
+            allowRunningInsecureContent: true, // this setting is not ideal, but for now, necessary
+            nodeIntegration: true,
+            contextIsolation: false,
+            webgl: true,
+            // sandbox: true,
+        },
+    });
+    
+    // Child window loads settings.html file
+    // childWindow.loadFile("settings.html");
     mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'html/register.html'),
+        pathname: path.join(__dirname, 'html/' + file),
         protocol: 'file:',
         slashes: true
     }))
+    
+    childWindow.once("ready-to-show", () => {
+        childWindow.show();
+    });
 }
