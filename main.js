@@ -221,7 +221,10 @@ function createWindow(width, height) {
                 },{
                     role: 'help',
                     submenu: [
-                        {label: 'Learn More'}
+                        {label: 'Learn More',
+                            click() {
+                                shell.openExternal("https://github.com/christensenjairus/Incrypto")
+                            }}
                     ]
                 }
             ]

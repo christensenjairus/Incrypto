@@ -94,7 +94,6 @@ $(function() { // this syntax means it's a function that will be run once once d
             // input.removeAttr('disabled').focus();
             // from now user can start sending messages
             if (DEBUG) console.log("user should be able to type now")
-            input.click();
             input.focus();
             var div = $('#content');
             div.animate({
@@ -111,7 +110,6 @@ $(function() { // this syntax means it's a function that will be run once once d
             input.prop("disabled", false)
             addMessage(json.data.author, json.data.text, json.data.color, new Date(json.data.time));
             if (DEBUG) console.log("should be able to type - message received")
-            input.click();
             input.focus();
             // content.scrollTop = content.scrollHeight
             var div = $('#content');
