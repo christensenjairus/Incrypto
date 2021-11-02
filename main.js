@@ -6,6 +6,7 @@ const Store = require('electron-store')
 const store = new Store()
 var openInEditor = require('open-in-editor');
 const {ipcMain} = require('electron')
+// require('@electron/remote/main').initialize()
 require('electron-reload')(__dirname) // this will allow electron to reload on changes
 
 const path = require('path')
@@ -53,6 +54,7 @@ function createWindow(width, height) {
             nodeIntegration: true,
             contextIsolation: false,
             webgl: true,
+            enableRemoteModule: true,
         },
         width: width,
         height: height,
@@ -252,26 +254,20 @@ function openEncryptionFileForEditing() {
 }
 
 function switchToLoginPage() {
-    // mainWindow.loadURL(url.format({
-    //     pathname: path.join(__dirname, 'html/login.html'),
-    //     protocol: 'file:',
-    //     slashes: true
-    // }))
-    let { width, height } = mainWindow.getBounds();
-    createChildWindow(width, height, "login.html")
+    createChildWindow("login.html")
 }
 
 function switchToRegistrationPage() {
-    // mainWindow.loadURL(url.format({
-    //     pathname: path.join(__dirname, 'html/register.html'),
-    //     protocol: 'file:',
-    //     slashes: true
-    // }))
-    let { width, height } = mainWindow.getBounds();
-    createChildWindow(width, height, "register.html")
+    createChildWindow("register.html")
 }
 
-function createChildWindow(width, height, file) {
+function switchToChatPage() {
+    createChildWindow("index.html")
+}
+
+function createChildWindow(file) {
+    let width = store.get('windowWidth', 800); // use size of last use, but 800 is default
+    let height = store.get('windowHeight', 600); // use size of last use, but 600 is default
     childWindow = new BrowserWindow({
         width: width,
         height: height,
@@ -286,7 +282,7 @@ function createChildWindow(width, height, file) {
             nodeIntegration: true,
             contextIsolation: false,
             webgl: true,
-            // sandbox: true,
+            enableRemoteModule: true,
         },
     });
     
@@ -302,3 +298,10 @@ function createChildWindow(width, height, file) {
         childWindow.show();
     });
 }
+
+ipcMain.handle('login', async (event, someArgument) => {
+    // const result = await doSomeWork(someArgument)
+    switchToChatPage();
+    // return result
+    return true;
+})

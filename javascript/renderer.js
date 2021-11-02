@@ -5,3 +5,11 @@
 // selectively enable features needed in the rendering
 // process.
 
+// // const { remote } = require('electron');
+// // const { BrowserWindow } = remote;
+// const { BrowserWindow } = require('@electron/remote')
+// require("@electron/remote/main").enable(webContents)
+
+// ipcRenderer.invoke('login', "").then((result) => {
+//     // ...
+// })
