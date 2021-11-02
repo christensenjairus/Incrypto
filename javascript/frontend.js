@@ -96,6 +96,10 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (DEBUG) console.log("user should be able to type now")
             input.click();
             input.focus();
+            var div = $('#content');
+            div.animate({
+                scrollTop: div[0].scrollHeight
+            }, 1000);
         } else if (json.type === 'history') { // entire message history
             // insert every single message to the chat window
             for (var i=0; i < json.data.length; i++) {
@@ -107,6 +111,13 @@ $(function() { // this syntax means it's a function that will be run once once d
             input.prop("disabled", false)
             addMessage(json.data.author, json.data.text, json.data.color, new Date(json.data.time));
             if (DEBUG) console.log("should be able to type - message received")
+            input.click();
+            input.focus();
+            // content.scrollTop = content.scrollHeight
+            var div = $('#content');
+            div.animate({
+                scrollTop: div[0].scrollHeight
+            }, 1000);
         } else {
             console.log('Unexpected Json Value: ', json);
         }
