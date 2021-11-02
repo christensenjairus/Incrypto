@@ -336,7 +336,7 @@ function replaceCurrentWindow(file) {
 ipcMain.handle('login', async (event, someArgument) => {
     // const result = await doSomeWork(someArgument)
     switchToChatPage();
-    mainWindow.webContents.openDevTools(); // open dev tools on chat launch
+    // mainWindow.webContents.openDevTools(); // open dev tools on chat launch
     // return result
     return true;
 })
