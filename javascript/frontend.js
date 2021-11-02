@@ -3,7 +3,7 @@
 */
 
 const Store = require('electron-store');
-const { server } = require('websocket');
+const { server, connection } = require('websocket');
 const store = new Store();
 
 const serverName = store.get("serverName", ""); // default to "" if no valid input
@@ -17,6 +17,11 @@ var input = $('#input');
 var mystatus = $('#status');
 var myColor = false;
 
+var colors = ['purple', 'plum', 'orange', 'red', 'green', 'blue', 'magenta'];
+colors.sort(function(a,b) {
+    return Math.random() > 0.5;	
+});
+
 $(function() { // this syntax means it's a function that will be run once once document.ready is true
     "use strict";
     // for better performance - to avoid searching in DOM
@@ -25,6 +30,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     mystatus = $('#status');
     // my color assigned by the server
     myColor = false;
+    myName = false;
     // if user is running mozilla then use it's built-in WebSocket
     window.WebSocket = window.WebSocket || window.MozWebSocket;
     // if browser doesn't support WebSocket, just show some notification and exit
@@ -41,19 +47,19 @@ $(function() { // this syntax means it's a function that will be run once once d
     * What to do when connection is first made
     */
     connection.onopen = function () {
-        // input.removeAttr('disabled')
         if (DEBUG) console.log("connection made")
-        // input.attr("disabled", "disabled")
-        let name = store.get("lastUser", "");
-        if (name != "") {
-            myName = name;
-            mystatus.text(name);
-            connection.send(name); // first message sent tells the server your name
-            // input.removeAttr("disabled")
+        myName = store.get("lastUser", "");
+        myColor = store.get(myName+"_Color", "black"); // default color is black
+        if (DEBUG) console.log("color is: " + myColor)
+        if (myName != "") {
+            mystatus.text(myName + ': ').css('color', myColor);
             input.prop("disabled", false);
-            if (DEBUG) console.log("end of connection initialization, should be able to type")
+            if (DEBUG) console.log("user should be able to type now")
             input.focus();
-            input.click();
+            var div = $('#content');
+            div.animate({
+                scrollTop: div[0].scrollHeight
+            }, 0); // lowered the animation time to zero so it wasn't annoying on reload
         }
         else {
             input.hide();
@@ -84,24 +90,25 @@ $(function() { // this syntax means it's a function that will be run once once d
             console.log('Invalid JSON: ', message.data);
             return;
         }
-        if (DEBUG) console.log("Message received: \n" + message.data);
+        console.log("Message received: \n" + message.data);
         // NOTE: if you're not sure about the JSON structure
         // check the server source code above
         // first response from the server with user's color
-        if (json.type === 'color') {
-            myColor = json.data;
-            mystatus.text(myName + ': ').css('color', myColor);
-            input.prop("disabled", false);
-            // input.removeAttr('disabled').focus();
-            // from now user can start sending messages
-            if (DEBUG) console.log("user should be able to type now")
-            input.focus();
-            var div = $('#content');
-            div.animate({
-                scrollTop: div[0].scrollHeight
-            }, 1000);
-        } else if (json.type === 'history') { // entire message history
+        // if (json.type === 'color') {
+        //     myColor = json.data;
+        //     mystatus.text(myName + ': ').css('color', myColor);
+        //     input.prop("disabled", false);
+        //     // input.removeAttr('disabled').focus();
+        //     // from now user can start sending messages
+        //     if (DEBUG) console.log("user should be able to type now")
+        //     input.focus();
+        //     var div = $('#content');
+        //     div.animate({
+        //         scrollTop: div[0].scrollHeight
+        //     }, 0); // lowered the animation time to zero so it wasn't annoying on reload
+        if (json.type === 'history') { // entire message history
             // insert every single message to the chat window
+            document.getElementById("content").innerHTML = "";
             for (var i=0; i < json.data.length; i++) {
                 addMessage(json.data[i].author, json.data[i].text, json.data[i].color, new Date(json.data[i].time));
             }
@@ -131,17 +138,17 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (!msg) {
                 return;
             }
-            // send the message as an ordinary text
-            connection.send(msg);
-            if (DEBUG) console.log("Message sent: \n" + msg);
+            // TODO: get encryption type, encrypt message, get key from authentication
+
+
+            // send the message as JSON
+            let message = {"type":"message", "user": myName, "msg":msg, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
+            connection.send(JSON.stringify(message));
+            console.log("Message sent: \n" + JSON.stringify(message));
             $(this).val('');
             // disable the input field to make the user wait until server sends back response
             input.attr('disabled', 'disabled');
             if (DEBUG) console.log("Input turned off until response is received")
-            // we know that the first message sent from a user their name
-            // if (myName === false) {
-            //     myName = msg;
-            // }
         }
     });
 
@@ -168,5 +175,34 @@ function addMessage(author, message, color, dt) {
         ? '0' + dt.getMinutes() : dt.getMinutes())
         + ': ' + message + '</p>');
     }
+
+    document.getElementById('status').addEventListener('click', () => {
+        // newColor = colors.shift();
+        var newColor = getRandomColor(); // generate random color
+        myColor = newColor
+        mystatus.css('color', myColor)
+        store.set(myName + "_Color", newColor)
+        document.getElementById("content").innerHTML + "";
+        let message = {"type":"colorChange", "user": myName, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
+        connection.send(JSON.stringify(message));
+        
+        // let message = {"type":"historyRequest", "user": myName, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
+        // connection.send(JSON.stringify(message));
+        console.log("Message sent: \n" + JSON.stringify(message));
+    })
 });
+
+// _________________ Helper Functions ________________________________
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+function setRandomColor() {
+    $("#colorpad").css("background-color", getRandomColor());
+}
 
