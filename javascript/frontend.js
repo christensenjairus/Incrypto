@@ -59,6 +59,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             input.hide();
             mystatus.text('Error occurred. Username unknown. Please log out and log back in.');
         }
+        content.html($('<p>',{text: 'Welcome to the Incrypto Chat! Type in the text box below to begin chatting!'}));
     };
 
     /*
@@ -160,7 +161,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     * Add message to the chat window
     */
 function addMessage(author, message, color, dt) {
-    content.append('<p><span style="color:' + color + '">'
+    content.append('<p style="position: left"><span style="color:' + color + '">'
         + author + '</span> @ ' + (dt.getHours() < 10 ? '0'
         + dt.getHours() : dt.getHours()) + ':'
         + (dt.getMinutes() < 10
