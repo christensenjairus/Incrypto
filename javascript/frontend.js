@@ -95,6 +95,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             // from now user can start sending messages
             if (DEBUG) console.log("user should be able to type now")
             input.click();
+            input.focus();
         } else if (json.type === 'history') { // entire message history
             // insert every single message to the chat window
             for (var i=0; i < json.data.length; i++) {
@@ -149,8 +150,8 @@ $(function() { // this syntax means it's a function that will be run once once d
     /*
     * Add message to the chat window
     */
-    function addMessage(author, message, color, dt) {
-    content.prepend('<p><span style="color:' + color + '">'
+function addMessage(author, message, color, dt) {
+    content.append('<p><span style="color:' + color + '">'
         + author + '</span> @ ' + (dt.getHours() < 10 ? '0'
         + dt.getHours() : dt.getHours()) + ':'
         + (dt.getMinutes() < 10
