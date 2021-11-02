@@ -6,7 +6,6 @@ const Store = require('electron-store')
 const store = new Store()
 var openInEditor = require('open-in-editor');
 const {ipcMain} = require('electron')
-// require('@electron/remote/main').initialize()
 require('electron-reload')(__dirname) // this will allow electron to reload on changes
 
 const path = require('path')
