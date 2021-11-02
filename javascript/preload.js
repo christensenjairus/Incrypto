@@ -1,3 +1,7 @@
+/*
+  I HAVE NO IDEA HOW TO EXPLAIN THIS FILE. DON'T WORRY ABOUT IT
+*/
+
 const electron = require('electron');
 
 process.once('loaded', () => {

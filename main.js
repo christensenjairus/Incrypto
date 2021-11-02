@@ -1,3 +1,8 @@
+/*
+    THIS IS THE GUTS OF THE APP. IT CONTROLS WINDOWS, SETTINGS, BAR MENU, ETC. 
+    You can run functions in this file from other files using IpcRenderer. (see example at end where we log in)
+*/
+
 
 const {app, BrowserWindow, Menu, MenuItem} = require('electron')
 const shell = require('electron').shell
@@ -331,7 +336,7 @@ function replaceCurrentWindow(file) {
 ipcMain.handle('login', async (event, someArgument) => {
     // const result = await doSomeWork(someArgument)
     switchToChatPage();
-    mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools(); // open dev tools on chat launch
     // return result
     return true;
 })

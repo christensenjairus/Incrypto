@@ -1,3 +1,7 @@
+/*
+    SCRIPT FOR CONTROLLING LOGIN AND REGISTRATION PAGES
+*/
+
 const { ipcRenderer } = require('electron');
 const Store = require('electron-store')
 const store = new Store(); // initalize Store

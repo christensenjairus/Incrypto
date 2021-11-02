@@ -1,3 +1,7 @@
+/*
+    SCRIPT FOR CONTROLLING CHAT CLIENT AND INDEX.HTML
+*/
+
 const Store = require('electron-store');
 const { server } = require('websocket');
 const store = new Store();
