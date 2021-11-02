@@ -53,6 +53,22 @@ if (document.getElementById('submit') != null) {
           }
       }
   });
+
+  var password = document.getElementById("password");
+  password.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("submit").click();
+    }
+  });
+
+  var serverName = document.getElementById("serverName");
+  serverName.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("submit").click();
+    }
+  });
 }
 
 if (document.getElementById('register') != null) {
@@ -84,6 +100,22 @@ if (document.getElementById('register') != null) {
       ipcRenderer.invoke('login', "").then((result) => { /* THIS FUNCTION RUNS THE "LOGIN" HANDLER IN MAIN.JS */})
       return false;
   })
+
+  var password2 = document.getElementById("password2");
+  password2.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("register").click();
+    }
+  });
+
+  var serverName = document.getElementById("serverName");
+  serverName.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("register").click();
+    }
+  });
 }
 
 $(function() { // run this as soon as the document loads
@@ -92,3 +124,4 @@ $(function() { // run this as soon as the document loads
     }
     document.getElementById("serverName").value = store.get("serverName", "");
 });
+
