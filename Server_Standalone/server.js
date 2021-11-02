@@ -46,26 +46,34 @@ wsServer.on('request', function(request) {
 	}
 	connection.on('message', function(message) {
 		if (message.type === 'utf8') {
-			if (userName === false) {
-				userName = htmlEntities(message.utf8Data);
-				userColor = colors.shift();
-				connection.sendUTF(JSON.stringify({ type:'color', data: userColor }));
-				console.log(' User is known as: ' + userName + ' with ' + userColor + ' color.');
-			} else {
-				console.log(' Received Message from ' + userName + ': ' + message.utf8Data);
+			console.log(message.utf8Data)
+			let inComingMsg = JSON.parse(message.utf8Data)
+			userName = inComingMsg.user
+			let msg = inComingMsg.msg
+			userColor = inComingMsg.userColor
+			console.log("UserName: " + userName + " sent " + msg + ". They have color " + userColor + " and encryption " + inComingMsg.encryption)
+			// console.log(JSON.stringify(inComingMsg))
+			// if (userName === false) {
+			// 	userName = htmlEntities(message.utf8Data);
+			// 	userColor = colors.shift();
+			// 	connection.sendUTF(JSON.stringify({ type:'color', data: userColor }));
+			// 	console.log(' User is known as: ' + userName + ' with ' + userColor + ' color.');
+			// } else {
+				// console.log(' Received Message from ' + userName + ': ' + message.utf8Data);
 				var obj = {
-					time: (new Date()).getTime(),
-					text: htmlEntities(message.utf8Data),
+					time: inComingMsg.time,
+					text: htmlEntities(msg),
 					author: userName,
-					color: userColor
+					color: userColor,
+					encryption: inComingMsg.encryption
 				};
-				history.push(obj);
+				history.push(obj); // save messages
 				history = history.slice(-100);
 				var json = JSON.stringify({ type:'message', data: obj });
-				for (var i=0; i < clients.length; i++) {
+				for (var i=0; i < clients.length; i++) { // send history to users
 					clients[i].sendUTF(json);
 				}
-			}
+			// }
 		}
 	});
 	connection.on('close', function(connection) {

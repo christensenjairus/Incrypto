@@ -156,6 +156,42 @@ function createWindow(width, height) {
                     {role: 'togglefullscreen'}
                 ]
                 },{
+                    label: 'Chat Color',
+                    submenu: [
+                        { label: 'Red', click() {
+                            let username = store.get("lastUser", "ALL")
+                            store.set(username+"_Color", "red")
+                            switchToChatPage()}},
+                        { label: 'Pink', click() {
+                            let username = store.get("lastUser", "ALL")
+                            store.set(username+"_Color", "pink")
+                            switchToChatPage()}},
+                        { label: 'Purple', click() {
+                            let username = store.get("lastUser", "ALL")
+                            store.set(username+"_Color", "purple")
+                            switchToChatPage()}},
+                        { label: 'Green', click() {
+                            let username = store.get("lastUser", "ALL")
+                            store.set(username+"_Color", "green")
+                            switchToChatPage()}},
+                        { label: 'Blue', click() {
+                            let username = store.get("lastUser", "ALL")
+                            store.set(username+"_Color", "blue")
+                            switchToChatPage()}},
+                        { label: 'Orange', click() {
+                            let username = store.get("lastUser", "ALL")
+                            store.set(username+"_Color", "orange")
+                            switchToChatPage()}},
+                        { label: 'Yellow', click() {
+                            let username = store.get("lastUser", "ALL")
+                            store.set(username+"_Color", "yellow")
+                            switchToChatPage()}},
+                        { label: 'Brown', click() {
+                            let username = store.get("lastUser", "ALL")
+                            store.set(username+"_Color", "brown")
+                            switchToChatPage()}}
+                    ]
+                },{
                 role: 'window',
                 submenu: [
                     {role: 'minimize'},
