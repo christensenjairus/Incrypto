@@ -12,13 +12,6 @@
         },
         "args" : ["."],
         "outputCapture": "std"
-      },
-      {
-        "type": "pwa-chrome",
-        "request": "launch",
-        "name": "Launch index.html",
-        "url": "http://localhost:8000",
-        "file": "${workspaceFolder}/html/index.html"
       }
     ]
   }
