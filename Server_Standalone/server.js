@@ -11,6 +11,8 @@ var WebSocketClient = require('websocket').client;
 var WebSocketFrame  = require('websocket').frame;
 var WebSocketRouter = require('websocket').router;
 var W3CWebSocket = require('websocket').w3cwebsocket;
+const Store = require('electron-store');
+const store = new Store();
 
 "use strict";
 process.title = 'Chat_Server';
@@ -41,9 +43,7 @@ wsServer.on('request', function(request) {
 	var userName = false;
 	var userColor = false;
 	console.log(connection.remoteAddress + 'is connected.');
-	if (history.length > 0) {
-		connection.sendUTF(JSON.stringify({ type: 'history', data: history} ));
-	}
+	sendHistory(connection)
 	connection.on('message', function(message) {
 		if (message.type === 'utf8') {
 			console.log(message.utf8Data)
@@ -51,6 +51,20 @@ wsServer.on('request', function(request) {
 			userName = inComingMsg.user
 			let msg = inComingMsg.msg
 			userColor = inComingMsg.userColor
+			console.log('Message type: ' + inComingMsg.type)
+			if (inComingMsg.type == "colorChange") {
+				// do something
+				changeMessagesColor(userName, userColor, inComingMsg)
+				sendHistoryToAll();
+				return;
+			}
+			if (inComingMsg.type == "historyRequest") {
+				// send history
+				console.log("history route chosen")
+				sendHistory(connection);
+				return
+			}
+			store.set(userName+"_Color", userColor);
 			console.log("UserName: " + userName + " sent " + msg + ". They have color " + userColor + " and encryption " + inComingMsg.encryption)
 			// console.log(JSON.stringify(inComingMsg))
 			// if (userName === false) {
@@ -69,6 +83,7 @@ wsServer.on('request', function(request) {
 				};
 				history.push(obj); // save messages
 				history = history.slice(-100);
+				changeMessagesColor(userName, userColor, inComingMsg);
 				var json = JSON.stringify({ type:'message', data: obj });
 				for (var i=0; i < clients.length; i++) { // send history to users
 					clients[i].sendUTF(json);
@@ -93,3 +108,33 @@ wsServer.on('request', function(request) {
 // function getRandomArbitrary(min, max) {
 // 	return Math.floor(Math.random() * (max - min) + min);
 // }
+
+function changeMessagesColor(userName, userColor, inComingMsg) {
+	history.forEach(function (item, index) {
+		if (item.author == inComingMsg.user && item.color != userColor) {
+			console.log(item.text + " -> changed to color " + userColor)
+			item.color = userColor;
+		}
+	});
+}
+
+function sendHistory(connection) {
+	if (history.length > 0) {
+		connection.sendUTF(JSON.stringify({ type: 'history', data: history} ));
+	}
+}
+
+function sendToAll(json) {
+	for (var i=0; i < clients.length; i++) { // send history to users
+		clients[i].sendUTF(json);
+	}
+}
+
+function sendHistoryToAll() {
+	for (var i=0; i < clients.length; i++) { // send history to users
+		// clients[i].sendUTF();
+		if (history.length > 0) {
+			clients[i].sendUTF(JSON.stringify({ type: 'history', data: history} ));
+		}
+	}
+}

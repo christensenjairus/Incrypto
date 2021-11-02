@@ -3,7 +3,7 @@
 */
 
 const Store = require('electron-store');
-const { server } = require('websocket');
+const { server, connection } = require('websocket');
 const store = new Store();
 
 const serverName = store.get("serverName", ""); // default to "" if no valid input
@@ -16,6 +16,11 @@ var content = $('#content');
 var input = $('#input');
 var mystatus = $('#status');
 var myColor = false;
+
+var colors = ['purple', 'plum', 'orange', 'red', 'green', 'blue', 'magenta'];
+colors.sort(function(a,b) {
+    return Math.random() > 0.5;	
+});
 
 $(function() { // this syntax means it's a function that will be run once once document.ready is true
     "use strict";
@@ -102,6 +107,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         //     }, 0); // lowered the animation time to zero so it wasn't annoying on reload
         if (json.type === 'history') { // entire message history
             // insert every single message to the chat window
+            document.getElementById("content").innerHTML = "";
             for (var i=0; i < json.data.length; i++) {
                 addMessage(json.data[i].author, json.data[i].text, json.data[i].color, new Date(json.data[i].time));
             }
@@ -135,7 +141,7 @@ $(function() { // this syntax means it's a function that will be run once once d
 
 
             // send the message as JSON
-            let message = {"user": myName, "msg":msg, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
+            let message = {"type":"message", "user": myName, "msg":msg, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
             connection.send(JSON.stringify(message));
             console.log("Message sent: \n" + JSON.stringify(message));
             $(this).val('');
@@ -160,12 +166,42 @@ $(function() { // this syntax means it's a function that will be run once once d
     /*
     * Add message to the chat window
     */
-function addMessage(author, message, color, dt) {
-    content.append('<p><span style="color:' + color + '">'
+    function addMessage(author, message, color, dt) {
+        content.append('<p><span style="color:' + color + '">'
         + author + '</span> @ ' + (dt.getHours() < 10 ? '0'
         + dt.getHours() : dt.getHours()) + ':'
         + (dt.getMinutes() < 10
         ? '0' + dt.getMinutes() : dt.getMinutes())
         + ': ' + message + '</p>');
     }
+
+    document.getElementById('status').addEventListener('click', () => {
+        // newColor = colors.shift();
+        var newColor = getRandomColor(); // generate random color
+        myColor = newColor
+        mystatus.css('color', myColor)
+        store.set(myName + "_Color", newColor)
+        document.getElementById("content").innerHTML + "";
+        let message = {"type":"colorChange", "user": myName, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
+        connection.send(JSON.stringify(message));
+        
+        // let message = {"type":"historyRequest", "user": myName, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
+        // connection.send(JSON.stringify(message));
+        console.log("Message sent: \n" + JSON.stringify(message));
+    })
 });
+
+// _________________ Helper Functions ________________________________
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+function setRandomColor() {
+    $("#colorpad").css("background-color", getRandomColor());
+}
+
