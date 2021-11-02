@@ -253,15 +253,15 @@ function openEncryptionFileForEditing() {
 }
 
 function switchToLoginPage() {
-    createChildWindow("login.html")
+    replaceCurrentWindow("login.html")
 }
 
 function switchToRegistrationPage() {
-    createChildWindow("register.html")
+    replaceCurrentWindow("register.html")
 }
 
 function switchToChatPage() {
-    createChildWindow("index.html")
+    replaceCurrentWindow("index.html")
 }
 
 function createChildWindow(file) {
@@ -270,11 +270,11 @@ function createChildWindow(file) {
     childWindow = new BrowserWindow({
         width: width,
         height: height,
-        modal: true,
+        // modal: true,
         show: false,
         parent: mainWindow, // Make sure to add parent window here
     
-      // Make sure to add webPreferences with below configuration
+        // Make sure to add webPreferences with below configuration
         webPreferences: {
             preload: path.join(__dirname, './javascript/preload.js'),
             allowRunningInsecureContent: true, // this setting is not ideal, but for now, necessary
@@ -287,7 +287,7 @@ function createChildWindow(file) {
     
     // Child window loads settings.html file
     // childWindow.loadFile("settings.html");
-    mainWindow.loadURL(url.format({
+    childWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'html/' + file),
         protocol: 'file:',
         slashes: true
@@ -296,6 +296,36 @@ function createChildWindow(file) {
     childWindow.once("ready-to-show", () => {
         childWindow.show();
     });
+
+    childWindow.on('resize', () => {
+        // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with
+        // the height, width, and x and y coordinates.
+        let { width, height } = mainWindow.getBounds();
+        
+        // Now that we have them, save them using the `set` method.
+        store.set('windowWidth', width);
+        store.set('windowHeight', height);
+    });
+
+    // Open the DevTools.
+    // childWindow.webContents.openDevTools(); // uncomment this for DevTools
+
+    // Emitted when the window is closed.
+    childWindow.on('closed', function() {
+        // Dereference the window object, usually you would store windows
+        // in an array if your app supports multi windows, this is the time
+        // when you should delete the corresponding element.
+        windows.delete(mainWindow)
+        mainWindow = null
+    })
+}
+
+function replaceCurrentWindow(file) {
+    mainWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'html/' + file),
+        protocol: 'file:',
+        slashes: true
+    }))
 }
 
 ipcMain.handle('login', async (event, someArgument) => {
