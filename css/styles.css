@@ -33,8 +33,9 @@ footer {
     overflow-y: scroll; 
     border:1px solid #CCC;
     margin-top:10px; 
-    min-height: 86vh; 
-    height: 86vh;
+    min-height: 93vh; 
+    height: 93vh;
+    min-width: 97%;
 }
 #input { 
     border-radius:2px; 
