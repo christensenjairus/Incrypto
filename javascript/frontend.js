@@ -12,7 +12,7 @@ const serverName = store.get("serverName", ""); // default to "" if no valid inp
 const portNum = '42069'
 const serverIPandPortNum = serverName + ':' + portNum; // <---- Insert hostname or IP of server here
 
-const DEBUG = false; // turn this on & use it with 'if(DEBUG)' to display more console.log info
+const DEBUG = true; // turn this on & use it with 'if(DEBUG)' to display more console.log info
 
 // const username = await import('./login.js')
 // import { username } from './login.js';
@@ -132,6 +132,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             div.animate({
                 scrollTop: div[0].scrollHeight
             }, 1000);
+            showNotification(json.data.author, json.data.text)
         } else if (json.type == "logout") {
             alert("'You've logged in somewhere else. You'll be logged out here")
             connection.close();
@@ -225,4 +226,14 @@ function setRandomColor() {
     $("#colorpad").css("background-color", getRandomColor());
 }
 
+function showNotification(author, text) {
+    const NOTIFICATION_TITLE = 'New message from ' + author
+    const NOTIFICATION_BODY = 'text'
+    // const CLICK_MESSAGE = 'Notification clicked!'
+    new Notification(NOTIFICATION_TITLE, { body: NOTIFICATION_BODY }).show()
+    .onclick = () => {
+        document.getElementById('input').focus();
+    }
+    console.log("notification should occur now")
+}
 
