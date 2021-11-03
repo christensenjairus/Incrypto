@@ -25,7 +25,7 @@ const DEBUG = false; // turn this on & use it with 'if(DEBUG)' to display more c
 //     console.log("error in import")
 // })
 // myName = false;
-var myName = false;
+var myName;
 ipcRenderer.invoke('getName', "").then((result) => { 
     myName = result;
 });
@@ -163,6 +163,10 @@ $(function() { // this syntax means it's a function that will be run once once d
             mystatus.text('Error');
             input.attr('disabled', 'disabled').val('Can\'t communicate with the WebSocket server. Reload with "View" > "Reload"');
         }
+        // if (connection.readyState === 1) {
+        //     mystatus.text(myName + ":");
+        //     input.removeAttr('disabled')
+        // }
     }, 3000);
 
     /*
