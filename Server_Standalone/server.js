@@ -43,7 +43,7 @@ wsServer.on('request', function(request) {
 	var userName = false;
 	var userColor = false;
 	console.log(connection.remoteAddress + 'is connected.');
-	sendHistory(connection)
+	// sendHistory(connection)
 	connection.on('message', function(message) {
 		if (message.type === 'utf8') {
 			console.log(message.utf8Data)
@@ -58,10 +58,39 @@ wsServer.on('request', function(request) {
 				sendHistoryToAll();
 				return;
 			}
-			if (inComingMsg.type == "historyRequest") {
+			else if (inComingMsg.type == "historyRequest") {
 				// send history
 				console.log("history route chosen")
 				sendHistory(connection);
+				return
+			}
+			else if (inComingMsg.type === 'AuthRequest') {
+				console.log("auth request!")
+				// check to see if credentials are valid!
+				var json = JSON.stringify({ type:'AuthResponse', result: "failure", key:"" });
+				let key = checkLoginCreds(inComingMsg.user, inComingMsg.passwordHash) // anything not "" is a valid key
+				if (key != "") {
+					json = JSON.stringify({ type:'AuthResponse', result: "success", key:key }); // make valid response
+				}
+				// send response
+				connection.sendUTF(json)
+				console.log("Sending to client:")
+				console.log(json)
+				return;
+			}
+			else if (inComingMsg.type === 'RegistrationRequest') {
+				console.log("registration request!")
+				var json = JSON.stringify({ type:'RegistrationResponse', result: "failure", key:"" });
+				let key = checkRegistrationCreds(inComingMsg.user, inComingMsg.passwordHash) // anything not "" is a valid key
+				if (key == "username_exists") {
+					json = JSON.stringify({ type:'RegistrationResponse', result: "failure", key:"username_exists" });
+				}
+				else if (key != "") {
+					json = JSON.stringify({ type:'RegistrationResponse', result: "success", key:key }); // make valid response
+				}
+				connection.sendUTF(json)
+				console.log("Sending to client:")
+				console.log(json)
 				return
 			}
 			store.set(userName+"_Color", userColor);
@@ -138,3 +167,44 @@ function sendHistoryToAll() {
 		}
 	}
 }
+
+function checkLoginCreds(username, passhash) {
+	/* use this to bypass registration
+	store.set("username_" + username, username);
+	store.set("passwordHash_" + username, passhash)
+	*/
+	if (store.get("username_" + username, "") == "") { // username does not exist
+		return "";
+	}
+	if (passhash === store.get("passwordHash_" + username)) {
+		var key = createGuid();  
+		store.set(username + "_key", key);
+		return key;
+	}
+	else{
+		return ""; // password did not exist
+	}
+}
+
+function checkRegistrationCreds(username, passhash) {
+	if (store.get("username_" + username, "") != "") { // username already exists
+		return "username_exists";
+	}
+	store.set("username_" + username, username);
+	store.set("passwordHash_" + username, passhash);
+	var key = createGuid();  
+	store.set(username + "_key", key);
+	return key;
+}
+
+function createGuid() {  
+	function _p8(s) {  
+		var p = (Math.random().toString(16)+"000000000").substr(2,8);  
+		return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p ;  
+	}  
+	return _p8() + _p8(true) + _p8(true) + _p8();  
+}  
+
+// hashCode = function(password){
+//     return password.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);              
+// }

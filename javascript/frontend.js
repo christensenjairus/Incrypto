@@ -53,6 +53,11 @@ $(function() { // this syntax means it's a function that will be run once once d
         if (DEBUG) console.log("color is: " + myColor)
         if (myName != "") {
             mystatus.text(myName + ': ').css('color', myColor);
+            // get history of chat
+            let message = {"type":"historyRequest", "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
+            connection.send(JSON.stringify(message));
+            console.log("Message sent: \n" + JSON.stringify(message));
+            // end of getting chat history
             input.prop("disabled", false);
             if (DEBUG) console.log("user should be able to type now")
             input.focus();
@@ -80,10 +85,6 @@ $(function() { // this syntax means it's a function that will be run once once d
     * What to do when the socket receives a message
     */
     connection.onmessage = function (message) {
-        // try to parse JSON message. Because we know that the server
-        // always returns JSON this should work without any problem but
-        // we should make sure that the massage is not chunked or
-        // otherwise damaged.
         try {
             var json = JSON.parse(message.data);
         } catch (e) {
@@ -91,21 +92,6 @@ $(function() { // this syntax means it's a function that will be run once once d
             return;
         }
         console.log("Message received: \n" + message.data);
-        // NOTE: if you're not sure about the JSON structure
-        // check the server source code above
-        // first response from the server with user's color
-        // if (json.type === 'color') {
-        //     myColor = json.data;
-        //     mystatus.text(myName + ': ').css('color', myColor);
-        //     input.prop("disabled", false);
-        //     // input.removeAttr('disabled').focus();
-        //     // from now user can start sending messages
-        //     if (DEBUG) console.log("user should be able to type now")
-        //     input.focus();
-        //     var div = $('#content');
-        //     div.animate({
-        //         scrollTop: div[0].scrollHeight
-        //     }, 0); // lowered the animation time to zero so it wasn't annoying on reload
         if (json.type === 'history') { // entire message history
             // insert every single message to the chat window
             document.getElementById("content").innerHTML = "";
@@ -119,7 +105,6 @@ $(function() { // this syntax means it's a function that will be run once once d
             addMessage(json.data.author, json.data.text, json.data.color, new Date(json.data.time));
             if (DEBUG) console.log("should be able to type - message received")
             input.focus();
-            // content.scrollTop = content.scrollHeight
             var div = $('#content');
             div.animate({
                 scrollTop: div[0].scrollHeight
@@ -167,8 +152,8 @@ $(function() { // this syntax means it's a function that will be run once once d
     /*
     * Add message to the chat window
     */
-function addMessage(author, message, color, dt) {
-    content.append('<p style="position: left"><span style="color:' + color + '">'
+    function addMessage(author, message, color, dt) {
+        content.append('<p style="position: left"><span style="color:' + color + '">'
         + author + '</span> @ ' + (dt.getHours() < 10 ? '0'
         + dt.getHours() : dt.getHours()) + ':'
         + (dt.getMinutes() < 10
@@ -205,4 +190,5 @@ function getRandomColor() {
 function setRandomColor() {
     $("#colorpad").css("background-color", getRandomColor());
 }
+
 

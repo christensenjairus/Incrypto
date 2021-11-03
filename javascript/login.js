@@ -4,6 +4,7 @@
 
 const { ipcRenderer } = require('electron');
 const Store = require('electron-store')
+const { server, connection } = require('websocket');
 const store = new Store(); // initalize Store
 var attempt = 3; // Variable to count number of attempts.
 
@@ -22,35 +23,43 @@ if (document.getElementById('submit') != null) {
         alert("Please enter a valid server name");
         return false;
       }
-      if (store.get("username_" + username, "") == "") { // username does not exist
-          --attempt;
-          alert("Username does not exist. You have "+attempt+" attempts left");
-          if(attempt == 0){
-            document.getElementById("username").disabled = true;
-            document.getElementById("password").disabled = true;
-            document.getElementById("submit").disabled = true;
-          }
-          return false;
+
+      // open web socket and verify credentials
+      const portNum = '42069'
+      const serverIPandPortNum = serverName + ':' + portNum; // <---- Insert hostname or IP of server here
+      
+      // if user is running mozilla then use it's built-in WebSocket
+      window.WebSocket = window.WebSocket || window.MozWebSocket;
+      // if browser doesn't support WebSocket, just show some notification and exit
+      if (!window.WebSocket) {
+        alert('Sorry, but your browser doesn’t support WebSocket.');
+        return;
       }
-      if (hashCode(password) === store.get("passwordHash_" + username)) {
-          // worked = true;
-          store.set("username_" + username, username);
+      // open connection
+      var connection = new WebSocket('ws://' + serverIPandPortNum);
+      connection.onopen = function () {
+        console.log('connection to server made')
+        let message = {"type":"AuthRequest", "user": username, "passwordHash":hashCode(password), "encryption":"plain_text", "time": (new Date()).getTime()}
+        connection.send(JSON.stringify(message));
+        console.log("Message sent: \n" + JSON.stringify(message));
+      }
+      connection.onerror = function (error) {
+        console.log("error in connection to server")
+      }
+      connection.onmessage = function(message) {
+        console.log(message.data)
+        let credResponse = JSON.parse(message.data);
+        if (credResponse.result == "success") {
+          console.log("success in login");
           store.set("lastUser", username);
           store.set("serverName", serverName);
-          alert ("Login successful");
-          ipcRenderer.invoke('login', "").then((result) => { /* THIS FUNCTION RUNS THE "LOGIN" HANDLER IN MAIN.JS */})
-          return false;
-      }
-      else{// sandbox: true,
-          attempt --;// Decrementing by one.
-          alert("Incorrect password. You have "+attempt+" attempts left");
-          // Disabling fields after 3 attempts.
-          if(attempt == 0){
-              document.getElementById("username").disabled = true;
-              document.getElementById("password").disabled = true;
-              document.getElementById("submit").disabled = true;
-              return false;
-          }
+          ipcRenderer.invoke('login', "").then((result) => { 
+            // THIS FUNCTION RUNS THE "LOGIN" HANDLER IN MAIN.JS
+          })
+        }
+        else {
+          console.log("login failed")
+        }
       }
   });
 
@@ -83,22 +92,55 @@ if (document.getElementById('register') != null) {
         alert("Please enter a valid server name");
         return false;
       }
-      if (store.get("username_" + username, "") != "") {
-        console.log("username taken");
-        return;
-      }
+
       if (password != password2) {
-        console.log("passwords to not match");
-        return;
+        alert("Passwords do not match")
+        return false;
       }
 
-      store.set("username_" + username, username);
-      store.set("passwordHash_" + username, hashCode(password));
-      store.set("lastUser", username);
-      store.set("serverName", serverName);
-      alert ("Registration successful");
-      ipcRenderer.invoke('login', "").then((result) => { /* THIS FUNCTION RUNS THE "LOGIN" HANDLER IN MAIN.JS */})
-      return false;
+      // open web socket and verify credentials
+      const portNum = '42069'
+      const serverIPandPortNum = serverName + ':' + portNum; // <---- Insert hostname or IP of server here
+      
+      // if user is running mozilla then use it's built-in WebSocket
+      window.WebSocket = window.WebSocket || window.MozWebSocket;
+      // if browser doesn't support WebSocket, just show some notification and exit
+      if (!window.WebSocket) {
+        alert('Sorry, but your browser doesn’t support WebSocket.');
+        return;
+      }
+      // open connection
+      var connection = new WebSocket('ws://' + serverIPandPortNum);
+      connection.onopen = function () {
+        console.log('connection to server made')
+        let message = {"type":"RegistrationRequest", "user": username, "passwordHash":hashCode(password), "encryption":"plain_text", "time": (new Date()).getTime()}
+        connection.send(JSON.stringify(message));
+        console.log("Message sent: \n" + JSON.stringify(message));
+      }
+      connection.onerror = function (error) {
+        console.log("error in connection to server")
+        alert("Could not connect to " + serverName)
+      }
+      connection.onmessage = function(message) {
+        console.log(message.data)
+        let credResponse = JSON.parse(message.data);
+        if (credResponse.result == "success") {
+          console.log("success in registration");
+          store.set("lastUser", username);
+          store.set("serverName", serverName);
+          ipcRenderer.invoke('login', "").then((result) => { 
+            // THIS FUNCTION RUNS THE "LOGIN" HANDLER IN MAIN.JS
+          })
+        }
+        else {
+          console.log("registration failed")
+          if (credResponse.key == "username_exists") {
+            alert("Username is taken. Please try another");
+            return false;
+          }
+          alert("Registration failure");
+          return false;
+        }}
   })
 
   var password2 = document.getElementById("password2");
