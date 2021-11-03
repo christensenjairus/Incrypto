@@ -168,7 +168,7 @@ function createWindow(width, height) {
                     submenu: [
                         {label: 'Change code editor',
                             submenu: [
-                                {label: "VS Code",
+                                {label: "VS Code (default)",
                                     click() {
                                         codeEditor = "code"
                                         store.set("codeEditor", "code");
