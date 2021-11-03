@@ -41,7 +41,7 @@ if (document.getElementById('submit') != null) {
         return;
       }
       // open connection
-      var connection = new WebSocket('ws://' + serverIPandPortNum);
+      var connection = new WebSocket('wzs://' + serverIPandPortNum);
       connection.onopen = function () {
         console.log('connection to server made')
         let message = {"type":"AuthRequest", "user": username, "passwordHash":hashCode(password), "encryption":"plain_text", "time": (new Date()).getTime()}
