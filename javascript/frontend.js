@@ -132,7 +132,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             div.animate({
                 scrollTop: div[0].scrollHeight
             }, 1000);
-            showNotification(json.data.author, json.data.text)
+            if (json.data.author != myName) showNotification(json.data.author, json.data.text)
         } else if (json.type == "logout") {
             alert("'You've logged in somewhere else. You'll be logged out here")
             connection.close();
@@ -228,7 +228,7 @@ function setRandomColor() {
 
 function showNotification(author, text) {
     const NOTIFICATION_TITLE = 'New message from ' + author
-    const NOTIFICATION_BODY = 'text'
+    const NOTIFICATION_BODY = text
     // const CLICK_MESSAGE = 'Notification clicked!'
     new Notification(NOTIFICATION_TITLE, { body: NOTIFICATION_BODY }).show()
     .onclick = () => {
