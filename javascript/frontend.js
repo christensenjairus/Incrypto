@@ -12,7 +12,7 @@ const serverName = store.get("serverName", ""); // default to "" if no valid inp
 const portNum = '42069'
 const serverIPandPortNum = serverName + ':' + portNum; // <---- Insert hostname or IP of server here
 
-const DEBUG = true; // turn this on & use it with 'if(DEBUG)' to display more console.log info
+const DEBUG = false; // turn this on & use it with 'if(DEBUG)' to display more console.log info
 
 // const username = await import('./login.js')
 // import { username } from './login.js';
@@ -168,7 +168,7 @@ $(function() { // this syntax means it's a function that will be run once once d
 
     /**
     * This method is optional. If the server wasn't able to
-    * respond to the in 3 seconds then show some error message
+    * respond to the in 5 seconds then show some error message
     * to notify the user that something is wrong.
     */
     setInterval(function() {
@@ -176,11 +176,12 @@ $(function() { // this syntax means it's a function that will be run once once d
             mystatus.text('Error');
             input.attr('disabled', 'disabled').val('Can\'t communicate with the WebSocket server. Reload with "View" > "Reload"');
         }
-        // if (connection.readyState === 1) {
-        //     mystatus.text(myName + ":");
-        //     input.removeAttr('disabled')
-        // }
-    }, 3000);
+        else {
+            let message = {"type":"historyRequest", "user":myName, "color":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
+            connection.send(JSON.stringify(message)); // reget the history every 3 seconds
+            // console.log("got history")
+        }
+    }, 5000);
 
     /*
     * Add message to the chat window
