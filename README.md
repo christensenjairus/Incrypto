@@ -58,3 +58,7 @@ Note: If you're using Linux Bash for Windows, [see this guide](https://www.howto
 
 ## Client-Server Javascript Communication Resources
 - [WebSocket Example](https://www.cronj.com/blog/node-js-websocket-examples-chat-features-client-server-communication/)
+
+TODO:
+* Create a logout button on the chat page that will end the client connection, then send via IPCRenderer the switch to the login window. Ending the client connection will cause the number of connections to work when it comes to double-logins.
+* We need another way to know the logged in user besides checking which user logged in last in the store
