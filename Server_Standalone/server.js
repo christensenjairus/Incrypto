@@ -21,6 +21,7 @@ const webSocketsServerPort = 42069;
 const webSocketServer = require('websocket').server;
 const http = require('http');
 var history = [ ];
+restoreFromFile();
 var clients = [ ];
 function htmlEntities(str) {
 	return String(str).replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"');
@@ -219,11 +220,21 @@ function createGuid() {
 function saveToFile(obj) {
 	history.push(obj); // save messages
 	history = history.slice(-100);
-	fs.writeFile("chat.txt", JSON.stringify(obj), function(err) {
+	fs.writeFile("chat.txt", JSON.stringify(history), function(err) {
 		if (err) {
 			console.log(err);
 		}
 	});
+}
+
+function restoreFromFile() {
+	fs.readFile('chat.txt', function read(err, data) {
+		if (err) {
+			console.log(err);
+			return;
+		}
+		history = JSON.parse(data);
+	})
 }
 
 // hashCode = function(password){
