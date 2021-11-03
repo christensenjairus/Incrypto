@@ -8,14 +8,18 @@ const { server, connection } = require('websocket');
 const store = new Store(); // initalize Store
 var attempt = 3; // Variable to count number of attempts.
 
-hashCode = function(password){
+function hashCode(password){
   return password.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);              
 }
+
+export let username = "";
 
 if (document.getElementById('submit') != null) {
   const loginButton = document.getElementById('submit');
   loginButton.addEventListener('click', () => {
-      var username = document.getElementById("username").value;
+      username = document.getElementById("username").value;
+      ipcRenderer.invoke('setName', username).then((result) => { 
+      });
       var password = document.getElementById("password").value;
       var serverName = document.getElementById("serverName").value;
 
@@ -97,7 +101,9 @@ if (document.getElementById('submit') != null) {
 if (document.getElementById('register') != null) {
   const registerButton = document.getElementById('register')
   registerButton.addEventListener('click', () => {
-      var username = document.getElementById("usernameReg").value;
+      username = document.getElementById("usernameReg").value;
+      ipcRenderer.invoke('setName', username).then((result) => { 
+      });
       var password = document.getElementById("password").value;
       var password2 = document.getElementById("password2").value;
       var serverName = document.getElementById("serverName").value;
@@ -177,8 +183,11 @@ if (document.getElementById('register') != null) {
 
 $(function() { // run this as soon as the document loads
     if (document.getElementById("username") != null) {
-        document.getElementById("username").value = store.get("lastUser", ""); // show last username used
+      document.getElementById("username").value = store.get("lastUser", ""); // show last username used
     }
-    document.getElementById("serverName").value = store.get("serverName", "");
+    if (document.getElementById("serverName") != null) {
+      document.getElementById("serverName").value = store.get("serverName", "");
+    }
 });
 
+module.exports = { username }

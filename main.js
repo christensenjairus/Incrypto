@@ -345,3 +345,15 @@ ipcMain.handle('login', async (event, someArgument) => {
     // return result
     return true;
 })
+
+let myName = false;
+
+ipcMain.handle('getName', async (event, someArgument) => {
+    return myName;
+})
+
+ipcMain.handle('setName', async (event, someArgument) => {
+    myName = someArgument;
+    console.log("name saved in main.js file: " + someArgument)
+    return true;
+})

@@ -23,7 +23,7 @@ const webSocketsServerPort = 42069;
 const webSocketServer = require('websocket').server;
 const http = require('http');
 var history = [ ];
-var myChat = "./Chat.txt"
+var myChat = "./chat.txt"
 if (fs.existsSync(myChat)) {
 	restoreFromFile();
 }

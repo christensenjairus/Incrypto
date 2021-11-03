@@ -2,8 +2,10 @@
     SCRIPT FOR CONTROLLING CHAT CLIENT AND INDEX.HTML
 */
 
+const { ipcMain } = require('electron');
 const Store = require('electron-store');
 const { server, connection } = require('websocket');
+// const { username } = require('./login.js');
 const store = new Store();
 
 const serverName = store.get("serverName", ""); // default to "" if no valid input
@@ -11,7 +13,22 @@ const portNum = '42069'
 const serverIPandPortNum = serverName + ':' + portNum; // <---- Insert hostname or IP of server here
 
 const DEBUG = false; // turn this on & use it with 'if(DEBUG)' to display more console.log info
+
+// const username = await import('./login.js')
+// import { username } from './login.js';
+// let myName = false;
+// import('./login.js').then(() => {
+//     myName = username
+//     console.log("Username is: " + username)
+// })
+// .catch( error => {
+//     console.log("error in import")
+// })
+// myName = false;
 var myName = false;
+ipcRenderer.invoke('getName', "").then((result) => { 
+    myName = result;
+});
 var content = $('#content');
 var input = $('#input');
 var mystatus = $('#status');
@@ -30,7 +47,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     mystatus = $('#status');
     // my color assigned by the server
     myColor = false;
-    myName = false;
+    // myName = false;
     // if user is running mozilla then use it's built-in WebSocket
     window.WebSocket = window.WebSocket || window.MozWebSocket;
     // if browser doesn't support WebSocket, just show some notification and exit
@@ -48,7 +65,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     */
     connection.onopen = function () {
         if (DEBUG) console.log("connection made")
-        myName = store.get("lastUser", ""); // TODO: get a better way of knowing who's logged in
+        // myName = store.get("lastUser", ""); // TODO: get a better way of knowing who's logged in
         myColor = store.get(myName+"_Color", "black"); // default color is black
         // if (DEBUG) console.log("color is: " + myColor)
         if (myName != "") {
