@@ -12,7 +12,7 @@ function hashCode(password){
   return password.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);              
 }
 
-export let username = "";
+let username = "";
 
 if (document.getElementById('submit') != null) {
   const loginButton = document.getElementById('submit');
@@ -189,5 +189,3 @@ $(function() { // run this as soon as the document loads
       document.getElementById("serverName").value = store.get("serverName", "");
     }
 });
-
-// module.exports = { username }
