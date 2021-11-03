@@ -93,7 +93,8 @@ wsServer.on('request', function(request) {
 					json = JSON.stringify({ type:'AuthResponse', result: "failure", key:key });
 				}
 				else if (key != "") {
-					json = JSON.stringify({ type:'AuthResponse', result: "success", key:key }); // make valid response
+					userColor = store.get(inComingMsg.user + "_Color", "black");
+					json = JSON.stringify({ type:'AuthResponse', color:userColor, result: "success", key:key }); // make valid response
 				}
 				// send response
 				connection.sendUTF(json)
@@ -112,7 +113,8 @@ wsServer.on('request', function(request) {
 					json = JSON.stringify({ type:'RegistrationResponse', result: "failure", key:"password_wrong" });
 				}
 				else if (key != "") {
-					json = JSON.stringify({ type:'RegistrationResponse', result: "success", key:key }); // make valid response
+					userColor = store.get(inComingMsg.user + "_Color", "black");
+					json = JSON.stringify({ type:'RegistrationResponse', color:userColor, result: "success", key:key }); // make valid response
 				}
 				connection.sendUTF(json)
 				if (DEBUG) console.log("Sending to client:")
@@ -161,6 +163,7 @@ wsServer.on('request', function(request) {
 // }
 
 function changeMessagesColor(userName, userColor, inComingMsg) {
+	store.set(userName + "_Color", userColor);
 	history.forEach(function (item, index) {
 		if (item.author == inComingMsg.user && item.color != userColor) {
 			if (DEBUG) console.log(item.text + " -> changed to color " + userColor)

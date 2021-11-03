@@ -12,7 +12,7 @@ const serverName = store.get("serverName", ""); // default to "" if no valid inp
 const portNum = '42069'
 const serverIPandPortNum = serverName + ':' + portNum; // <---- Insert hostname or IP of server here
 
-const DEBUG = false; // turn this on & use it with 'if(DEBUG)' to display more console.log info
+const DEBUG = true; // turn this on & use it with 'if(DEBUG)' to display more console.log info
 
 // const username = await import('./login.js')
 // import { username } from './login.js';
@@ -29,10 +29,17 @@ var myName;
 ipcRenderer.invoke('getName', "").then((result) => { 
     myName = result;
 });
+var myColor;
+ipcRenderer.invoke('getColor', "").then((result) => { 
+    myColor = result;
+});
+if (myColor == false) {
+    myColor = "black"
+}
+
 var content = $('#content');
 var input = $('#input');
 var mystatus = $('#status');
-var myColor = false;
 
 var colors = ['purple', 'plum', 'orange', 'red', 'green', 'blue', 'magenta'];
 colors.sort(function(a,b) {
@@ -46,7 +53,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     input = $('#input');
     mystatus = $('#status');
     // my color assigned by the server
-    myColor = false;
+    // myColor = false;
     // myName = false;
     // if user is running mozilla then use it's built-in WebSocket
     window.WebSocket = window.WebSocket || window.MozWebSocket;
@@ -66,7 +73,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     connection.onopen = function () {
         if (DEBUG) console.log("connection made")
         // myName = store.get("lastUser", ""); // TODO: get a better way of knowing who's logged in
-        myColor = store.get(myName+"_Color", "black"); // default color is black
+        // myColor = store.get(myName+"_Color", "black"); // default color is black
         // if (DEBUG) console.log("color is: " + myColor)
         if (myName != "") {
             mystatus.text(myName + ': ').css('color', myColor);

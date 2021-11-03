@@ -355,13 +355,25 @@ ipcMain.handle('logout', async (event, someArgument) => {
 })
 
 let myName = false;
+let myColor = false;
 
 ipcMain.handle('getName', async (event, someArgument) => {
     return myName;
 })
 
-ipcMain.handle('setName', async (event, someArgument) => {
-    myName = someArgument;
-    console.log("name saved in main.js file: " + someArgument)
+ipcMain.handle('getColor', async (event, someArgument) => {
+    return myColor;
+})
+
+ipcMain.handle('setName', async (event, name) => {
+    myName = name;
+    // console.log("name saved in main.js file: " + name)
+    return true;
+})
+
+ipcMain.handle('setColor', async (event, color) => {
+    // myName = name;
+    myColor = color;
+    // console.log("name saved in main.js file: " + color)
     return true;
 })

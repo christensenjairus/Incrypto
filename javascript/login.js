@@ -56,6 +56,9 @@ if (document.getElementById('submit') != null) {
         if (credResponse.result == "success") {
           console.log("success in login");
           store.set("lastUser", username);
+          ipcRenderer.invoke('setColor', credResponse.color).then((result => {
+            // set color so that chat knows what color to use
+          }))
           store.set("serverName", serverName);
           connection.close()
           ipcRenderer.invoke('login', "").then((result) => { 
@@ -147,6 +150,9 @@ if (document.getElementById('register') != null) {
         if (credResponse.result == "success") {
           console.log("success in registration");
           store.set("lastUser", username);
+          ipcRenderer.invoke('setColor', credResponse.color).then((result => {
+            // set color so that chat knows what color to use
+          }))
           store.set("serverName", serverName);
           connection.close()
           ipcRenderer.invoke('login', "").then((result) => { 
