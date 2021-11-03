@@ -15,17 +15,6 @@ const serverIPandPortNum = serverName + ':' + portNum; // <---- Insert hostname 
 
 const DEBUG = true; // turn this on & use it with 'if(DEBUG)' to display more console.log info
 
-// const username = await import('./login.js')
-// import { username } from './login.js';
-// let myName = false;
-// import('./login.js').then(() => {
-//     myName = username
-//     console.log("Username is: " + username)
-// })
-// .catch( error => {
-//     console.log("error in import")
-// })
-// myName = false;
 var myName;
 ipcRenderer.invoke('getName', "").then((result) => { 
     myName = result;
@@ -53,9 +42,6 @@ $(function() { // this syntax means it's a function that will be run once once d
     content = $('#content');
     input = $('#input');
     mystatus = $('#status');
-    // my color assigned by the server
-    // myColor = false;
-    // myName = false;
     // if user is running mozilla then use it's built-in WebSocket
     window.WebSocket = window.WebSocket || window.MozWebSocket;
     // if browser doesn't support WebSocket, just show some notification and exit
@@ -73,9 +59,6 @@ $(function() { // this syntax means it's a function that will be run once once d
     */
     connection.onopen = function () {
         if (DEBUG) console.log("connection made")
-        // myName = store.get("lastUser", ""); // TODO: get a better way of knowing who's logged in
-        // myColor = store.get(myName+"_Color", "black"); // default color is black
-        // if (DEBUG) console.log("color is: " + myColor)
         if (myName != "") {
             mystatus.text(myName + ': ').css('color', myColor);
             // get history of chat
@@ -123,6 +106,10 @@ $(function() { // this syntax means it's a function that will be run once once d
             for (var i=0; i < json.data.length; i++) {
                 addMessage(json.data[i].author, json.data[i].text, json.data[i].color, new Date(json.data[i].time));
             }
+            var div = $('#content');
+            div.animate({
+                scrollTop: div[0].scrollHeight
+            }, 0);
         } else if (json.type === 'message') { // it's a single message
             // let the user write another message
             input.prop("disabled", false)

@@ -50,6 +50,7 @@ if (document.getElementById('submit') != null) {
       }
       connection.onerror = function (error) {
         console.log("error in connection to server")
+        alert("Could not connect to server")
       }
       connection.onmessage = function(message) {
         console.log(message.data)
