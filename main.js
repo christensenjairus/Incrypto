@@ -8,10 +8,12 @@ const {app, BrowserWindow, Menu, MenuItem} = require('electron')
 const shell = require('electron').shell
 const {dialog} = require('electron')
 const Store = require('electron-store')
-const store = new Store()
+const store = new Store({
+    // name: "serverConfig.json"
+})
 var openInEditor = require('open-in-editor');
 const {ipcMain} = require('electron')
-require('electron-reload')(__dirname) // this will allow electron to reload on changes
+// require('electron-reload')(__dirname) // this will allow electron to reload on changes
 
 const path = require('path')
 const url = require('url')

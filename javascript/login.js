@@ -53,6 +53,7 @@ if (document.getElementById('submit') != null) {
           console.log("success in login");
           store.set("lastUser", username);
           store.set("serverName", serverName);
+          connection.close()
           ipcRenderer.invoke('login', "").then((result) => { 
             // THIS FUNCTION RUNS THE "LOGIN" HANDLER IN MAIN.JS
           })
@@ -66,6 +67,10 @@ if (document.getElementById('submit') != null) {
           }
           else if (credResponse.key == "password_wrong") {
             alert("Incorrect credentials")
+            return false;
+          }
+          else if (credResponse.key == "already_loggedin") {
+            alert("You're logged in somewhere else. Please log out there before continuing");
             return false;
           }
         }
@@ -137,6 +142,7 @@ if (document.getElementById('register') != null) {
           console.log("success in registration");
           store.set("lastUser", username);
           store.set("serverName", serverName);
+          connection.close()
           ipcRenderer.invoke('login', "").then((result) => { 
             // THIS FUNCTION RUNS THE "LOGIN" HANDLER IN MAIN.JS
           })

@@ -15,13 +15,18 @@ var fs = require('fs');
 const Store = require('electron-store');
 const store = new Store();
 
+const DEBUG = false;
+
 "use strict";
 process.title = 'Chat_Server';
 const webSocketsServerPort = 42069;
 const webSocketServer = require('websocket').server;
 const http = require('http');
 var history = [ ];
-restoreFromFile();
+var myChat = "./Chat.txt"
+if (fs.existsSync(myChat)) {
+	restoreFromFile();
+}
 var clients = [ ];
 function htmlEntities(str) {
 	return String(str).replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"');
@@ -33,27 +38,31 @@ colors.sort(function(a,b) {
 var server = http.createServer(function(request, response) {
 });
 server.listen(webSocketsServerPort, function() {
-	console.log(" Server listening port "  + webSocketsServerPort);
+	console.log("Server listening port "  + webSocketsServerPort);
 });
 var wsServer = new webSocketServer({
 	httpServer: server
 });
 wsServer.on('request', function(request) {
-	console.log(' Connection origin ' + request.origin + '.');
+	// console.log(' Connection origin ' + request.origin + '.');
 	var connection = request.accept(null, request.origin);
+	var index = -1;
 	var index = clients.push(connection) - 1;
 	var userName = false;
+	var connectionSaved = false;
 	var userColor = false;
-	console.log(connection.remoteAddress + 'is connected.');
-	// sendHistory(connection)
 	connection.on('message', function(message) {
 		if (message.type === 'utf8') {
-			console.log(message.utf8Data)
+			if (DEBUG) console.log(message.utf8Data)
 			let inComingMsg = JSON.parse(message.utf8Data)
-			userName = inComingMsg.user
+			
+			userName = inComingMsg.user;
+			
+			// store.set(userName + "_loggedin", true);
+			// console.log(userName + " logged in")
 			let msg = inComingMsg.msg
 			userColor = inComingMsg.userColor
-			console.log('Message type: ' + inComingMsg.type)
+			if (DEBUG) console.log('Message type: ' + inComingMsg.type)
 			if (inComingMsg.type == "colorChange") {
 				// do something
 				changeMessagesColor(userName, userColor, inComingMsg)
@@ -62,12 +71,12 @@ wsServer.on('request', function(request) {
 			}
 			else if (inComingMsg.type == "historyRequest") {
 				// send history
-				console.log("history route chosen")
+				if (DEBUG) console.log("history route chosen")
 				sendHistory(connection);
 				return
 			}
 			else if (inComingMsg.type === 'AuthRequest') {
-				console.log("auth request!")
+				if (DEBUG) console.log("auth request!")
 				// check to see if credentials are valid!
 				var json = JSON.stringify({ type:'AuthResponse', result: "failure", key:"" });
 				let key = checkLoginCreds(inComingMsg.user, inComingMsg.passwordHash) 
@@ -77,17 +86,20 @@ wsServer.on('request', function(request) {
 				else if (key == "username_not_exist") {
 					json = JSON.stringify({ type:'AuthResponse', result: "failure", key:key });
 				}
+				else if (key == "already_loggedin") {
+					json = JSON.stringify({ type:'AuthResponse', result: "failure", key:key });
+				}
 				else if (key != "") {
 					json = JSON.stringify({ type:'AuthResponse', result: "success", key:key }); // make valid response
 				}
 				// send response
 				connection.sendUTF(json)
-				console.log("Sending to client:")
-				console.log(json)
+				if (DEBUG) console.log("Sending to client:")
+				if (DEBUG) console.log(json)
 				return;
 			}
 			else if (inComingMsg.type === 'RegistrationRequest') {
-				console.log("registration request!")
+				if (DEBUG) console.log("registration request!")
 				var json = JSON.stringify({ type:'RegistrationResponse', result: "failure", key:"" });
 				let key = checkRegistrationCreds(inComingMsg.user, inComingMsg.passwordHash)
 				if (key == "username_exists") {
@@ -100,20 +112,13 @@ wsServer.on('request', function(request) {
 					json = JSON.stringify({ type:'RegistrationResponse', result: "success", key:key }); // make valid response
 				}
 				connection.sendUTF(json)
-				console.log("Sending to client:")
-				console.log(json)
+				if (DEBUG) console.log("Sending to client:")
+				if (DEBUG) console.log(json)
 				return
 			}
 			store.set(userName+"_Color", userColor);
-			console.log("UserName: " + userName + " sent " + msg + ". They have color " + userColor + " and encryption " + inComingMsg.encryption)
-			// console.log(JSON.stringify(inComingMsg))
-			// if (userName === false) {
-			// 	userName = htmlEntities(message.utf8Data);
-			// 	userColor = colors.shift();
-			// 	connection.sendUTF(JSON.stringify({ type:'color', data: userColor }));
-			// 	console.log(' User is known as: ' + userName + ' with ' + userColor + ' color.');
-			// } else {
-				// console.log(' Received Message from ' + userName + ': ' + message.utf8Data);
+			userName = inComingMsg.user
+			console.log("	" + userName + " sent '" + msg + "'. They have color " + userColor + " and encryption " + inComingMsg.encryption)
 				var obj = {
 					time: inComingMsg.time,
 					text: htmlEntities(msg),
@@ -129,14 +134,16 @@ wsServer.on('request', function(request) {
 				for (var i=0; i < clients.length; i++) { // send history to users
 					clients[i].sendUTF(json);
 				}
-			// }
 		}
 	});
 	connection.on('close', function(connection) {
-		if (userName !== false && userColor !== false) {
-			console.log(connection + " was disconnected.");
+		if (userName !== false) {
+			// console.log(connection + " was disconnected.");
 			clients.splice(index, 1);
-			colors.push(userColor);
+			// console.log("	client index " + index + " was spliced");
+			// colors.push(userColor);
+			// store.set(userName + "_loggedin", false);
+			// console.log(userName + " logged out")
 		}
 	});
 });
@@ -153,7 +160,7 @@ wsServer.on('request', function(request) {
 function changeMessagesColor(userName, userColor, inComingMsg) {
 	history.forEach(function (item, index) {
 		if (item.author == inComingMsg.user && item.color != userColor) {
-			console.log(item.text + " -> changed to color " + userColor)
+			if (DEBUG) console.log(item.text + " -> changed to color " + userColor)
 			item.color = userColor;
 		}
 	});
@@ -185,12 +192,27 @@ function checkLoginCreds(username, passhash) {
 	store.set("username_" + username, username);
 	store.set("passwordHash_" + username, passhash)
 	*/
+	// console.log(username + " is logged in?: " + store.get(username + "_loggedin", false))
+
 	if (store.get("username_" + username, "") == "") { // username does not exist
 		return "username_not_exist";
 	}
+	// displayClients();
+	// let count = 0;
+	// for (var i=0; i < clients.length; ++i) {
+	// 	if (clients[i].userName == username) count++;
+	// }
+	// console.log("	count is at " + count)
+	// if (count >= 2) return "already_loggedin" // 1 connection for this login, and then 1 connection for another app using the chat with that name
+	// if (ProtectAgainstMultipleLogons && store.get(username + "_loggedin", false) == true) {
+	// if (alreadyLoggedIn == true)
+	// 	return "already_loggedin"
+	// }
 	if (passhash == store.get("passwordHash_" + username, "")) {
 		var key = createGuid();  
 		store.set(username + "_key", key);
+		// store.set(username + "_loggedin", true);
+		// console.log(username + " logged in")
 		return key;
 	}
 	else{
@@ -206,6 +228,8 @@ function checkRegistrationCreds(username, passhash) {
 	store.set("passwordHash_" + username, passhash);
 	var key = createGuid();  
 	store.set(username + "_key", key);
+	// store.set(username + "_loggedin", true);
+	// console.log(username + " logged in")
 	return key;
 }
 
@@ -237,6 +261,8 @@ function restoreFromFile() {
 	})
 }
 
-// hashCode = function(password){
-//     return password.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);              
+// function displayClients() {
+// 	for (var i=0; i < clients.length; ++i) {
+// 		console.log("	" +	clients[i].userName + " has a connection")
+// 	}
 // }

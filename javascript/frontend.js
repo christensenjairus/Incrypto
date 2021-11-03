@@ -48,18 +48,18 @@ $(function() { // this syntax means it's a function that will be run once once d
     */
     connection.onopen = function () {
         if (DEBUG) console.log("connection made")
-        myName = store.get("lastUser", "");
+        myName = store.get("lastUser", ""); // TODO: get a better way of knowing who's logged in
         myColor = store.get(myName+"_Color", "black"); // default color is black
-        if (DEBUG) console.log("color is: " + myColor)
+        // if (DEBUG) console.log("color is: " + myColor)
         if (myName != "") {
             mystatus.text(myName + ': ').css('color', myColor);
             // get history of chat
-            let message = {"type":"historyRequest", "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
+            let message = {"type":"historyRequest", "user":myName, "color":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
             connection.send(JSON.stringify(message));
-            console.log("Message sent: \n" + JSON.stringify(message));
+            if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
             // end of getting chat history
             input.prop("disabled", false);
-            if (DEBUG) console.log("user should be able to type now")
+            // if (DEBUG) console.log("user should be able to type now")
             input.focus();
             var div = $('#content');
             div.animate({
@@ -91,7 +91,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             console.log('Invalid JSON: ', message.data);
             return;
         }
-        console.log("Message received: \n" + message.data);
+        if (DEBUG) console.log("Message received: \n" + message.data);
         if (json.type === 'history') { // entire message history
             // insert every single message to the chat window
             document.getElementById("content").innerHTML = "";
@@ -100,10 +100,9 @@ $(function() { // this syntax means it's a function that will be run once once d
             }
         } else if (json.type === 'message') { // it's a single message
             // let the user write another message
-            // input.removeAttr('disabled');
             input.prop("disabled", false)
             addMessage(json.data.author, json.data.text, json.data.color, new Date(json.data.time));
-            if (DEBUG) console.log("should be able to type - message received")
+            // if (DEBUG) console.log("should be able to type - message received")
             input.focus();
             var div = $('#content');
             div.animate({
@@ -129,11 +128,11 @@ $(function() { // this syntax means it's a function that will be run once once d
             // send the message as JSON
             let message = {"type":"message", "user": myName, "msg":msg, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
             connection.send(JSON.stringify(message));
-            console.log("Message sent: \n" + JSON.stringify(message));
+            if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
             $(this).val('');
             // disable the input field to make the user wait until server sends back response
             input.attr('disabled', 'disabled');
-            if (DEBUG) console.log("Input turned off until response is received")
+            // if (DEBUG) console.log("Input turned off until response is received")
         }
     });
 
@@ -145,20 +144,20 @@ $(function() { // this syntax means it's a function that will be run once once d
     setInterval(function() {
         if (connection.readyState !== 1) {
             mystatus.text('Error');
-            input.attr('disabled', 'disabled').val('Unable to communicate with the WebSocket server.');
+            input.attr('disabled', 'disabled').val('Can\'t communicate with the WebSocket server. Reload with "View" > "Reload"');
         }
     }, 3000);
 
     /*
     * Add message to the chat window
     */
-function addMessage(author, message, color, dt) {
-    content.append('<p><span style="color:' + color + '">'
-        + author + '</span> @ ' + (dt.getHours() < 10 ? '0'
-        + dt.getHours() : dt.getHours()) + ':'
-        + (dt.getMinutes() < 10
-        ? '0' + dt.getMinutes() : dt.getMinutes())
-        + ': ' + message + '</p>');
+    function addMessage(author, message, color, dt) {
+        content.append('<p><span style="color:' + color + '">'
+            + author + '</span> @ ' + (dt.getHours() < 10 ? '0'
+            + dt.getHours() : dt.getHours()) + ':'
+            + (dt.getMinutes() < 10
+            ? '0' + dt.getMinutes() : dt.getMinutes())
+            + ': ' + message + '</p>');
     }
 
     document.getElementById('status').addEventListener('click', () => {
@@ -173,7 +172,7 @@ function addMessage(author, message, color, dt) {
         
         // let message = {"type":"historyRequest", "user": myName, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
         // connection.send(JSON.stringify(message));
-        console.log("Message sent: \n" + JSON.stringify(message));
+        if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
     })
 });
 
