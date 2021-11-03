@@ -59,6 +59,15 @@ if (document.getElementById('submit') != null) {
         }
         else {
           console.log("login failed")
+          if (credResponse.key == "username_not_exist") {
+            // alert("Username does not exist")
+            alert("Incorrect credentials")
+            return false;
+          }
+          else if (credResponse.key == "password_wrong") {
+            alert("Incorrect credentials")
+            return false;
+          }
         }
       }
   });

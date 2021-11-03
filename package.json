@@ -26,6 +26,7 @@
     "axios": "^0.23.0",
     "electron-reload": "^2.0.0-alpha.1",
     "electron-store": "^8.0.1",
+    "fs": "^0.0.1-security",
     "open-in-editor": "^2.2.0",
     "source-map-support": "^0.5.20",
     "svg.draggable.js": "^2.2.1",

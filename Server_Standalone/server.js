@@ -11,6 +11,7 @@ var WebSocketClient = require('websocket').client;
 var WebSocketFrame  = require('websocket').frame;
 var WebSocketRouter = require('websocket').router;
 var W3CWebSocket = require('websocket').w3cwebsocket;
+var fs = require('fs');
 const Store = require('electron-store');
 const store = new Store();
 
@@ -68,8 +69,14 @@ wsServer.on('request', function(request) {
 				console.log("auth request!")
 				// check to see if credentials are valid!
 				var json = JSON.stringify({ type:'AuthResponse', result: "failure", key:"" });
-				let key = checkLoginCreds(inComingMsg.user, inComingMsg.passwordHash) // anything not "" is a valid key
-				if (key != "") {
+				let key = checkLoginCreds(inComingMsg.user, inComingMsg.passwordHash) 
+				if (key == "password_wrong") {
+					json = JSON.stringify({ type:'AuthResponse', result: "failure", key:key });
+				}
+				else if (key == "username_not_exist") {
+					json = JSON.stringify({ type:'AuthResponse', result: "failure", key:key });
+				}
+				else if (key != "") {
 					json = JSON.stringify({ type:'AuthResponse', result: "success", key:key }); // make valid response
 				}
 				// send response
@@ -81,9 +88,12 @@ wsServer.on('request', function(request) {
 			else if (inComingMsg.type === 'RegistrationRequest') {
 				console.log("registration request!")
 				var json = JSON.stringify({ type:'RegistrationResponse', result: "failure", key:"" });
-				let key = checkRegistrationCreds(inComingMsg.user, inComingMsg.passwordHash) // anything not "" is a valid key
+				let key = checkRegistrationCreds(inComingMsg.user, inComingMsg.passwordHash)
 				if (key == "username_exists") {
 					json = JSON.stringify({ type:'RegistrationResponse', result: "failure", key:"username_exists" });
+				}
+				else if (key == "password_wrong") {
+					json = JSON.stringify({ type:'RegistrationResponse', result: "failure", key:"password_wrong" });
 				}
 				else if (key != "") {
 					json = JSON.stringify({ type:'RegistrationResponse', result: "success", key:key }); // make valid response
@@ -110,8 +120,9 @@ wsServer.on('request', function(request) {
 					color: userColor,
 					encryption: inComingMsg.encryption
 				};
-				history.push(obj); // save messages
-				history = history.slice(-100);
+				// history.push(obj); // save messages
+				// history = history.slice(-100);
+				saveToFile(obj);
 				changeMessagesColor(userName, userColor, inComingMsg);
 				var json = JSON.stringify({ type:'message', data: obj });
 				for (var i=0; i < clients.length; i++) { // send history to users
@@ -174,15 +185,15 @@ function checkLoginCreds(username, passhash) {
 	store.set("passwordHash_" + username, passhash)
 	*/
 	if (store.get("username_" + username, "") == "") { // username does not exist
-		return "";
+		return "username_not_exist";
 	}
-	if (passhash === store.get("passwordHash_" + username)) {
+	if (passhash == store.get("passwordHash_" + username, "")) {
 		var key = createGuid();  
 		store.set(username + "_key", key);
 		return key;
 	}
 	else{
-		return ""; // password did not exist
+		return "password_wrong"; // password did not exist
 	}
 }
 
@@ -204,6 +215,16 @@ function createGuid() {
 	}  
 	return _p8() + _p8(true) + _p8(true) + _p8();  
 }  
+
+function saveToFile(obj) {
+	history.push(obj); // save messages
+	history = history.slice(-100);
+	fs.writeFile("chat.txt", JSON.stringify(obj), function(err) {
+		if (err) {
+			console.log(err);
+		}
+	});
+}
 
 // hashCode = function(password){
 //     return password.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);              

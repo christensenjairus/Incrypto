@@ -124,10 +124,10 @@ function createWindow(width, height) {
                         click() {
                             switchToRegistrationPage();
                         }},
-                    {label: "Clear All Local User Data",
+                    {label: "Clear All Local Data",
                         click() {
                             store.clear();
-                            switchToRegistrationPage();
+                            switchToLoginPage();
                         }},
                     {label: "Quit",
                         click() {
