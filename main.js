@@ -346,6 +346,14 @@ ipcMain.handle('login', async (event, someArgument) => {
     return true;
 })
 
+ipcMain.handle('logout', async (event, someArgument) => {
+    // const result = await doSomeWork(someArgument)
+    switchToLoginPage();
+    // mainWindow.webContents.openDevTools(); // open dev tools on chat launch
+    // return result
+    return true;
+})
+
 let myName = false;
 
 ipcMain.handle('getName', async (event, someArgument) => {

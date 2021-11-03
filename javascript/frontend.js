@@ -2,7 +2,7 @@
     SCRIPT FOR CONTROLLING CHAT CLIENT AND INDEX.HTML
 */
 
-const { ipcMain } = require('electron');
+const { ipcMain, ipcRenderer } = require('electron');
 const Store = require('electron-store');
 const { server, connection } = require('websocket');
 // const { username } = require('./login.js');
@@ -125,6 +125,12 @@ $(function() { // this syntax means it's a function that will be run once once d
             div.animate({
                 scrollTop: div[0].scrollHeight
             }, 1000);
+        } else if (json.type == "logout") {
+            alert("'You've logged in somewhere else. You'll be logged out here")
+            connection.close();
+            ipcRenderer.invoke('logout', "").then((result) => { 
+                // THIS FUNCTION RUNS THE "LOGIN" HANDLER IN MAIN.JS
+            })
         } else {
             console.log('Unexpected Json Value: ', json);
         }

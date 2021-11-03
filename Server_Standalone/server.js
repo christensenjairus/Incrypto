@@ -47,7 +47,7 @@ wsServer.on('request', function(request) {
 	// console.log(' Connection origin ' + request.origin + '.');
 	var connection = request.accept(null, request.origin);
 	var index = -1;
-	var index = clients.push(connection) - 1;
+	// var index = clients.push(connection) - 1;
 	var userName = false;
 	var connectionSaved = false;
 	var userColor = false;
@@ -57,7 +57,10 @@ wsServer.on('request', function(request) {
 			let inComingMsg = JSON.parse(message.utf8Data)
 			
 			userName = inComingMsg.user;
-			
+			// console.log("user logged in: " + inComingMsg.user)
+			if (index == -1) {
+				index=clients.push({"connection":connection, "userName":userName})
+			}
 			// store.set(userName + "_loggedin", true);
 			// console.log(userName + " logged in")
 			let msg = inComingMsg.msg
@@ -79,7 +82,7 @@ wsServer.on('request', function(request) {
 				if (DEBUG) console.log("auth request!")
 				// check to see if credentials are valid!
 				var json = JSON.stringify({ type:'AuthResponse', result: "failure", key:"" });
-				let key = checkLoginCreds(inComingMsg.user, inComingMsg.passwordHash) 
+				let key = checkLoginCreds(connection, inComingMsg.user, inComingMsg.passwordHash) 
 				if (key == "password_wrong") {
 					json = JSON.stringify({ type:'AuthResponse', result: "failure", key:key });
 				}
@@ -132,7 +135,7 @@ wsServer.on('request', function(request) {
 				changeMessagesColor(userName, userColor, inComingMsg);
 				var json = JSON.stringify({ type:'message', data: obj });
 				for (var i=0; i < clients.length; i++) { // send history to users
-					clients[i].sendUTF(json);
+					clients[i].connection.sendUTF(json);
 				}
 		}
 	});
@@ -174,7 +177,7 @@ function sendHistory(connection) {
 
 function sendToAll(json) {
 	for (var i=0; i < clients.length; i++) { // send history to users
-		clients[i].sendUTF(json);
+		clients[i].connection.sendUTF(json);
 	}
 }
 
@@ -182,12 +185,12 @@ function sendHistoryToAll() {
 	for (var i=0; i < clients.length; i++) { // send history to users
 		// clients[i].sendUTF();
 		if (history.length > 0) {
-			clients[i].sendUTF(JSON.stringify({ type: 'history', data: history} ));
+			clients[i].connection.sendUTF(JSON.stringify({ type: 'history', data: history} ));
 		}
 	}
 }
 
-function checkLoginCreds(username, passhash) {
+function checkLoginCreds(connection, username, passhash) {
 	/* use this to bypass registration
 	store.set("username_" + username, username);
 	store.set("passwordHash_" + username, passhash)
@@ -197,7 +200,8 @@ function checkLoginCreds(username, passhash) {
 	if (store.get("username_" + username, "") == "") { // username does not exist
 		return "username_not_exist";
 	}
-	// displayClients();
+	displayClients();
+	logOutOthers(connection, username);
 	// let count = 0;
 	// for (var i=0; i < clients.length; ++i) {
 	// 	if (clients[i].userName == username) count++;
@@ -261,8 +265,20 @@ function restoreFromFile() {
 	})
 }
 
-// function displayClients() {
-// 	for (var i=0; i < clients.length; ++i) {
-// 		console.log("	" +	clients[i].userName + " has a connection")
-// 	}
-// }
+function displayClients() {
+	for (var i=0; i < clients.length; ++i) {
+		console.log("	" +	clients[i].userName + " has a connection")
+	}
+}
+
+function logOutOthers(thisConnection, username) {
+	for (var i=0; i < clients.length; i++) { // send history to users
+		if (clients[i].userName == username && clients[i].connection != thisConnection) {
+			clients[i].connection.sendUTF(JSON.stringify({ type:'logout', result: "other_login", key:"" }))
+			clients[i].connection.close();
+			clients.splice[i, 1];
+		}
+		
+		// clients[i].connection.sendUTF(json);
+	}
+}
