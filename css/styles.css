@@ -6,6 +6,7 @@
     font-size:12px;
     padding:0px;
     margin:0px;
+    color:black; /* this color to change text color */
 }
 h1 {
     text-align: center; 
@@ -28,7 +29,7 @@ footer {
 }
 #content { 
     padding:5px; 
-    background:#ddd; 
+    background:white; /*this color to change background of chat box */
     border-radius:5px;
     overflow-y: scroll; 
     border:1px solid #CCC;

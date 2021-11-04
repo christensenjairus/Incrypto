@@ -5,6 +5,9 @@
 
 /* Below line is used for online Google font */
 @import url(https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@700);
+body{
+    background-color: #282828; /*background of login screen*/
+}
 h2{
     /* background-color: #FEFFED; */
     padding: 30px 35px;
@@ -20,10 +23,10 @@ hr{
     margin-bottom: 40px;
 }
 label{
-    color: #464646;
-    text-shadow: 0 1px 0 #fff;
+    color: white;
+    /* text-shadow: 0 1px 0 white; */
     font-size: 18px;
-    font-weight: bold;
+    /* font-weight: bold; */
     width: 100%;
 }
 center{
@@ -34,6 +37,8 @@ div.container{
     height: 610px; */
     margin:35px auto;
     font-family: 'Crimson Pro', sans-serif;
+    color: white;
+    /* background-color: #6f2232; */
 }
 div.main{
     /* width: 300px; */
@@ -43,6 +48,7 @@ div.main{
     font-family: 'Crimson Pro';
     float:center;
     margin-top:50px;
+    background-color: #190061; /*background of login box*/
 }
 input[type=text],input[type=password]{
     width: 100%;
@@ -58,7 +64,7 @@ input[type=text],input[type=password]{
 input[type=button]{
     font-size: 16px;
     background: linear-gradient(#202020 5%, #000000 100%);
-    border: 2px solid orange;
+    border: 2px solid black;
     color: #ffffff;
     font-weight: bold;
     cursor: pointer;
