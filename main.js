@@ -17,6 +17,7 @@ const {ipcMain} = require('electron')
 
 const path = require('path')
 const url = require('url')
+app.setAppUserModelId(process.execPath); // during development only?
 
 let codeEditor = store.get("codeEditor", "code"); // VS Code is the default
 
