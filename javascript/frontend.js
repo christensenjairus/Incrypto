@@ -218,7 +218,7 @@ function showNotification(author, text) {
     const NOTIFICATION_TITLE = 'New message from ' + author
     const NOTIFICATION_BODY = text
     // const CLICK_MESSAGE = 'Notification clicked!'
-    new Notification(NOTIFICATION_TITLE, { body: NOTIFICATION_BODY }).show()
+    new Notification(NOTIFICATION_TITLE, { body: NOTIFICATION_BODY })
     .onclick = () => {
         document.getElementById('input').focus();
     }
