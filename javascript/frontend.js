@@ -121,6 +121,9 @@ $(function() { // this syntax means it's a function that will be run once once d
                 scrollTop: div[0].scrollHeight
             }, 1000);
             if (json.data.author != myName) showNotification(json.data.author, json.data.text)
+            ipcRenderer.invoke('incBadgeCnt', 1).then((result => {
+                // update badge count
+            }))
         } else if (json.type == "logout") {
             alert("'You've logged in somewhere else. You'll be logged out here")
             connection.close();

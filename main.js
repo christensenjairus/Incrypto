@@ -380,3 +380,24 @@ ipcMain.handle('setColor', async (event, color) => {
     // console.log("name saved in main.js file: " + color)
     return true;
 })
+
+let badgeCnt = 0;
+
+app.on('browser-window-focus', (event, window) => {
+    window.$focus = true;
+    // dockNotificationCache[window.id] = 0;
+    if (process.platform === 'darwin' ||
+        (process.platform === 'linux' && app.isUnityRunning &&
+        app.isUnityRunning())) {
+        app.setBadgeCount(0);
+        badgeCnt = 0;
+    }
+});
+
+ipcMain.handle('incBadgeCnt', async (event, count) => {
+    if (process.platform === 'darwin' ||
+        (process.platform === 'linux' && app.isUnityRunning &&
+        app.isUnityRunning())) {
+        app.setBadgeCount(count + badgeCnt);
+    }
+})
