@@ -403,3 +403,12 @@ ipcMain.handle('incBadgeCnt', async (event, count) => {
         badgeCnt += count;
     }
 })
+
+ipcMain.handle('setBadgeCnt', async (event, count) => {
+    if (process.platform === 'darwin' ||
+        (process.platform === 'linux' && app.isUnityRunning &&
+        app.isUnityRunning())) {
+        app.setBadgeCount(count);
+        badgeCnt = 0;
+    }
+})
