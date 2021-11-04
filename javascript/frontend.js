@@ -152,7 +152,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             // disable the input field to make the user wait until server sends back response
             input.attr('disabled', 'disabled');
             // if (DEBUG) console.log("Input turned off until response is received")
-            ipcRenderer.invoke('setBadgeCnt', "0").then((result) => { 
+            ipcRenderer.invoke('setBadgeCnt', 0).then((result) => { 
             })
         }
     });

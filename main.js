@@ -402,6 +402,9 @@ ipcMain.handle('incBadgeCnt', async (event, count) => {
         app.setBadgeCount(count + badgeCnt);
         badgeCnt += count;
     }
+    if (process.platform === 'darwin') {
+        app.dock.bounce();
+    }
 })
 
 ipcMain.handle('setBadgeCnt', async (event, count) => {
