@@ -406,7 +406,7 @@ ipcMain.handle('incBadgeCnt', async (event, count) => {
         app.dock.bounce();
     }
     mainWindow.once('focus', () => mainWindow.flashFrame(false))
-    windows.flashFrame(true)
+    mainWindow.flashFrame(true)
 })
 
 ipcMain.handle('setBadgeCnt', async (event, count) => {
