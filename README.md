@@ -56,10 +56,10 @@ Note: If you're using Linux Bash for Windows, [see this guide](https://www.howto
 * Rearrange chat to have times on right, names on left
 * Drop down menu on chat page that lists different encryption options
 * Create basic encryption example in encryption.js and use that encryption as the default
-* For Jairus:
-        * Implement username being encrypted to other users as well as messages
-        * Make webserver use WSS instead of WS protocol
-        * Implement keys and key validation
-        * Notifications have wrong logo and name
-        * Run on port 443 and use HTTPS instead of HTTP
+* For Jairus: ---------------------------------------------v
+* Implement username being encrypted to other users as well as messages
+* Make webserver use WSS instead of WS protocol
+* Implement keys and key validation
+* Notifications have wrong logo and name
+* Run on port 443 and use HTTPS instead of HTTP
 * BUG: Windows requires that you click outside the chat first before you can type anything in the chat right when chat loads
