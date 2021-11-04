@@ -132,6 +132,12 @@ $(function() { // this syntax means it's a function that will be run once once d
         }
     };
 
+    connection.onclose = function () {
+        // ipcRenderer.invoke('login', "").then((result) => { 
+        //     // used to refresh page
+        // })
+    };
+
     /**
     * Send message when user presses Enter key
     */
@@ -164,15 +170,26 @@ $(function() { // this syntax means it's a function that will be run once once d
     */
     setInterval(function() {
         if (connection.readyState !== 1) {
-            mystatus.text('Error');
-            input.attr('disabled', 'disabled').val('Can\'t communicate with the WebSocket server. Reload with "View" > "Reload"');
+            // document.getElementById('input').attr('disabled', 'disabled')
+            // document.getElementById('status').val('Can\'t communicate with the WebSocket server. Reload with "View" > "Reload"');
+            // console.log("reloading page")
+            // location.reload();
+            // mystatus.text('Error');
+            ipcRenderer.invoke('login', "").then((result) => { 
+                // used to refresh page
+            })
         }
         else {
+            // input.removeAttr('disabled')
             let message = {"type":"historyRequest", "user":myName, "color":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
             connection.send(JSON.stringify(message)); // reget the history every 3 seconds
             // console.log("got history")
         }
     }, 5000);
+    setInterval(function() {
+        let message = {type:"ping"}
+        connection.send(JSON.stringify(message));
+    }, 100)
 
     /*
     * Add message to the chat window

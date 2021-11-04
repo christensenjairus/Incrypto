@@ -67,7 +67,12 @@ wsServer.on('request', function(request) {
 			let msg = inComingMsg.msg
 			userColor = inComingMsg.userColor
 			if (DEBUG) console.log('Message type: ' + inComingMsg.type)
-			if (inComingMsg.type == "colorChange") {
+			if (inComingMsg.type == "ping") {
+				let message = {type:"pong"};
+				connection.send(JSON.stringify(message));
+				return;
+			}
+			else if (inComingMsg.type == "colorChange") {
 				// do something
 				changeMessagesColor(userName, userColor, inComingMsg)
 				sendHistoryToAll();
