@@ -17,7 +17,8 @@ const {ipcMain} = require('electron')
 
 const path = require('path')
 const url = require('url')
-app.setAppUserModelId(process.execPath); // during development only?
+// app.setAppUserModelId(process.execPath); // during development only?
+app.setAppUserModelId("Incrypto");
 
 let codeEditor = store.get("codeEditor", "code"); // VS Code is the default
 
