@@ -399,5 +399,6 @@ ipcMain.handle('incBadgeCnt', async (event, count) => {
         (process.platform === 'linux' && app.isUnityRunning &&
         app.isUnityRunning())) {
         app.setBadgeCount(count + badgeCnt);
+        badgeCnt += count;
     }
 })
