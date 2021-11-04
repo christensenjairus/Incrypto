@@ -19,6 +19,7 @@ const path = require('path')
 const url = require('url')
 // app.setAppUserModelId(process.execPath); // during development only?
 app.setAppUserModelId("Incrypto");
+app.setBadgeCount(1);
 
 let codeEditor = store.get("codeEditor", "code"); // VS Code is the default
 
