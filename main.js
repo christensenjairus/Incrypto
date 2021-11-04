@@ -384,8 +384,9 @@ ipcMain.handle('setColor', async (event, color) => {
 let badgeCnt = 0;
 
 app.on('browser-window-focus', (event, window) => {
-    window.$focus = true;
+    // window.$focus = true;
     // dockNotificationCache[window.id] = 0;
+    console.log("window has been focused on!")
     if (process.platform === 'darwin' ||
         (process.platform === 'linux' && app.isUnityRunning &&
         app.isUnityRunning())) {
