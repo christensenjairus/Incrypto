@@ -1,16 +1,6 @@
 # Incrypto
 
-This is a minimal Electron application based on the [Quick Start Guide](http://electron.atom.io/docs/tutorial/quick-start) within the Electron documentation.
-
-**Use this app along with the [Electron API Demos](http://electron.atom.io/#get-started) app for API code examples to help you get started.**
-
-A basic Electron application needs just these files:
-
-- `package.json` - Points to the app's main file and lists its details and dependencies.
-- `main.js` - Starts the app and creates a browser window to render HTML. This is the app's **main process**.
-- `index.html` - A web page to render. This is the app's **renderer process**.
-
-You can learn more about each of these components within the [Quick Start Guide](http://electron.atom.io/docs/tutorial/quick-start).
+This is an Electron-based messaging app (both Server and Client) that allows you to make and use your own encryption algorithms.
 
 ## To Use
 
@@ -60,6 +50,16 @@ Note: If you're using Linux Bash for Windows, [see this guide](https://www.howto
 - [WebSocket Example](https://www.cronj.com/blog/node-js-websocket-examples-chat-features-client-server-communication/)
 
 # TODO:
-* Create a logout button on the chat page that will end the client connection, then send via IPCRenderer the switch to the login window. Ending the client connection will cause the number of connections to work when it comes to double-logins.
-* Error when other clients log in/out. It needs to be periodically refreshed to fix it.
-* Windows requires that you click outside the chat first before you can type anything in the chat right when chat loads
+* Create a logout button on the chat page that will end the client connection
+* Login/register buttons on login/register pages
+* Dark mode
+* Rearrange chat to have times on right, names on left
+* Drop down menu on chat page that lists different encryption options
+* Create basic encryption example in encryption.js and use that encryption as the default
+* For Jairus: ---------------------------------------------v
+* Implement username being encrypted to other users as well as messages
+* Make webserver use WSS instead of WS protocol
+* Implement keys and key validation
+* Notifications have wrong logo and name
+* Run on port 443 and use HTTPS instead of HTTP
+* BUG: Windows requires that you click outside the chat first before you can type anything in the chat right when chat loads
