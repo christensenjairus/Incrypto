@@ -403,9 +403,9 @@ ipcMain.handle('incBadgeCnt', async (event, count) => {
         badgeCnt += count;
     }
     if (process.platform === 'darwin') {
-        app.dock.bounce();
+        app.dock.bounce(); // this doesn't work!
     }
-    app.dock.bounce(); // try this?
+    // app.dock.bounce(); // doesn't work either
     mainWindow.once('focus', () => mainWindow.flashFrame(false))
     mainWindow.flashFrame(true)
 })
