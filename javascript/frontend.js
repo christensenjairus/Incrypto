@@ -99,8 +99,11 @@ $(function() { // this syntax means it's a function that will be run once once d
             console.log('Invalid JSON: ', message.data);
             return;
         }
-        if (DEBUG) console.log("Message received: \n" + message.data);
+        if (json.type == "pong") { // do nothing
+            return;
+        }
         if (json.type === 'history') { // entire message history
+            if (DEBUG) console.log("Message received: \n" + message.data);
             // insert every single message to the chat window
             document.getElementById("content").innerHTML = "";
             for (var i=0; i < json.data.length; i++) {
@@ -111,6 +114,7 @@ $(function() { // this syntax means it's a function that will be run once once d
                 scrollTop: div[0].scrollHeight
             }, 0);
         } else if (json.type === 'message') { // it's a single message
+            if (DEBUG) console.log("Message received: \n" + message.data);
             // let the user write another message
             input.prop("disabled", false)
             addMessage(json.data.author, json.data.text, json.data.color, new Date(json.data.time));
@@ -152,8 +156,12 @@ $(function() { // this syntax means it's a function that will be run once once d
 
             // send the message as JSON
             let message = {"type":"message", "user": myName, "msg":msg, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
-            connection.send(JSON.stringify(message));
-            if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
+            try {
+                connection.send(JSON.stringify(message));
+                if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
+            } catch(error) {
+                console.log("message not sent")
+            }
             $(this).val('');
             // disable the input field to make the user wait until server sends back response
             input.attr('disabled', 'disabled');
