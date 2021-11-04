@@ -386,7 +386,7 @@ let badgeCnt = 0;
 app.on('browser-window-focus', (event, window) => {
     // window.$focus = true;
     // dockNotificationCache[window.id] = 0;
-    console.log("window has been focused on!")
+    // console.log("window has been focused on!")
     if (process.platform === 'darwin' ||
         (process.platform === 'linux' && app.isUnityRunning &&
         app.isUnityRunning())) {
@@ -405,6 +405,8 @@ ipcMain.handle('incBadgeCnt', async (event, count) => {
     if (process.platform === 'darwin') {
         app.dock.bounce();
     }
+    mainWindow.once('focus', () => mainWindow.flashFrame(false))
+    windows.flashFrame(true)
 })
 
 ipcMain.handle('setBadgeCnt', async (event, count) => {
