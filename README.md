@@ -1,6 +1,6 @@
 # Incrypto
 
-This is an Electron-based messaging app (both Server and Client) that allows you to make and use your own encryption algorithms.
+This is an Electron-based messaging app (both server and client) that allows you to make and use your own encryption algorithms.
 
 ## To Use
 
