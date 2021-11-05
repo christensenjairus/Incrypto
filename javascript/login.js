@@ -93,6 +93,15 @@ if (document.getElementById('submit') != null) {
         document.getElementById("submit").click();
     }
   });
+  password.focus();
+
+  var usernameBox = document.getElementById("username");
+  usernameBox.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("submit").click();
+    }
+  });
 
   var serverName = document.getElementById("serverName");
   serverName.addEventListener("keyup", function(event) {
@@ -172,6 +181,23 @@ if (document.getElementById('register') != null) {
           return false;
         }}
   })
+
+  var usernameReg = document.getElementById("usernameReg");
+  usernameReg.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("register").click();
+    }
+  });
+  usernameReg.focus();
+
+  var password = document.getElementById("password");
+  password.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("register").click();
+    }
+  });
 
   var password2 = document.getElementById("password2");
   password2.addEventListener("keyup", function(event) {
