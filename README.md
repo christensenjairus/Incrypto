@@ -1,6 +1,6 @@
 # Incrypto
 
-This is an Electron-based messaging app (both Server and Client) that allows you to make and use your own encryption algorithms.
+This is an Electron-based messaging app (both server and client) that allows you to make and use your own encryption algorithms.
 
 ## To Use
 
@@ -50,7 +50,7 @@ Note: If you're using Linux Bash for Windows, [see this guide](https://www.howto
 - [WebSocket Example](https://www.cronj.com/blog/node-js-websocket-examples-chat-features-client-server-communication/)
 
 # TODO:
-* Create a logout button on the chat page that will end the client connection
+* Create a logout button on the chat page that will end the client connection and run main.js switchToLoginPage() function
 * Login/register buttons on login/register pages
 * Dark mode
 * Rearrange chat to have times on right, names on left
