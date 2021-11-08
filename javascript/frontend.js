@@ -107,12 +107,6 @@ $(function() { // this syntax means it's a function that will be run once once d
         }
         if (json.type == "pong") { // do nothing
             pongCount = pongCount + 1;
-            // if (pongCount == 100) {
-            //     // error! should never pass 50 (see how history message resets it)
-            //     ipcRenderer.invoke('login', "").then((result) => { 
-            //         //     // used to refresh page
-            //         })
-            // }
             return;
         }
         if (json.type === 'history') { // entire message history
@@ -212,10 +206,10 @@ $(function() { // this syntax means it's a function that will be run once once d
     setInterval(function() {
         let message = {type:"ping"}
         connection.send(JSON.stringify(message));
-        console.log("ping sent")
+        // console.log("ping sent")
         pingCount = pingCount + 1;
-            if (pingCount > 50 && pongCount < 50) {
-                // error! should never pass 50 (see how history message resets it)
+            if (pingCount > 55 && pongCount < 55) {
+                // error! pingcount should never pass 50 (see how history message resets it every 5 seconds (at count 50))
                 ipcRenderer.invoke('login', "").then((result) => { 
                     //     // used to refresh page
                     })
