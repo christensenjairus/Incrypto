@@ -30,6 +30,7 @@ if (myColor == false) {
 var content = $('#content');
 var input = $('#input');
 var mystatus = $('#status');
+let savedInputText = "";
 
 var colors = ['purple', 'plum', 'orange', 'red', 'green', 'blue', 'magenta'];
 colors.sort(function(a,b) {
@@ -86,10 +87,10 @@ $(function() { // this syntax means it's a function that will be run once once d
     */
     connection.onerror = function (error) {
         // just in there were some problems with connection...
-        content.html($('<p>', {text: 'Sorry, but there\'s some problem with your ' + 'connection or the server is down.'}));
-        // ipcRenderer.invoke('login', "").then((result) => { 
-        //     // used to refresh page
-        // })
+        // content.html($('<p>', {text: 'Sorry, but there\'s some problem with your ' + 'connection or the server is down.'}));
+        ipcRenderer.invoke('login', "").then((result) => { 
+            // used to refresh page
+        })
     };
 
     let pingCount = 0;
@@ -146,9 +147,9 @@ $(function() { // this syntax means it's a function that will be run once once d
     };
 
     connection.onclose = function () {
-        // ipcRenderer.invoke('login', "").then((result) => { 
-        //     // used to refresh page
-        // })
+        ipcRenderer.invoke('login', "").then((result) => { 
+            // used to refresh page
+        })
     };
 
     /**
@@ -162,12 +163,12 @@ $(function() { // this syntax means it's a function that will be run once once d
             }
             // TODO: get encryption type, encrypt message, get key from authentication
 
-
             // send the message as JSON
             let message = {"type":"message", "user": myName, "msg":msg, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
             try {
                 connection.send(JSON.stringify(message));
                 if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
+                savedInputText = "";
             } catch(error) {
                 console.log("message not sent")
             }
@@ -180,6 +181,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         }
     });
 
+    
     /**
     * This method is optional. If the server wasn't able to
     * respond to the in 5 seconds then show some error message
@@ -200,7 +202,6 @@ $(function() { // this syntax means it's a function that will be run once once d
             // input.removeAttr('disabled')
             let message = {"type":"historyRequest", "user":myName, "color":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
             connection.send(JSON.stringify(message)); // reget the history every 3 seconds
-            // console.log("got history")
         }
     }, 5000);
     setInterval(function() {
@@ -209,10 +210,21 @@ $(function() { // this syntax means it's a function that will be run once once d
         // console.log("ping sent")
         pingCount = pingCount + 1;
             if (pingCount > 55 && pongCount < 55) {
-                // error! pingcount should never pass 50 (see how history message resets it every 5 seconds (at count 50))
-                ipcRenderer.invoke('login', "").then((result) => { 
-                    //     // used to refresh page
-                    })
+                if (document.getElementById('input').value != "Can\'t communicate with the WebSocket server.") {
+                    savedInputText = document.getElementById('input').value
+                    // console.log("input saved")
+                }
+                document.getElementById('input').value = ("Can\'t communicate with the WebSocket server.")
+                input.attr('disabled', 'disabled')
+            }
+            else {
+                input.removeAttr('disabled')
+                if (document.getElementById('input').value === "Can\'t communicate with the WebSocket server.") {
+                    document.getElementById('input').value = savedInputText;
+                    // console.log("input restored");
+                }
+                input.focus();
+                mystatus.text(myName).css('color', myColor);
             }
             return;
     }, 100)
@@ -230,7 +242,6 @@ $(function() { // this syntax means it's a function that will be run once once d
     }
 
     document.getElementById('status').addEventListener('click', () => {
-        // newColor = colors.shift();
         var newColor = getRandomColor(); // generate random color
         myColor = newColor
         mystatus.css('color', myColor)
@@ -239,8 +250,6 @@ $(function() { // this syntax means it's a function that will be run once once d
         let message = {"type":"colorChange", "user": myName, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
         connection.send(JSON.stringify(message));
         
-        // let message = {"type":"historyRequest", "user": myName, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
-        // connection.send(JSON.stringify(message));
         if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
     })
 });
