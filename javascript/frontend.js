@@ -87,7 +87,13 @@ $(function() { // this syntax means it's a function that will be run once once d
     connection.onerror = function (error) {
         // just in there were some problems with connection...
         content.html($('<p>', {text: 'Sorry, but there\'s some problem with your ' + 'connection or the server is down.'}));
+        // ipcRenderer.invoke('login', "").then((result) => { 
+        //     // used to refresh page
+        // })
     };
+
+    let pingCount = 0;
+    let pongCount = 0;
 
     /*
     * What to do when the socket receives a message
@@ -100,9 +106,18 @@ $(function() { // this syntax means it's a function that will be run once once d
             return;
         }
         if (json.type == "pong") { // do nothing
+            pongCount = pongCount + 1;
+            // if (pongCount == 100) {
+            //     // error! should never pass 50 (see how history message resets it)
+            //     ipcRenderer.invoke('login', "").then((result) => { 
+            //         //     // used to refresh page
+            //         })
+            // }
             return;
         }
         if (json.type === 'history') { // entire message history
+            pongCount = 0;
+            pingCount = 0;
             if (DEBUG) console.log("Message received: \n" + message.data);
             // insert every single message to the chat window
             document.getElementById("content").innerHTML = "";
@@ -197,6 +212,15 @@ $(function() { // this syntax means it's a function that will be run once once d
     setInterval(function() {
         let message = {type:"ping"}
         connection.send(JSON.stringify(message));
+        console.log("ping sent")
+        pingCount = pingCount + 1;
+            if (pingCount > 50 && pongCount < 50) {
+                // error! should never pass 50 (see how history message resets it)
+                ipcRenderer.invoke('login', "").then((result) => { 
+                    //     // used to refresh page
+                    })
+            }
+            return;
     }, 100)
 
     /*
