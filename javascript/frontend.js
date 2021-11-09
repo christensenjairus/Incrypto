@@ -86,7 +86,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     * What to do in case of a socket error
     */
     connection.onerror = function (error) {
-        // just in there were some problems with connection...
+        // just in case there were some problems with connection...
         // content.html($('<p>', {text: 'Sorry, but there\'s some problem with your ' + 'connection or the server is down.'}));
         ipcRenderer.invoke('login', "").then((result) => { 
             // used to refresh page
