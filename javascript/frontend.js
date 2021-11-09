@@ -86,7 +86,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     * What to do in case of a socket error
     */
     connection.onerror = function (error) {
-        // just in there were some problems with connection...
+        // just in case there were some problems with connection...
         // content.html($('<p>', {text: 'Sorry, but there\'s some problem with your ' + 'connection or the server is down.'}));
         ipcRenderer.invoke('login', "").then((result) => { 
             // used to refresh page
@@ -233,12 +233,20 @@ $(function() { // this syntax means it's a function that will be run once once d
     * Add message to the chat window
     */
     function addMessage(author, message, color, dt) {
-        content.append('<p><span style="float:right; color:' + color + '">'
-            + author + '</span> @ ' + (dt.getHours() < 10 ? '0'
-            + dt.getHours() : dt.getHours()) + ':'
-            + (dt.getMinutes() < 10
-            ? '0' + dt.getMinutes() : dt.getMinutes())
-            + ': ' + message + '</p>');
+        if (author != myName) {
+            content.append('<div class="myDiv"><p style="text-align: left"><span style="color:' + color + '">'
+            + author + '</span>:    ' + message + '</p></div>');
+        } else {
+            content.append('<div class="myDiv2"><p style="text-align: right"><span style="color:' + color + '">'
+            + author + '</span>:  ' + message + '</p><div class="myDiv">'); 
+        };
+
+        // content.append('<div class="myDiv"><p style="text-align: left"><span style="color:' + color + '">'
+        //     + author + '</span> @ ' + (dt.getHours() < 10 ? '0'
+        //     + dt.getHours() : dt.getHours()) + ':'
+        //     + (dt.getMinutes() < 10
+        //     ? '0' + dt.getMinutes() : dt.getMinutes())
+        //     + ': ' + message + '</p></div>');
     }
 
     document.getElementById('status').addEventListener('click', () => {

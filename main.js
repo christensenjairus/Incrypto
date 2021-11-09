@@ -151,6 +151,10 @@ function createWindow(width, height) {
                 },{
                 label: 'View',
                 submenu: [
+                    { label: 'Theme',
+                        click() {
+                            // Enter Theme switcher here @Blake
+                        }},
                     { role: 'reload'},
                     { role: 'toggledevtools'},
                     { type: 'separator'},
