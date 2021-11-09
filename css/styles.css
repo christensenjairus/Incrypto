@@ -24,6 +24,12 @@ div {
     margin-left:auto; 
     margin-right:auto;
 }
+myDiv {
+    text-align: left;
+}
+myDiv2 {
+    text-align: right;
+}
 footer { 
     text-align: center;
 }
@@ -36,7 +42,7 @@ footer {
     margin-top:10px; 
     min-height: 91vh; 
     height: 91vh;
-    min-width: 97%;
+    min-width: 60%;
 }
 #input { 
     border-radius:2px; 
