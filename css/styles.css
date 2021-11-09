@@ -2,11 +2,11 @@
     CSS FOR CHAT PAGE
 */
 * {
-    font-family:tahoma;
+    font-family:Arial, Helvetica, sans-serif;
     font-size:12px;
     padding:0px;
     margin:0px;
-    color:black; /* this color to change text color */
+    color:white; /* this color to change text color */
 }
 h1 {
     text-align: center; 
@@ -29,27 +29,31 @@ footer {
 }
 #content { 
     padding:5px; 
-    background:white; /*this color to change background of chat box */
+    background:black; /*this color to change background of chat box */
     border-radius:5px;
-    overflow-y: scroll; 
-    border:1px solid #CCC;
+    overflow-y: scroll; /*need*/
+    border:1px solid #4f4f4f;
     margin-top:10px; 
-    min-height: 93vh; 
-    height: 93vh;
+    min-height: 91vh; 
+    height: 91vh;
     min-width: 97%;
 }
 #input { 
     border-radius:2px; 
-    border:1px solid #ccc;
-    margin-top:10px; 
+    border:1px solid #4f4f4f;
+    margin-top:7px; 
     padding:5px; 
     width:400px;
-    
+    background-color: black;  
 }
 #status { 
     width:88px;
     display:block;
     float:left;
     margin-top:15px; 
+}
+body{
+    background-color: #190061; /*background of chat screen*/
+    overflow: hidden;
 }
 /* Add styles here to customize the appearance of your app */
