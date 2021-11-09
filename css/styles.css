@@ -17,7 +17,7 @@ h2 {
 }
 p { 
     line-height:18px; 
-    text-align: center;    
+    text-align: left;    
 }
 div { 
     width:500px; 
@@ -36,7 +36,7 @@ footer {
     margin-top:10px; 
     min-height: 91vh; 
     height: 91vh;
-    min-width: 97%;
+    min-width: 80%;
 }
 #input { 
     border-radius:2px; 

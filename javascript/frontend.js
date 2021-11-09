@@ -233,7 +233,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     * Add message to the chat window
     */
     function addMessage(author, message, color, dt) {
-        content.append('<p><span style="color:' + color + '">'
+        content.append('<p><span style="float:right; color:' + color + '">'
             + author + '</span> @ ' + (dt.getHours() < 10 ? '0'
             + dt.getHours() : dt.getHours()) + ':'
             + (dt.getMinutes() < 10
