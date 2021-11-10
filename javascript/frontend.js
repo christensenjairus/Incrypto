@@ -6,7 +6,6 @@ const { ipcMain, ipcRenderer } = require('electron');
 const Store = require('electron-store');
 const { server, connection } = require('websocket');
 import * as EncryptionAlgs from './Encryption.js';
-// const { username } = require('./login.js');
 const store = new Store();
 
 const serverName = store.get("serverName", ""); // default to "" if no valid input
