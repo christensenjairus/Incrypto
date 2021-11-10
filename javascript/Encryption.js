@@ -29,7 +29,7 @@ function plain_text_REVERSE(textin) {
 
 function binary(textin) {
     let textout = "";
-    const textToBinary = (str = '') => {
+    function textToBinary (str = '') {
         let res = '';
         res = str.split('').map(char => {
             return char.charCodeAt(0).toString(2);
