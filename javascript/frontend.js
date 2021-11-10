@@ -5,6 +5,7 @@
 const { ipcMain, ipcRenderer } = require('electron');
 const Store = require('electron-store');
 const { server, connection } = require('websocket');
+import * as EncryptionAlgs from './Encryption.js';
 // const { username } = require('./login.js');
 const store = new Store();
 
@@ -26,6 +27,7 @@ ipcRenderer.invoke('getColor', "").then((result) => {
 if (myColor == false) {
     myColor = "black"
 }
+let EncryptionFunction = "defaultEncryption";
 
 var content = $('#content');
 var input = $('#input');
@@ -117,7 +119,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             // insert every single message to the chat window
             document.getElementById("content").innerHTML = "";
             for (var i=0; i < json.data.length; i++) {
-                addMessage(json.data[i].author, json.data[i].text, json.data[i].color, new Date(json.data[i].time));
+                addMessage(json.data[i].author, json.data[i].text, json.data[i].color, json.data[i].time, json.data[i].encryption);
             }
             var div = $('#content');
             div.animate({
@@ -127,7 +129,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (DEBUG) console.log("Message received: \n" + message.data);
             // let the user write another message
             input.prop("disabled", false)
-            addMessage(json.data.author, json.data.text, json.data.color, new Date(json.data.time));
+            addMessage(json.data.author, json.data.text, json.data.color, json.data.time, json.data.encryption);
             // if (DEBUG) console.log("should be able to type - message received")
             input.focus();
             var div = $('#content');
@@ -161,10 +163,17 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (!msg) {
                 return;
             }
+
+            try {
+                msg = eval(EncryptionFunction + '("' + msg + '")'); // ENCRYPTION IS HERE!
+            } catch(e) {
+                alert("Error with user encryption. Check that encryption name is correct");
+                return;
+            }
             // TODO: get encryption type, encrypt message, get key from authentication
 
             // send the message as JSON
-            let message = {"type":"message", "user": myName, "msg":msg, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
+            let message = {"type":"message", "user": myName, "msg":msg, "userColor":myColor, "encryption":EncryptionFunction, "key":"none", "time": (new Date()).getTime()}
             try {
                 connection.send(JSON.stringify(message));
                 if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
@@ -232,7 +241,12 @@ $(function() { // this syntax means it's a function that will be run once once d
     /*
     * Add message to the chat window
     */
-    function addMessage(author, message, color, dt) {
+    function addMessage(author, message, color, dt, encryptionType) {
+        try {
+            message = eval(encryptionType + '_REVERSE("' + message + '")');
+        } catch (e) {
+            console.log("Don't have decryption algorithm for " + encryptionType + " in message sent from " + author);
+        }
         if (author != myName) {
             content.append('<div class="myDiv"><p style="text-align: left"><span style="color:' + color + '">'
             + author + '</span>:    ' + message + '</p></div>');
@@ -288,5 +302,19 @@ function showNotification(author, text) {
     ipcRenderer.invoke('incBadgeCnt', 1).then((result => {
         // update badge count
     }))
+}
+
+function getFunctionFromString(string)
+{
+    var scope = window;
+    var scopeSplit = string.split('.');
+    for (i = 0; i < scopeSplit.length - 1; i++)
+    {
+        scope = scope[scopeSplit[i]];
+
+        if (scope == undefined) return;
+    }
+
+    return scope[scopeSplit[scopeSplit.length - 1]];
 }
 
