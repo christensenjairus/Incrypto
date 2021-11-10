@@ -8,6 +8,7 @@ const {app, BrowserWindow, Menu, MenuItem} = require('electron')
 const shell = require('electron').shell
 const {dialog} = require('electron')
 const Store = require('electron-store')
+// const fs = require('fs')
 const store = new Store({
     // name: "serverConfig.json"
 })
