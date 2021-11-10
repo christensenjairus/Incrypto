@@ -296,9 +296,10 @@ function setRandomColor() {
 
 function showNotification(author, text) {
     try {
-        message = eval(encryptionType + '_REVERSE("' + message + '")');
+        text = eval(encryptionType + '_REVERSE("' + text + '")');
     } catch (e) {
         console.log("Don't have decryption algorithm for " + encryptionType + " in message sent from " + author);
+        return; // don't get notifications for messages that are gibberish
     }
     const NOTIFICATION_TITLE = 'New message from ' + author
     const NOTIFICATION_BODY = text
