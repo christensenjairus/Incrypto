@@ -27,7 +27,10 @@ ipcRenderer.invoke('getColor', "").then((result) => {
 if (myColor == false) {
     myColor = "black"
 }
-let EncryptionFunction = "defaultEncryption";
+
+let EncryptionFunction = "defaultEncryption"; 
+EncryptionFunction = "plain_text"; // TODO: COMMENT OUT THIS LINE TO USE ENCRYPTION
+
 
 var content = $('#content');
 var input = $('#input');
@@ -66,7 +69,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             mystatus.text(myName + ': ').css('color', myColor);
             // get history of chat
             let message = {"type":"historyRequest", "user":myName, "color":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
-            connection.send(JSON.stringify(message));
+            send(connection, JSON.stringify(message));
             if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
             // end of getting chat history
             input.prop("disabled", false);
@@ -175,7 +178,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             // send the message as JSON
             let message = {"type":"message", "user": myName, "msg":msg, "userColor":myColor, "encryption":EncryptionFunction, "key":"none", "time": (new Date()).getTime()}
             try {
-                connection.send(JSON.stringify(message));
+                send(connection, JSON.stringify(message));
                 if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
                 savedInputText = "";
             } catch(error) {
@@ -210,12 +213,12 @@ $(function() { // this syntax means it's a function that will be run once once d
         else {
             // input.removeAttr('disabled')
             let message = {"type":"historyRequest", "user":myName, "color":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
-            connection.send(JSON.stringify(message)); // reget the history every 3 seconds
+            send(connection, JSON.stringify(message)); // reget the history every 3 seconds
         }
     }, 5000);
     setInterval(function() {
         let message = {type:"ping"}
-        connection.send(JSON.stringify(message));
+        send(connection, JSON.stringify(message));
         // console.log("ping sent")
         pingCount = pingCount + 1;
             if (pingCount > 55 && pongCount < 55) {
@@ -270,7 +273,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         store.set(myName + "_Color", newColor)
         document.getElementById("content").innerHTML + "";
         let message = {"type":"colorChange", "user": myName, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
-        connection.send(JSON.stringify(message));
+        send(connection, JSON.stringify(message));
         
         if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
     })
@@ -304,17 +307,22 @@ function showNotification(author, text) {
     }))
 }
 
-function getFunctionFromString(string)
-{
-    var scope = window;
-    var scopeSplit = string.split('.');
-    for (i = 0; i < scopeSplit.length - 1; i++)
-    {
-        scope = scope[scopeSplit[i]];
+function send(connection, message) {
+    try {
+        connection.send(message);
 
-        if (scope == undefined) return;
+        input.removeAttr('disabled')
+        if (document.getElementById('input').value === "Can\'t communicate with the WebSocket server.") {
+            document.getElementById('input').value = savedInputText;
+        }
+        input.focus();
+        mystatus.text(myName).css('color', myColor);
+    } catch(e) { // will execute if connection.send fails (which means that connection is not set up yet)
+        // change DOM here because of failure
+        if (document.getElementById('input').value != "Can\'t communicate with the WebSocket server.") {
+            savedInputText = document.getElementById('input').value
+        }
+        document.getElementById('input').value = ("Can\'t communicate with the WebSocket server.")
+        input.attr('disabled', 'disabled')
     }
-
-    return scope[scopeSplit[scopeSplit.length - 1]];
 }
-
