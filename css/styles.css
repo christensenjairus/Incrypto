@@ -67,4 +67,21 @@ body{
     background-color: #16082f; /*background of chat screen*/
     overflow: hidden;
 }
+/* width
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+
+  ::-webkit-scrollbar-track {
+    background: white;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  } */
 /* Add styles here to customize the appearance of your app */
