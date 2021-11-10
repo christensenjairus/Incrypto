@@ -295,6 +295,11 @@ function setRandomColor() {
 }
 
 function showNotification(author, text) {
+    try {
+        message = eval(encryptionType + '_REVERSE("' + message + '")');
+    } catch (e) {
+        console.log("Don't have decryption algorithm for " + encryptionType + " in message sent from " + author);
+    }
     const NOTIFICATION_TITLE = 'New message from ' + author
     const NOTIFICATION_BODY = text
     // const CLICK_MESSAGE = 'Notification clicked!'
@@ -302,7 +307,7 @@ function showNotification(author, text) {
     .onclick = () => {
         document.getElementById('input').focus();
     }
-    console.log("notification should occur now")
+    // console.log("notification should occur now")
     ipcRenderer.invoke('incBadgeCnt', 1).then((result => {
         // update badge count
     }))
