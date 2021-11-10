@@ -140,7 +140,15 @@ $(function() { // this syntax means it's a function that will be run once once d
             div.animate({
                 scrollTop: div[0].scrollHeight
             }, 1000);
-            if (json.data.author != myName) showNotification(json.data.author, json.data.text)
+            if (json.data.author != myName) {
+                try {
+                    json.data.text = eval(json.data.encryption + '_REVERSE("' + json.data.text + '")');
+                } catch (e) {
+                    console.log("Don't have decryption algorithm for " + json.data.encryption + " in message sent from " + json.data.author);
+                    return; // don't get notifications for messages that are gibberish
+                }
+                showNotification(json.data.author, json.data.text)
+            }
         } else if (json.type == "logout") {
             alert("'You've logged in somewhere else. You'll be logged out here")
             connection.close();
@@ -290,17 +298,12 @@ function getRandomColor() {
     }
     return color;
 }
+
 function setRandomColor() {
     $("#colorpad").css("background-color", getRandomColor());
 }
 
 function showNotification(author, text) {
-    try {
-        text = eval(encryptionType + '_REVERSE("' + text + '")');
-    } catch (e) {
-        console.log("Don't have decryption algorithm for " + encryptionType + " in message sent from " + author);
-        return; // don't get notifications for messages that are gibberish
-    }
     const NOTIFICATION_TITLE = 'New message from ' + author
     const NOTIFICATION_BODY = text
     // const CLICK_MESSAGE = 'Notification clicked!'
