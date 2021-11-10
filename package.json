@@ -28,6 +28,7 @@
     "electron-store": "^8.0.1",
     "fs": "^0.0.1-security",
     "open-in-editor": "^2.2.0",
+    "perfect-scrollbar": "^1.5.3",
     "source-map-support": "^0.5.20",
     "svg.draggable.js": "^2.2.1",
     "svg.js": "^2.6.3",
