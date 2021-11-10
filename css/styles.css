@@ -43,7 +43,8 @@ footer {
     margin-top:10px; 
     min-height: 91vh; 
     height: 91vh;
-    /* min-width: 60vh; */
+    min-width: 60vh;
+    max-width: 60vh;
     width: 80vh;
     block-size: fit-content;
     
@@ -63,7 +64,7 @@ footer {
     margin-top:15px; 
 }
 body{
-    background-color: #190061; /*background of chat screen*/
+    background-color: #16082f; /*background of chat screen*/
     overflow: hidden;
 }
 /* Add styles here to customize the appearance of your app */
