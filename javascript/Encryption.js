@@ -41,10 +41,8 @@ function binary(textin) {
 
 function binary_REVERSE(textin) {
     function binaryAgent(str) {
-
         var newBin = str.split(" ");
         var binCode = [];
-        
         for (i = 0; i < newBin.length; i++) {
             binCode.push(String.fromCharCode(parseInt(newBin[i], 2)));
         }
