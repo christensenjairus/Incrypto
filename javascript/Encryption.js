@@ -7,7 +7,7 @@
 */
 
 // ADD YOUR ENCRYPTION NAME HERE ------------------------------
-const Encryption_Types = ["defaultEncryption", "plain_text", "example", "binary"]; // <--- add name in here
+const Encryption_Types = ["defaultEncryption", "plain_text", "example"]; // <--- add name in here
 // ------------------------------------------------------------
 
 // CREATE YOUR FUNCTIONS WITH THE EXACT SAME NAME HERE
@@ -25,28 +25,4 @@ function plain_text(textin) {
 
 function plain_text_REVERSE(textin) {
     return textin;
-}
-
-function binary(textin) {
-    let textout = "";
-    function textToBinary (str = '') {
-        let res = '';
-        res = str.split('').map(char => {
-            return char.charCodeAt(0).toString(2);
-        }).join(' ');
-        return res;
-    };
-    return textToBinary(textin);
-}
-
-function binary_REVERSE(textin) {
-    function binaryAgent(str) {
-        var newBin = str.split(" ");
-        var binCode = [];
-        for (i = 0; i < newBin.length; i++) {
-            binCode.push(String.fromCharCode(parseInt(newBin[i], 2)));
-        }
-        return binCode.join("");
-    }
-    return binaryAgent(textin);
 }

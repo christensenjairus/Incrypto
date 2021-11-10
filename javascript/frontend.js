@@ -5,7 +5,8 @@
 const { ipcMain, ipcRenderer } = require('electron');
 const Store = require('electron-store');
 const { server, connection } = require('websocket');
-import * as EncryptionAlgs from './Encryption.js';
+import * as EncryptionAlgs from './Encryption.js'; // turn this on once official
+// import * as EncryptionAlgs from './Encryption_DEV.js'; // add special algorithms
 const store = new Store();
 
 const serverName = store.get("serverName", ""); // default to "" if no valid input
