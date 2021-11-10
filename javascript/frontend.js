@@ -28,7 +28,8 @@ if (myColor == false) {
 }
 
 let EncryptionFunction = store.get("encryptionType", Encryption_Types[0]); // default encryption type is first in file
-EncryptionFunction = "plain_text"; // TODO: COMMENT OUT THIS LINE TO USE ENCRYPTION
+// EncryptionFunction = "plain_text"; // TODO: COMMENT OUT THIS LINE TO USE ENCRYPTION
+// EncryptionFunction = "binary";
 
 
 var content = $('#content');

@@ -221,12 +221,22 @@ function createWindow(width, height) {
                                         codeEditor = "emacs"
                                         store.set("codeEditor", "emacs");
                                     }}
+                                    
                             ]
                         },
                         {label: 'Enter algorithm',
                             click() {
                                 openEncryptionFileForEditing();
-                            }}
+                            },
+                        },
+                        {label: 'Change your message encryption',
+                            submenu: [
+                                {label: "Default Encryption", click() {changeMessageEncryptionType("defaultEncryption")}},
+                                {label: "Plain Text", click() {changeMessageEncryptionType("plain_text")}},
+                                {label: "Binary", click() {changeMessageEncryptionType("binary")}},
+                            ]
+                        }
+
                     ]
                 },{
                     role: 'help',
@@ -268,6 +278,11 @@ function openEncryptionFileForEditing() {
         //can do something here with the response
         }))
     });
+}
+
+function changeMessageEncryptionType(type) {
+    store.set("encryptionType", type);
+    switchToChatPage();
 }
 
 function switchToLoginPage() {
