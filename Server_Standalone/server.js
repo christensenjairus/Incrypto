@@ -24,7 +24,7 @@ const webSocketsServerPort = 80;
 const webSocketServer = require('websocket').server;
 const http = require('http');
 var history = [ ];
-var myChat = "./chat.txt"
+var myChat = "./chat.json"
 if (fs.existsSync(myChat)) {
 	restoreFromFile();
 }
