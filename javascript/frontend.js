@@ -150,7 +150,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             //         console.log("Don't have decryption algorithm for " + json.data.encryption + " in message sent from " + json.data.author);
             //         return; // don't get notifications for messages that are gibberish
             //     }
-            if (encName = json.data.author) {
+            if (Encrypt(myName) = json.data.author) {
                 showNotification(Decrypt(json.data.author, json.data.encryption), Decrypt(json.data.text, json.data.encryption));
             }
         } else if (json.type == "logout") {
