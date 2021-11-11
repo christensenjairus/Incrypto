@@ -218,7 +218,7 @@ function checkLoginCreds(connection, username, passhash) {
 	if (store.get("username_" + username, "") == "") { // username does not exist
 		return "username_not_exist";
 	}
-	displayClients();
+	// displayClients();
 	logOutOthers(connection, username);
 	// let count = 0;
 	// for (var i=0; i < clients.length; ++i) {
