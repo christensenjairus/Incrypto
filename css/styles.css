@@ -36,7 +36,8 @@ footer {
     padding: 0px; 
     background:black; /*this color to change background of chat box */
     background-color: #000000;
-    background-image: linear-gradient(310deg, #04062e67 0%, #3110445b 74%);
+    /* background-image: linear-gradient(310deg, #04062e67 0%, #3110445b 74%); */
+    background-image: linear-gradient(310deg, #050a7967 0%, #3110445b 74%);
     border-radius:5px;
     overflow-y: scroll; 
     border:1px solid #4f4f4f;
