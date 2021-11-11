@@ -10,11 +10,12 @@
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
     <title>Incrypto - Chat</title>
   </head>
-  <body>
+  <body id='body1'>
     <!-- <h1>Incrypto - Chat</h1> -->
     <div id="content"></div>
-    <div>
+    <div id="textEntry">
       <span id="status">Connecting...</span>
+      <span id="smallBuffer"></span>
       <input type="text" id="input" disabled="true" />
       <!-- <input type="text" id="input" /> -->
     </div>
@@ -26,5 +27,13 @@
     <!-- <footer></footer> -->
     <!-- You can also require other files to run in this process -->
     <script type="text/javascript" src="../javascript/renderer.js"></script>
+    <!-- <script language="javascript">
+      function autoResizeDiv() {
+          document.getElementById('body1').style.height = window.innerHeight +'px';
+          console.log("window resized")
+      }
+      window.onresize = autoResizeDiv;
+      autoResizeDiv();
+    </script> -->
   </body>
 </html>

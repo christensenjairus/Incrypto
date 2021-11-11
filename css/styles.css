@@ -3,11 +3,15 @@
 */
 * {
     font-family:Arial, Helvetica, sans-serif;
-    font-size:12px;
+    font-size:14px;
     padding:0px;
     margin:0px;
     font-style: fixed;
     color:white; /* this color to change text color */
+}
+html, body {
+    height: 100%;
+    /* padding-top: 100px; */
 }
 h1 {
     text-align: center; 
@@ -17,11 +21,11 @@ h2 {
     text-align: center;
 }
 p { 
-    line-height:18px; 
-    text-align: left;    
+    /* line-height:18px;  */
+    /* text-align: left;     */
 }
 div { 
-    width:500px; 
+    /* width:500px;  */
     margin-left:auto; 
     margin-right:auto;
 }
@@ -35,53 +39,78 @@ footer {
     text-align: center;
 }
 #content { 
-    padding:5px; 
+    padding-top: 20px;
+    padding: 6px; 
     background:black; /*this color to change background of chat box */
     border-radius:5px;
-    overflow-y: scroll; /*need*/
+    overflow-y: scroll; 
     border:1px solid #4f4f4f;
+    height: max-content;
     margin-top:10px; 
-    min-height: 91vh; 
-    height: 91vh;
-    min-width: 60vh;
-    max-width: 60vh;
-    width: 80vh;
-    block-size: fit-content;
-    
+    min-height: 10vh; 
+    height: 92vh;
+    /* min-height: 10px; */
+    /* min-width: 60vh; */
+    /* max-width: 60vh; */
+    /* width: 80vh; */
+    margin: auto;
+    margin-left: 5px; /*for some reason this is needed becayse of the scroll bar on the right*/
+    margin-right: 5px;
+    /* block-size: fit-content; */
+}
+#textEntry {
+    margin: 5px;
+    margin-top: 3px;
+    width: 100%;
+    padding: 10px;
+    display: flex;
 }
 #input { 
     border-radius:2px; 
     border:1px solid #4f4f4f;
-    margin-top:7px; 
+    /* margin-top:7px;  */
+    margin-top:-7px;
     padding:5px; 
-    width:400px;
+    /* width:400px; */
+    /* max-width: 700px; */
+    /* min-width: 10px; */
+    width: 100%;
+    margin-right: 20px;
+    /* text-align: center; */
     background-color: black;  
 }
 #status { 
-    width:88px;
-    display:block;
-    float:left;
-    margin-top:15px; 
+    width: fit-content;
+    /* display: inline-block; */
+    min-width: 120px;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: inline;
+    /* float:left; */
+    /* margin-top:15px;  */
+    /* margin-top: -5px; */
+    text-align: center;
+    white-space: nowrap;
+    /* overflow:visible; */
 }
 body{
     background-color: #16082f; /*background of chat screen*/
     overflow: hidden;
 }
-/* width
+
 ::-webkit-scrollbar {
     width: 10px;
-  }
-  
+}
 
-  ::-webkit-scrollbar-track {
-    background: white;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background: #888;
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  } */
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(31, 0, 66);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(1, 0, 87);
+} */
 /* Add styles here to customize the appearance of your app */

@@ -35,6 +35,7 @@ let EncryptionFunction = store.get("encryptionType", Encryption_Types[1]);  // T
 var content = $('#content');
 var input = $('#input');
 var mystatus = $('#status');
+// var textEntry = $('textEntry');
 let savedInputText = "";
 
 var colors = ['purple', 'plum', 'orange', 'red', 'green', 'blue', 'magenta'];
