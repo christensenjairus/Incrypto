@@ -389,15 +389,16 @@ ipcMain.handle('logout', async (event, someArgument) => {
 let myName = false;
 let myColor = false;
 
-ipcMain.handle('getName', async (event, someArgument) => {
+ipcMain.handle('getName', (event, someArgument) => {
     return myName;
 })
 
 ipcMain.handle('getColor', (event, someArgument) => {
+    console.log(myColor + ' grabbed')
     return myColor;
 })
 
-ipcMain.handle('setName', async (event, name) => {
+ipcMain.handle('setName', (event, name) => {
     myName = name;
     // console.log("name saved in main.js file: " + name)
     return true;
@@ -414,10 +415,10 @@ ipcMain.handle('getEncryptionType', (someArgument) => {
     return EncryptionType;
 })
 
-ipcMain.handle('setColor', async (event, color) => {
+ipcMain.handle('setColor', (event, color) => {
     // myName = name;
     myColor = color;
-    // console.log("name saved in main.js file: " + color)
+    console.log("color saved in main.js file: " + color)
     return true;
 })
 

@@ -78,14 +78,14 @@ wsServer.on('request', function(request) {
 				let allNames = JSON.parse(inComingMsg.allNames);
 				for (var i = 0; i < allNames.length; ++i) {
 					changeMessagesColor(allNames[i], userColor, inComingMsg);
-					console.log("changing message color for " + allNames[i])
+					// console.log("changing message color for " + allNames[i])
 				}
 				sendHistoryToAll();
 				return;
 			}
 			else if (inComingMsg.type == "historyRequest") {
 				// send history
-				if (DEBUG) console.log("history route chosen")
+				// if (DEBUG) console.log("history route chosen")
 				sendHistory(connection);
 				return
 			}

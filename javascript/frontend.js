@@ -22,10 +22,6 @@ var myColor;
 ipcRenderer.invoke('getColor', "").then((result) => { 
     myColor = result;
 });
-// if (myColor == false) {
-//     // myColor = "black"
-//     myColor = store.get(myName + "_Color", "black");
-// }
 
 let EncryptionFunction = store.get("encryptionType", Encryption_Types[1]);  // TODO: switch this back to default Encryption
                                                                             //default encryption type is first in file
@@ -279,6 +275,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         var newColor = getRandomColor(); // generate random color
         myColor = newColor
         store.set(myName + "_Color", newColor);
+        ipcRenderer.invoke('setColor', myColor);
         mystatus.css('color', myColor)
         let allMyEncNames = [];
         for (let i = 0; i < Encryption_Types.length; ++i) {
