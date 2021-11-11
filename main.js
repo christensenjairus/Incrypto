@@ -33,8 +33,8 @@ const windows = new Set();
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-    let width = store.get('windowWidth', 800); // use size of last use, but 800 is default
-    let height = store.get('windowHeight', 600); // use size of last use, but 600 is default
+    let width = store.get('windowWidth', 420); // use size of last use, but 120 is default
+    let height = store.get('windowHeight', 720); // use size of last use, but 720 is default
     createWindow(width, height);
 });
 
