@@ -182,9 +182,10 @@ $(function() { // this syntax means it's a function that will be run once once d
             // TODO: get encryption type, encrypt message, get key from authentication
 
             // send the message as JSON
-            console.log("myname is " + myName);
+            // console.log("myname is " + myName);
             msg = Encrypt(msg);
-            let message = {"type":"message", "user":myName, "userEnc": Encrypt(myName), "msg":msg, "userColor":myColor, "encryption":EncryptionFunction, "key":"none", "time": (new Date()).getTime()}
+            var tmp = Encrypt(myName);
+            let message = {"type":"message", "user":myName, "userEnc":tmp, "msg":msg, "userColor":myColor, "encryption":EncryptionFunction, "key":"none", "time": (new Date()).getTime()}
             try {
                 send(connection, JSON.stringify(message));
                 if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));

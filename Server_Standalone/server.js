@@ -141,7 +141,7 @@ wsServer.on('request', function(request) {
 					// history.push(obj); // save messages
 					// history = history.slice(-100);
 					saveToFile(obj);
-					changeMessagesColor(userName, userColor, inComingMsg);
+					// changeMessagesColor(userName, userColor, inComingMsg);
 					var json = JSON.stringify({ type:'message', data: obj });
 					for (var i=0; i < clients.length; i++) { // send history to users
 						clients[i].connection.sendUTF(json);
