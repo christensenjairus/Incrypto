@@ -140,14 +140,15 @@ $(function() { // this syntax means it's a function that will be run once once d
             div.animate({
                 scrollTop: div[0].scrollHeight
             }, 1000);
-            if (json.data.author != myName) {
-                try {
-                    json.data.text = eval(json.data.encryption + '_REVERSE("' + json.data.text + '")');
-                } catch (e) {
-                    console.log("Don't have decryption algorithm for " + json.data.encryption + " in message sent from " + json.data.author);
-                    return; // don't get notifications for messages that are gibberish
-                }
-                showNotification(json.data.author, json.data.text)
+            // if (json.data.author != myName) {
+            //     try {
+            //         json.data.text = eval(json.data.encryption + '_REVERSE("' + json.data.text + '")');
+            //     } catch (e) {
+            //         console.log("Don't have decryption algorithm for " + json.data.encryption + " in message sent from " + json.data.author);
+            //         return; // don't get notifications for messages that are gibberish
+            //     }
+            if (encName = json.data.author) {
+                showNotification(Decrypt(json.data.author, json.data.encryption), Decrypt(json.data.text, json.data.encryption));
             }
         } else if (json.type == "logout") {
             alert("'You've logged in somewhere else. You'll be logged out here")
@@ -178,7 +179,9 @@ $(function() { // this syntax means it's a function that will be run once once d
             // TODO: get encryption type, encrypt message, get key from authentication
 
             // send the message as JSON
-            let message = {"type":"message", "user": myName, "userEnc": Encrypt(myName), "msg":Encrypt(msg), "userColor":myColor, "encryption":EncryptionFunction, "key":"none", "time": (new Date()).getTime()}
+            console.log("myname is " + myName);
+            msg = Encrypt(msg);
+            let message = {"type":"message", "user":myName, "userEnc": Encrypt(myName), "msg":msg, "userColor":myColor, "encryption":EncryptionFunction, "key":"none", "time": (new Date()).getTime()}
             try {
                 send(connection, JSON.stringify(message));
                 if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
@@ -248,9 +251,9 @@ $(function() { // this syntax means it's a function that will be run once once d
     */
     function addMessage(author, message, color, dt, encryptionType) {
         message = Decrypt(message, encryptionType);
-        author = Decrypt(author, encryptionType);
-        console.log("my name is " + myName);
-        console.log("author is " + author);
+        author = Decrypt(author, encryptionType)
+        console.log("author is " + Decrypt(author, encryptionType));
+        console.log("encryption type is " + encryptionType)
         if (author != myName) {
             content.append('<div class="myDiv"><p style="text-align: left"><span style="color:' + color + '">'
             + author + '</span>:    ' + message + '</p></div>');
@@ -343,7 +346,9 @@ function Decrypt(textin, encryptionType) {
     let toReturn = "";
     try {
         toReturn = eval(encryptionType + '_REVERSE("' + textin + '")');
+        console.log("success: toReturn=" + toReturn);
     } catch(e) {
+        console.log("error in decryption: " + e);
         return textin;
     }
     return toReturn;
