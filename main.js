@@ -393,11 +393,6 @@ ipcMain.handle('getName', (event, someArgument) => {
     return myName;
 })
 
-ipcMain.handle('getColor', (event, someArgument) => {
-    console.log(myColor + ' grabbed')
-    return myColor;
-})
-
 ipcMain.handle('setName', (event, name) => {
     myName = name;
     // console.log("name saved in main.js file: " + name)
@@ -415,10 +410,15 @@ ipcMain.handle('getEncryptionType', (someArgument) => {
     return EncryptionType;
 })
 
+ipcMain.handle('getColor', (event, someArgument) => {
+    // console.log(myColor + ' grabbed')
+    return myColor;
+})
+
 ipcMain.handle('setColor', (event, color) => {
     // myName = name;
     myColor = color;
-    console.log("color saved in main.js file: " + color)
+    // console.log("color saved in main.js file: " + color)
     return true;
 })
 
