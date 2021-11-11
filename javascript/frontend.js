@@ -175,17 +175,10 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (!msg) {
                 return;
             }
-
-            try {
-                msg = eval(EncryptionFunction + '("' + msg + '")'); // ENCRYPTION IS HERE!
-            } catch(e) {
-                alert("Error with user encryption. Check that encryption name is correct");
-                return;
-            }
             // TODO: get encryption type, encrypt message, get key from authentication
 
             // send the message as JSON
-            let message = {"type":"message", "user": myName, "msg":msg, "userColor":myColor, "encryption":EncryptionFunction, "key":"none", "time": (new Date()).getTime()}
+            let message = {"type":"message", "user": myName, "userEnc": Encrypt(myName), "msg":Encrypt(msg), "userColor":myColor, "encryption":EncryptionFunction, "key":"none", "time": (new Date()).getTime()}
             try {
                 send(connection, JSON.stringify(message));
                 if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
@@ -254,11 +247,8 @@ $(function() { // this syntax means it's a function that will be run once once d
     * Add message to the chat window
     */
     function addMessage(author, message, color, dt, encryptionType) {
-        try {
-            message = eval(encryptionType + '_REVERSE("' + message + '")');
-        } catch (e) {
-            console.log("Don't have decryption algorithm for " + encryptionType + " in message sent from " + author);
-        }
+        message = Decrypt(message);
+        author = Decrypt(author);
         if (author != myName) {
             content.append('<div class="myDiv"><p style="text-align: left"><span style="color:' + color + '">'
             + author + '</span>:    ' + message + '</p></div>');
@@ -335,4 +325,24 @@ function send(connection, message) {
         document.getElementById('input').value = ("Can\'t communicate with the WebSocket server.")
         input.attr('disabled', 'disabled')
     }
+}
+
+function Encrypt(textin) {
+    let toReturn = "";
+    try {
+        toReturn = eval(EncryptionFunction + '("' + textin + '")');
+    } catch(e) {
+        return textin;
+    }
+    return toReturn;
+}
+
+function Decrypt(textin) {
+    let toReturn = "";
+    try {
+        toReturn = eval(EncryptionFunction + '_REVERSE("' + textin + '")');
+    } catch(e) {
+        return textin;
+    }
+    return toReturn;
 }

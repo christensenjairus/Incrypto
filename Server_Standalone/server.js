@@ -127,24 +127,29 @@ wsServer.on('request', function(request) {
 				if (DEBUG) console.log(json)
 				return
 			}
-			store.set(userName+"_Color", userColor);
-			userName = inComingMsg.user
-			console.log("	" + userName + " sent '" + msg + "'. They have color " + userColor + " and encryption " + inComingMsg.encryption)
-				var obj = {
-					time: inComingMsg.time,
-					text: htmlEntities(msg),
-					author: userName,
-					color: userColor,
-					encryption: inComingMsg.encryption
-				};
-				// history.push(obj); // save messages
-				// history = history.slice(-100);
-				saveToFile(obj);
-				changeMessagesColor(userName, userColor, inComingMsg);
-				var json = JSON.stringify({ type:'message', data: obj });
-				for (var i=0; i < clients.length; i++) { // send history to users
-					clients[i].connection.sendUTF(json);
-				}
+			else if (inComingMsg.type === 'message') {
+				store.set(userName+"_Color", userColor);
+				userName = inComingMsg.user
+				console.log("	" + userName + " sent '" + msg + "'. They have color " + userColor + " and encryption " + inComingMsg.encryption)
+					var obj = {
+						time: inComingMsg.time,
+						text: htmlEntities(msg),
+						author: inComingMsg.userEnc,
+						color: userColor,
+						encryption: inComingMsg.encryption
+					};
+					// history.push(obj); // save messages
+					// history = history.slice(-100);
+					saveToFile(obj);
+					changeMessagesColor(userName, userColor, inComingMsg);
+					var json = JSON.stringify({ type:'message', data: obj });
+					for (var i=0; i < clients.length; i++) { // send history to users
+						clients[i].connection.sendUTF(json);
+					}
+			}
+			else {
+				console.log("received a message of type unknown");
+			}
 		}
 	});
 	connection.on('close', function(connection) {
