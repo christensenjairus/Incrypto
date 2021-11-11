@@ -290,6 +290,7 @@ function openEncryptionFileForEditing() {
 
 function changeMessageEncryptionType(type) {
     store.set("encryptionType", type);
+    EncryptionType = type;
     switchToChatPage();
 }
 
@@ -400,6 +401,17 @@ ipcMain.handle('setName', async (event, name) => {
     myName = name;
     // console.log("name saved in main.js file: " + name)
     return true;
+})
+
+let EncryptionType = store.get("encryptionType", "defaultEncryption");
+
+ipcMain.handle('setEncryptionType', async (event, name) => {
+    EncryptionType = name;
+    return true;
+})
+
+ipcMain.handle('getEncryptionType', async (someArgument) => {
+    return EncryptionType;
 })
 
 ipcMain.handle('setColor', async (event, color) => {

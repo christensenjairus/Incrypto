@@ -26,8 +26,11 @@ if (myColor == false) {
     myColor = "black"
 }
 
-let EncryptionFunction = store.get("encryptionType", Encryption_Types[1]);  // TODO: switch this back to default Encryption
+let EncryptionFunction; // = store.get("encryptionType", Encryption_Types[1]);  // TODO: switch this back to default Encryption
                                                                             //default encryption type is first in file
+ipcRenderer.invoke('getEncryptionType', "").then((result) => {
+    EncryptionFunction = result;
+})
 // EncryptionFunction = "plain_text"; // TODO: COMMENT OUT THIS LINE TO USE ENCRYPTION
 // EncryptionFunction = "binary";
 
