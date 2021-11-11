@@ -41,6 +41,10 @@ var mystatus = $('#status');
 // var textEntry = $('textEntry');
 let savedInputText = "";
 
+function logout() {
+    ipcRenderer.invoke('logout');
+}
+
 // var colors = ['purple', 'plum', 'orange', 'red', 'green', 'blue', 'magenta'];
 // colors.sort(function(a,b) {
 //     return Math.random() > 0.5;	
@@ -153,14 +157,15 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (Encrypt(myName) != json.data.author) {
                 showNotification(Decrypt(json.data.author, json.data.encryption), Decrypt(json.data.text, json.data.encryption));
             }
-        // } else if (json.type == "logout") {
-        //     clearInterval(pingIntervalID);
-        //     clearInterval(historyIntervalID);
-            alert("'You've logged in somewhere else.")
+        } else if (json.type == "logout") {
+            clearInterval(pingIntervalID);
+            clearInterval(historyIntervalID);
             connection.close();
-            ipcRenderer.invoke('logout').then(() => {
-            //     alert("logout has been run")
+            // window.stop();
+            alert("You've logged in somewhere else. You'll be logged out here.")
+            ipcRenderer.invoke('forceLogout').then(() => { // this is a jenky solution to the problem - the login handler isn't working when called here and we don't know why
             });
+            // logout();
             return;
         } else {
             console.log('Unexpected Json Value: ', json);

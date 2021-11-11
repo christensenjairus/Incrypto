@@ -295,9 +295,9 @@ function changeMessageEncryptionType(type) {
 }
 
 function switchToLoginPage() {
-    replaceCurrentWindow("login.html")
+    // replaceCurrentWindow("login.html")
     // console.log("supposed to switch to login page here")
-    // switchToLoginPage();
+    switchToLoginPage();
 }
 
 function switchToRegistrationPage() {
@@ -390,6 +390,11 @@ ipcMain.handle('logout', (event) => {
     // return result
 
     // mainWindow.loadURL('file://' + __dirname + '/html/login.html')
+})
+
+ipcMain.handle('forceLogout', (event) => {
+    app.relaunch();
+    app.exit();
 })
 
 let myName = false;
