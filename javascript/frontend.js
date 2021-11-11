@@ -247,9 +247,9 @@ $(function() { // this syntax means it's a function that will be run once once d
     * Add message to the chat window
     */
     function addMessage(author, message, color, dt, encryptionType) {
-        message = Decrypt(message);
-        author = Decrypt(author);
-        if (author != myName) {
+        message = Decrypt(message, encryptionType);
+        author = Decrypt(author, encryptionType);
+        if (author != Decrypt(myName, encryptionType)) {
             content.append('<div class="myDiv"><p style="text-align: left"><span style="color:' + color + '">'
             + author + '</span>:    ' + message + '</p></div>');
         } else {
@@ -337,10 +337,10 @@ function Encrypt(textin) {
     return toReturn;
 }
 
-function Decrypt(textin) {
+function Decrypt(textin, encryptionType) {
     let toReturn = "";
     try {
-        toReturn = eval(EncryptionFunction + '_REVERSE("' + textin + '")');
+        toReturn = eval(encryptionType + '_REVERSE("' + textin + '")');
     } catch(e) {
         return textin;
     }
