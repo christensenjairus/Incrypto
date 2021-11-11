@@ -15,7 +15,7 @@ var fs = require('fs');
 const Store = require('electron-store');
 const store = new Store();
 
-const DEBUG = false;
+const DEBUG = true;
 
 "use strict";
 process.title = 'Chat_Server';
@@ -54,7 +54,7 @@ wsServer.on('request', function(request) {
 	var userColor = false;
 	connection.on('message', function(message) {
 		if (message.type === 'utf8') {
-			if (DEBUG) console.log(message.utf8Data)
+			// if (DEBUG) console.log(message.utf8Data)
 			let inComingMsg = JSON.parse(message.utf8Data)
 			
 			userName = inComingMsg.user;
@@ -66,18 +66,23 @@ wsServer.on('request', function(request) {
 			// console.log(userName + " logged in")
 			let msg = inComingMsg.msg
 			userColor = inComingMsg.userColor
-			if (DEBUG) console.log('Message type: ' + inComingMsg.type)
+			// if (DEBUG) console.log('Message type: ' + inComingMsg.type)
 			if (inComingMsg.type == "ping") {
 				let message = {type:"pong"};
 				connection.send(JSON.stringify(message));
 				return;
 			}
-			// else if (inComingMsg.type == "colorChange") {
-			// 	// do something
-			// 	changeMessagesColor(userName, userColor, inComingMsg)
-			// 	sendHistoryToAll();
-			// 	return;
-			// }
+			else if (inComingMsg.type == "colorChange") {
+				// do something
+				store.set(userName + "_Color", userColor);
+				let allNames = JSON.parse(inComingMsg.allNames);
+				for (var i = 0; i < allNames.length; ++i) {
+					changeMessagesColor(allNames[i], userColor, inComingMsg);
+					console.log("changing message color for " + allNames[i])
+				}
+				sendHistoryToAll();
+				return;
+			}
 			else if (inComingMsg.type == "historyRequest") {
 				// send history
 				if (DEBUG) console.log("history route chosen")
@@ -173,10 +178,9 @@ wsServer.on('request', function(request) {
 // 	return Math.floor(Math.random() * (max - min) + min);
 // }
 
-function changeMessagesColor(userName, userColor, inComingMsg) {
-	store.set(userName + "_Color", userColor);
+function changeMessagesColor(userName, userColor) { // used to have something here about incomingmsg and it's user
 	history.forEach(function (item, index) {
-		if (item.author == inComingMsg.user && item.color != userColor) {
+		if (item.author == userName && item.color != userColor) {
 			if (DEBUG) console.log(item.text + " -> changed to color " + userColor)
 			item.color = userColor;
 		}

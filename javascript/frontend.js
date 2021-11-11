@@ -22,9 +22,10 @@ var myColor;
 ipcRenderer.invoke('getColor', "").then((result) => { 
     myColor = result;
 });
-if (myColor == false) {
-    myColor = "black"
-}
+// if (myColor == false) {
+//     // myColor = "black"
+//     myColor = store.get(myName + "_Color", "black");
+// }
 
 let EncryptionFunction = store.get("encryptionType", Encryption_Types[1]);  // TODO: switch this back to default Encryption
                                                                             //default encryption type is first in file
@@ -41,10 +42,10 @@ var mystatus = $('#status');
 // var textEntry = $('textEntry');
 let savedInputText = "";
 
-var colors = ['purple', 'plum', 'orange', 'red', 'green', 'blue', 'magenta'];
-colors.sort(function(a,b) {
-    return Math.random() > 0.5;	
-});
+// var colors = ['purple', 'plum', 'orange', 'red', 'green', 'blue', 'magenta'];
+// colors.sort(function(a,b) {
+//     return Math.random() > 0.5;	
+// });
 
 $(function() { // this syntax means it's a function that will be run once once document.ready is true
     "use strict";
@@ -277,12 +278,20 @@ $(function() { // this syntax means it's a function that will be run once once d
     document.getElementById('status').addEventListener('click', () => {
         var newColor = getRandomColor(); // generate random color
         myColor = newColor
+        store.set(myName + "_Color", newColor);
         mystatus.css('color', myColor)
-        // store.set(myName + "_Color", newColor)
-        // document.getElementById("content").innerHTML + "";
-        // let message = {"type":"colorChange", "user": myName, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
-        // send(connection, JSON.stringify(message));
-        ipcRenderer.invoke('setColor', myColor);
+        let allMyEncNames = [];
+        for (let i = 0; i < Encryption_Types.length; ++i) {
+            allMyEncNames[i]=EncryptOther(myName, Encryption_Types[i]);
+        }
+        // create array of encrypted names using all encryption algorithms
+        let allNamesJSON = JSON.stringify(allMyEncNames);
+        // json stringify that array
+        console.log(allMyEncNames);
+        // add that value to the message
+        let message = {"type":"colorChange", "user": myName, "allNames":allNamesJSON, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
+        send(connection, JSON.stringify(message));
+        // ipcRenderer.invoke('setColor', myColor);
         
         // if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
     })
@@ -341,6 +350,16 @@ function Encrypt(textin) {
     let toReturn = "";
     try {
         toReturn = eval(EncryptionFunction + '("' + textin + '")');
+    } catch(e) {
+        return textin;
+    }
+    return toReturn;
+}
+
+function EncryptOther(textin, encryptionType) {
+    let toReturn = "";
+    try {
+        toReturn = eval(encryptionType + '("' + textin + '")');
     } catch(e) {
         return textin;
     }

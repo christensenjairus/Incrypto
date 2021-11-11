@@ -393,7 +393,7 @@ ipcMain.handle('getName', async (event, someArgument) => {
     return myName;
 })
 
-ipcMain.handle('getColor', async (event, someArgument) => {
+ipcMain.handle('getColor', (event, someArgument) => {
     return myColor;
 })
 
