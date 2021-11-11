@@ -264,7 +264,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             + author + '</span>:    ' + message + '</p></div>');
         } else {
             content.append('<div class="myDiv2"><p style="text-align: right"><span style="color:' + color + '">'
-            + author + '</span>:  ' + message + '</p><div class="myDiv">'); 
+            + "Me" + '</span>:  ' + message + '</p><div class="myDiv">'); 
         };
 
         // content.append('<div class="myDiv"><p style="text-align: left"><span style="color:' + color + '">'

@@ -68,6 +68,8 @@ function createWindow(width, height) {
         },
         width: width,
         height: height,
+        minWidth: 320,
+        minHeight: 600
     }) 
 
     // and load the index.html of the app.
@@ -94,6 +96,12 @@ function createWindow(width, height) {
         let { width, height } = mainWindow.getBounds();
         
         // Now that we have them, save them using the `set` method.
+        if (width < 320) {
+            width = 320;
+        }
+        if (height < 600) {
+            height = 600;
+        }
         store.set('windowWidth', width);
         store.set('windowHeight', height);
     });
