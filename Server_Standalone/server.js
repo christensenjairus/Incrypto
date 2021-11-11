@@ -104,7 +104,7 @@ wsServer.on('request', function(request) {
 					json = JSON.stringify({ type:'AuthResponse', result: "failure", key:key });
 				}
 				else if (key != "") {
-					userColor = store.get(inComingMsg.user + "_Color", "black");
+					userColor = store.get(inComingMsg.user + "_Color", "white");
 					json = JSON.stringify({ type:'AuthResponse', color:userColor, result: "success", key:key }); // make valid response
 				}
 				// send response

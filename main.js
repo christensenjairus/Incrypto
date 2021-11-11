@@ -295,9 +295,9 @@ function changeMessageEncryptionType(type) {
 }
 
 function switchToLoginPage() {
-    // replaceCurrentWindow("login.html")
+    replaceCurrentWindow("login.html")
     // console.log("supposed to switch to login page here")
-    switchToLoginPage();
+    // switchToLoginPage();
 }
 
 function switchToRegistrationPage() {

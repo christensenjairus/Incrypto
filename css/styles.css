@@ -13,6 +13,9 @@ html, body {
     height: 100%;
     /* padding-top: 100px; */
 }
+p {
+  text-align: center;
+}
 h1 {
     text-align: center; 
     font-size: x-large;
