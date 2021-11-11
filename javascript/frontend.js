@@ -150,7 +150,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             //         console.log("Don't have decryption algorithm for " + json.data.encryption + " in message sent from " + json.data.author);
             //         return; // don't get notifications for messages that are gibberish
             //     }
-            if (Encrypt(myName) == json.data.author) {
+            if (Encrypt(myName) != json.data.author) {
                 showNotification(Decrypt(json.data.author, json.data.encryption), Decrypt(json.data.text, json.data.encryption));
             }
         } else if (json.type == "logout") {
@@ -278,12 +278,13 @@ $(function() { // this syntax means it's a function that will be run once once d
         var newColor = getRandomColor(); // generate random color
         myColor = newColor
         mystatus.css('color', myColor)
-        store.set(myName + "_Color", newColor)
-        document.getElementById("content").innerHTML + "";
-        let message = {"type":"colorChange", "user": myName, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
-        send(connection, JSON.stringify(message));
+        // store.set(myName + "_Color", newColor)
+        // document.getElementById("content").innerHTML + "";
+        // let message = {"type":"colorChange", "user": myName, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
+        // send(connection, JSON.stringify(message));
+        ipcRenderer.invoke('setColor', myColor);
         
-        if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
+        // if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
     })
 });
 

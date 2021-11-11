@@ -72,12 +72,12 @@ wsServer.on('request', function(request) {
 				connection.send(JSON.stringify(message));
 				return;
 			}
-			else if (inComingMsg.type == "colorChange") {
-				// do something
-				changeMessagesColor(userName, userColor, inComingMsg)
-				sendHistoryToAll();
-				return;
-			}
+			// else if (inComingMsg.type == "colorChange") {
+			// 	// do something
+			// 	changeMessagesColor(userName, userColor, inComingMsg)
+			// 	sendHistoryToAll();
+			// 	return;
+			// }
 			else if (inComingMsg.type == "historyRequest") {
 				// send history
 				if (DEBUG) console.log("history route chosen")
