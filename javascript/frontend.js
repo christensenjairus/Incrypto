@@ -26,14 +26,14 @@ if (myColor == false) {
     myColor = "black"
 }
 
-let EncryptionFunction; // = store.get("encryptionType", Encryption_Types[1]);  // TODO: switch this back to default Encryption
+let EncryptionFunction = store.get("encryptionType", Encryption_Types[1]);  // TODO: switch this back to default Encryption
                                                                             //default encryption type is first in file
 ipcRenderer.invoke('getEncryptionType', "").then((result) => {
     EncryptionFunction = result;
 })
 // EncryptionFunction = "plain_text"; // TODO: COMMENT OUT THIS LINE TO USE ENCRYPTION
 // EncryptionFunction = "binary";
-
+console.log("encryption type is " + EncryptionFunction)
 
 var content = $('#content');
 var input = $('#input');
@@ -150,7 +150,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             //         console.log("Don't have decryption algorithm for " + json.data.encryption + " in message sent from " + json.data.author);
             //         return; // don't get notifications for messages that are gibberish
             //     }
-            if (Encrypt(myName) = json.data.author) {
+            if (Encrypt(myName) == json.data.author) {
                 showNotification(Decrypt(json.data.author, json.data.encryption), Decrypt(json.data.text, json.data.encryption));
             }
         } else if (json.type == "logout") {
@@ -255,8 +255,8 @@ $(function() { // this syntax means it's a function that will be run once once d
     function addMessage(author, message, color, dt, encryptionType) {
         message = Decrypt(message, encryptionType);
         author = Decrypt(author, encryptionType)
-        console.log("author is " + Decrypt(author, encryptionType));
-        console.log("encryption type is " + encryptionType)
+        // console.log("author is " + Decrypt(author, encryptionType));
+        // console.log("encryption type is " + encryptionType)
         if (author != myName) {
             content.append('<div class="myDiv"><p style="text-align: left"><span style="color:' + color + '">'
             + author + '</span>:    ' + message + '</p></div>');
@@ -349,9 +349,9 @@ function Decrypt(textin, encryptionType) {
     let toReturn = "";
     try {
         toReturn = eval(encryptionType + '_REVERSE("' + textin + '")');
-        console.log("success: toReturn=" + toReturn);
+        // console.log("success: toReturn=" + toReturn);
     } catch(e) {
-        console.log("error in decryption: " + e);
+        // console.log("error in decryption: " + e);
         return textin;
     }
     return toReturn;

@@ -405,12 +405,12 @@ ipcMain.handle('setName', async (event, name) => {
 
 let EncryptionType = store.get("encryptionType", "defaultEncryption");
 
-ipcMain.handle('setEncryptionType', async (event, name) => {
+ipcMain.handle('setEncryptionType', (event, name) => {
     EncryptionType = name;
     return true;
 })
 
-ipcMain.handle('getEncryptionType', async (someArgument) => {
+ipcMain.handle('getEncryptionType', (someArgument) => {
     return EncryptionType;
 })
 
