@@ -124,7 +124,7 @@ wsServer.on('request', function(request) {
 					json = JSON.stringify({ type:'RegistrationResponse', result: "failure", key:"password_wrong" });
 				}
 				else if (key != "") {
-					userColor = store.get(inComingMsg.user + "_Color", "black");
+					userColor = store.get(inComingMsg.user + "_Color", "white");
 					json = JSON.stringify({ type:'RegistrationResponse', color:userColor, result: "success", key:key }); // make valid response
 				}
 				connection.sendUTF(json)
