@@ -42,6 +42,8 @@ footer {
     padding-top: 20px;
     padding: 6px; 
     background:black; /*this color to change background of chat box */
+    background-color: #000000;
+    background-image: linear-gradient(310deg, #04062e67 0%, #3110445b 74%);
     border-radius:5px;
     overflow-y: scroll; 
     border:1px solid #4f4f4f;
@@ -64,6 +66,8 @@ footer {
     width: 100%;
     padding: 10px;
     display: flex;
+    /* position: absolute;
+    bottom: 0; */
 }
 #input { 
     border-radius:2px; 
@@ -83,18 +87,19 @@ footer {
     width: fit-content;
     /* display: inline-block; */
     min-width: 120px;
-    padding-left: 10px;
+    padding-left: 0px;
     padding-right: 10px;
     display: inline;
     /* float:left; */
     /* margin-top:15px;  */
     /* margin-top: -5px; */
     text-align: center;
-    white-space: nowrap;
+    /* white-space: nowrap; */
     /* overflow:visible; */
 }
 body{
-    background-color: #16082f; /*background of chat screen*/
+    background-color: #0a0a0a; /*background of chat screen*/
+    
     overflow: hidden;
 }
 
@@ -107,10 +112,10 @@ body{
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgb(31, 0, 66);
+    background: #16082f;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgb(1, 0, 87);
-} */ */
+    background: #220c47;
+} 
 /* Add styles here to customize the appearance of your app */
