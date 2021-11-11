@@ -266,7 +266,7 @@ function createGuid() {
 function saveToFile(obj) {
 	history.push(obj); // save messages
 	history = history.slice(-100);
-	fs.writeFile("chat.txt", JSON.stringify(history), function(err) {
+	fs.writeFile("chat.json", JSON.stringify(history), function(err) {
 		if (err) {
 			console.log(err);
 		}
@@ -274,7 +274,7 @@ function saveToFile(obj) {
 }
 
 function restoreFromFile() {
-	fs.readFile('chat.txt', function read(err, data) {
+	fs.readFile('chat.json', function read(err, data) {
 		if (err) {
 			console.log(err);
 			return;
