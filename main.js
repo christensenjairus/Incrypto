@@ -296,6 +296,8 @@ function changeMessageEncryptionType(type) {
 
 function switchToLoginPage() {
     replaceCurrentWindow("login.html")
+    // console.log("supposed to switch to login page here")
+    // switchToLoginPage();
 }
 
 function switchToRegistrationPage() {
@@ -363,11 +365,12 @@ function createChildWindow(file) {
 }
 
 function replaceCurrentWindow(file) {
-    mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'html/' + file),
-        protocol: 'file:',
-        slashes: true
-    }))
+    // mainWindow.loadURL(url.format({
+    //     pathname: path.join(__dirname, 'html/' + file),
+    //     protocol: 'file:',
+    //     slashes: true
+    // }))
+    mainWindow.loadURL('file://' + __dirname + '/html/' + file)
 }
 
 ipcMain.handle('login', async (event, someArgument) => {
@@ -378,12 +381,15 @@ ipcMain.handle('login', async (event, someArgument) => {
     return true;
 })
 
-ipcMain.handle('logout', async (event, someArgument) => {
+ipcMain.handle('logout', (event) => {
     // const result = await doSomeWork(someArgument)
     switchToLoginPage();
+    // mainWindow.loadFile('${ __dirname}/html/login.html');
+    // console.log("should log you out now")
     // mainWindow.webContents.openDevTools(); // open dev tools on chat launch
     // return result
-    return true;
+
+    // mainWindow.loadURL('file://' + __dirname + '/html/login.html')
 })
 
 let myName = false;

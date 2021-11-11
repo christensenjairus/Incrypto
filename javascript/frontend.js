@@ -23,6 +23,9 @@ ipcRenderer.invoke('getColor', "").then((result) => {
     myColor = result;
 });
 
+let pingIntervalID;
+let historyIntervalID;
+
 let EncryptionFunction = store.get("encryptionType", Encryption_Types[1]);  // TODO: switch this back to default Encryption
                                                                             //default encryption type is first in file
 ipcRenderer.invoke('getEncryptionType', "").then((result) => {
@@ -150,12 +153,15 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (Encrypt(myName) != json.data.author) {
                 showNotification(Decrypt(json.data.author, json.data.encryption), Decrypt(json.data.text, json.data.encryption));
             }
-        } else if (json.type == "logout") {
-            alert("'You've logged in somewhere else. You'll be logged out here")
+        // } else if (json.type == "logout") {
+        //     clearInterval(pingIntervalID);
+        //     clearInterval(historyIntervalID);
+            alert("'You've logged in somewhere else.")
             connection.close();
-            ipcRenderer.invoke('logout', "").then((result) => { 
-                // THIS FUNCTION RUNS THE "LOGIN" HANDLER IN MAIN.JS
-            })
+            ipcRenderer.invoke('logout').then(() => {
+            //     alert("logout has been run")
+            });
+            return;
         } else {
             console.log('Unexpected Json Value: ', json);
         }
@@ -205,7 +211,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     * respond to the in 5 seconds then show some error message
     * to notify the user that something is wrong.
     */
-    setInterval(function() {
+    historyIntervalID = setInterval(function() {
         if (connection.readyState !== 1) {
             // document.getElementById('input').attr('disabled', 'disabled')
             // document.getElementById('status').val('Can\'t communicate with the WebSocket server. Reload with "View" > "Reload"');
@@ -222,7 +228,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             send(connection, JSON.stringify(message)); // reget the history every 3 seconds
         }
     }, 5000);
-    setInterval(function() {
+    pingIntervalID = setInterval(function() {
         let message = {type:"ping"}
         send(connection, JSON.stringify(message));
         // console.log("ping sent")
