@@ -249,7 +249,9 @@ $(function() { // this syntax means it's a function that will be run once once d
     function addMessage(author, message, color, dt, encryptionType) {
         message = Decrypt(message, encryptionType);
         author = Decrypt(author, encryptionType);
-        if (author != Decrypt(myName, encryptionType)) {
+        console.log("my name is " + myName);
+        console.log("author is " + author);
+        if (author != myName) {
             content.append('<div class="myDiv"><p style="text-align: left"><span style="color:' + color + '">'
             + author + '</span>:    ' + message + '</p></div>');
         } else {

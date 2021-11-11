@@ -130,7 +130,7 @@ wsServer.on('request', function(request) {
 			else if (inComingMsg.type === 'message') {
 				store.set(userName+"_Color", userColor);
 				userName = inComingMsg.user
-				console.log("	" + userName + " sent '" + msg + "'. They have color " + userColor + " and encryption " + inComingMsg.encryption)
+				console.log("	" + inComingMsg.userEnc + " sent '" + msg + "'. They have color " + userColor + " and encryption " + inComingMsg.encryption)
 					var obj = {
 						time: inComingMsg.time,
 						text: htmlEntities(msg),
