@@ -192,6 +192,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             // send the message as JSON
             // console.log("myname is " + myName);
             msg = Encrypt(msg);
+            if (msg == "") return; // if encryption fails
             var tmp = Encrypt(myName);
             let message = {"type":"message", "user":myName, "userEnc":tmp, "msg":msg, "userColor":myColor, "encryption":EncryptionFunction, "key":"none", "time": (new Date()).getTime()}
             try {
@@ -359,7 +360,9 @@ function Encrypt(textin) {
     try {
         toReturn = eval(EncryptionFunction + '("' + textin + '")');
     } catch(e) {
-        return textin;
+        alert("There's an issue with the selected encryption algorithm.");
+        // return textin;
+        return "";
     }
     return toReturn;
 }
