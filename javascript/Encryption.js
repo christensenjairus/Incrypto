@@ -7,11 +7,10 @@
 */
 
 // ADD YOUR ENCRYPTION NAME HERE ------------------------------
-const Encryption_Types = ["defaultEncryption", "plain_text", "example"]; // <--- add name in here
+const Encryption_Types = ["Default_Encryption", "Plain_Text", "Example"]; // <--- add name in here
 // ------------------------------------------------------------
 
-// CREATE YOUR FUNCTIONS WITH THE EXACT SAME NAME HERE
-function defaultEncryption(textin) {
+function Default_Encryption(textin) {
     function strToHex(textin){
         var hex, i;
     
@@ -26,7 +25,7 @@ function defaultEncryption(textin) {
     return strToHex(textin);
 }
 
-function defaultEncryption_REVERSE(textin) {
+function Default_Encryption_REVERSE(textin) {
     function hexToString(textin){
         var j;
         var hexes = textin.match(/.{1,4}/g) || [];
@@ -39,10 +38,22 @@ function defaultEncryption_REVERSE(textin) {
     return hexToString(textin);
 }
 
-function plain_text(textin) {
+function Plain_Text(textin) {
     return textin;
 }
 
-function plain_text_REVERSE(textin) {
+function Plain_Text_REVERSE(textin) {
     return textin;
 }
+
+// CREATE YOUR FUNCTIONS WITH THE EXACT SAME NAME HERE
+
+function Example () {
+    
+}
+
+function Example_Reverse() {
+
+}
+
+// Make sure to add your encryption's name into the array on line 10
