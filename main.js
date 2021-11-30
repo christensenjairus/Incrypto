@@ -237,13 +237,13 @@ function createWindow(width, height) {
                                 openEncryptionFileForEditing();
                             },
                         },
-                        {label: 'Change your message encryption',
-                            submenu: [
-                                {label: "Default Encryption", click() {changeMessageEncryptionType("defaultEncryption")}},
-                                {label: "Plain Text", click() {changeMessageEncryptionType("plain_text")}},
-                                {label: "Binary", click() {changeMessageEncryptionType("binary")}},
-                            ]
-                        }
+                        // {label: 'Change your message encryption',
+                        //     submenu: [
+                        //         {label: "Default Encryption", click() {changeMessageEncryptionType("defaultEncryption")}},
+                        //         {label: "Plain Text", click() {changeMessageEncryptionType("plain_text")}},
+                        //         {label: "Binary", click() {changeMessageEncryptionType("binary")}},
+                        //     ]
+                        // }
 
                     ]
                 },{
@@ -271,7 +271,7 @@ function openEncryptionFileForEditing() {
     var editor = openInEditor.configure({
         editor: codeEditor
     });
-    editor.open('./javascript/Encryption.js:10:70').then(function() {
+    editor.open('./javascript/Encryption.js:52:4').then(function() {
         // console.log('Success!');
     }, function(err) {
         // console.error('Something went wrong: ' + err);
