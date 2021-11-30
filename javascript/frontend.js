@@ -312,7 +312,13 @@ $(function() { // this syntax means it's a function that will be run once once d
 
     var dropdown = document.getElementById('dropdown');
     for (let i = 0; i < Encryption_Types.length; ++i) {
-        dropdown.innerHTML += '<a href="#" onclick="changeE_Type(' + i + ')")>' + Encryption_Types[i] + '</a>'
+        dropdown.innerHTML += '<a href="#" id="encryption_type_' + i + '")>' + Encryption_Types[i] + '</a>'
+        
+    }
+    for (let i = 0; i < Encryption_Types.length; ++i) {
+        document.getElementById("encryption_type_" + i).addEventListener('click', () => {
+            changeE_Type(Encryption_Types[i]);
+        })
     }
 });
 
@@ -327,8 +333,8 @@ function getRandomColor() {
     return color;
 }
 
-function changeE_Type(indexInEncryptionTypeArray) {
-    ipcRenderer.invoke('changeMessageE_Type(' + Encryption_Types[indexInEncryptionTypeArray] + ")");
+function changeE_Type(EncryptionType) {
+    ipcRenderer.invoke('changeMessageE_Type', EncryptionType);
 }
 
 function setRandomColor() {
