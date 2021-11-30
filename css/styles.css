@@ -31,8 +31,7 @@ div {
 footer { 
     text-align: center;
 }
-#content { 
-    /* padding-top: 20px; */
+#content {  
     padding: 0px; 
     background:black; /*this color to change background of chat box */
     background-color: #000000;
