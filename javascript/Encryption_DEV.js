@@ -7,16 +7,22 @@
 */
 
 // ADD YOUR ENCRYPTION NAME HERE ------------------------------
-const Encryption_Types = ["defaultEncryption", "plain_text", "example", "binary"]; // <--- add name in here
+const Encryption_Types = ["defaultEncryption", "plain_text", "example", "binary", "addition"]; // <--- add name in here
 // ------------------------------------------------------------
 
 // CREATE YOUR FUNCTIONS WITH THE EXACT SAME NAME HERE
 function defaultEncryption(textin) {
-    return "encrypted";
+    //simple encryption of adding a key value to each char value (ASCII addition)
+    let newText = textin.value() + 3;
+    alert(newText);
+    return newText;
 }
 
 function defaultEncryption_REVERSE(textin) {
-    return "decrypted";
+    //the reverse
+    let revText = textin.value() - 3;
+    alert(newText);
+    return newText;
 }
 
 function plain_text(textin) {
@@ -49,4 +55,18 @@ function binary_REVERSE(textin) {
         return binCode.join("");
     }
     return binaryAgent(textin);
+}
+
+function addition(textin) {
+    //simple encryption of adding a key value to each char value (ASCII addition)
+    let newText = textin.value() + 3;
+    alert(newText);
+    return newText;
+}
+
+function addition_REVERSE(textin) {
+    //the reverse
+    let revText = textin.value() - 3;
+    alert(newText);
+    return newText;
 }
