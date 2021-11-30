@@ -18,9 +18,7 @@ function defaultEncryption(textin) {
         var result = [];
         for (i=0; i < textin.length; i++) {
             hex = textin.charCodeAt(i).toString(16);
-            result[i] = ("000"+hex).slice(-4); //pretty sure this is the problem it needs to be an array i think but my brain is already fried from getting this far haha
-            //alert(result);
-            
+            result[i] = ("000"+hex).slice(-4);            
         }
         return result.join("");
     }
@@ -32,13 +30,6 @@ function defaultEncryption_REVERSE(textin) {
     function hexToString(textin){
         var j;
         var hexes = textin.match(/.{1,4}/g) || [];
-        //alert(hexes);
-        /*var back = "";
-        for(j = 0; j < hexes.length; j++) {
-            back += String.fromCharCode(parseInt(hexes[j], 16));
-        }
-    
-        return back;*/
         var binCode = [];
         for (i = 0; i < hexes.length; i++) {
             binCode.push(String.fromCharCode(parseInt(hexes[i], 16)));
