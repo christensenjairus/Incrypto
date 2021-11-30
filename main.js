@@ -410,7 +410,7 @@ ipcMain.handle('setName', (event, name) => {
     return true;
 })
 
-let EncryptionType = store.get("encryptionType", "defaultEncryption");
+let EncryptionType = store.get("encryptionType", "Default_Encryption");
 
 ipcMain.handle('setEncryptionType', (event, name) => {
     EncryptionType = name;

@@ -26,7 +26,7 @@ ipcRenderer.invoke('getColor', "").then((result) => {
 let pingIntervalID;
 let historyIntervalID;
 
-let EncryptionFunction = store.get("encryptionType", Encryption_Types[1]);  // TODO: switch this back to default Encryption
+let EncryptionFunction = store.get("encryptionType", Encryption_Types[0]);  // TODO: switch this back to default Encryption
                                                                             //default encryption type is first in file
 ipcRenderer.invoke('getEncryptionType', "").then((result) => {
     EncryptionFunction = result;
