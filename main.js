@@ -14,7 +14,7 @@ const store = new Store({
 })
 var openInEditor = require('open-in-editor');
 const {ipcMain} = require('electron')
-// require('electron-reload')(__dirname) // this will allow electron to reload on changes
+require('electron-reload')(__dirname) // this will allow electron to reload on changes
 
 const path = require('path')
 const url = require('url')

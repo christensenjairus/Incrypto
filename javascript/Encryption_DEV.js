@@ -12,17 +12,34 @@ const Encryption_Types = ["defaultEncryption", "plain_text", "example", "binary"
 
 // CREATE YOUR FUNCTIONS WITH THE EXACT SAME NAME HERE
 function defaultEncryption(textin) {
-    //simple encryption of adding a key value to each char value (ASCII addition)
-    let newText = textin.value() + 3;
-    alert(newText);
-    return newText;
+    function strToHex(textin){
+        var hex, i;
+    
+        var result = "";
+        for (i=0; i < textin.length; i++) {
+            hex = textin.charCodeAt(i).toString(16);
+            result += ("000"+hex).slice(-4); //pretty sure this is the problem it needs to be an array i think but my brain is already fried from getting this far haha
+            //alert(result);
+            return result
+        }
+    }
+        
+    return strToHex(textin);
 }
 
 function defaultEncryption_REVERSE(textin) {
-    //the reverse
-    let revText = textin.value() - 3;
-    alert(newText);
-    return newText;
+    /*function hexToString(textin){
+        var j;
+        var hexes = textin.match(/.{1,4}/g) || [];
+        var back = "";
+        for(j = 0; j < hexes.length; j++) {
+            back += String.fromCharCode(parseInt(hexes[j], 16));
+        }
+    
+        return back;
+    }
+    return hexToString(textin);*/
+    return textin;
 }
 
 function plain_text(textin) {
