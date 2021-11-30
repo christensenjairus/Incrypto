@@ -470,3 +470,7 @@ ipcMain.handle('setBadgeCnt', async (event, count) => {
         badgeCnt = 0;
     }
 })
+
+ipcMain.handle('changeMessageE_Type', (event, nameOfNewE_Type) => {
+    changeMessageEncryptionType(nameOfNewE_Type);
+})

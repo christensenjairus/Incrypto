@@ -10,19 +10,20 @@
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
     <title>Incrypto - Chat</title>
   </head>
+  <script type="module" src="../javascript/frontend.js"></script> <!-- used to update this page with new chats -->
   <div class="navbar">
     <!-- <a href="#news">News</a> -->
     <div class="dropdown">
       <button class="dropbtn">Encryption Type
         <i class="fa fa-caret-down"></i>
       </button>
-      <div class="dropdown-content">
-        <a href="#">Plain Text</a>
+      <div class="dropdown-content" id="dropdown">
+        <!-- <a href="#">Plain Text</a>
         <a href="#">Binary</a>
-        <a href="#">Default Encryption</a>
+        <a href="#">Default Encryption</a> -->
       </div>
     </div>
-        <a href="#home">Logout</a>
+        <a href="#home" id="logoutButton">Logout</a>
   </div>
   <body id='body1'>
     <!-- <h1>Incrypto - Chat</h1> -->
@@ -36,7 +37,6 @@
                     <!-- used to encrypt messages before sending them & after receiving them -->
     <script type="text/javascript" src="../javascript/Encryption_DEV.js"></script> 
     <!-- <script type="text/javascript" src="../javascript/Encryption.js"></script> -->
-    <script type="module" src="../javascript/frontend.js"></script> <!-- used to update this page with new chats -->
     
     <!-- <footer></footer> -->
     <!-- You can also require other files to run in this process -->

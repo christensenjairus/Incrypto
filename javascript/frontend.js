@@ -304,6 +304,16 @@ $(function() { // this syntax means it's a function that will be run once once d
         
         // if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
     })
+
+    // add NAVBAR functionality
+    document.getElementById('logoutButton').addEventListener('click', () => {
+        logout();
+    })
+
+    var dropdown = document.getElementById('dropdown');
+    for (let i = 0; i < Encryption_Types.length; ++i) {
+        dropdown.innerHTML += '<a href="#" onclick="changeE_Type(' + i + ')")>' + Encryption_Types[i] + '</a>'
+    }
 });
 
 // _________________ Helper Functions ________________________________
@@ -315,6 +325,10 @@ function getRandomColor() {
       color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+}
+
+function changeE_Type(indexInEncryptionTypeArray) {
+    ipcRenderer.invoke('changeMessageE_Type(' + Encryption_Types[indexInEncryptionTypeArray] + ")");
 }
 
 function setRandomColor() {
