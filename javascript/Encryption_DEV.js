@@ -7,7 +7,7 @@
 */
 
 // ADD YOUR ENCRYPTION NAME HERE ------------------------------
-const Encryption_Types = ["defaultEncryption", "plain_text", "example", "binary", "addition"]; // <--- add name in here
+const Encryption_Types = ["defaultEncryption", "plain_text", "binary", "addition"]; // <--- add name in here
 // ------------------------------------------------------------
 
 // CREATE YOUR FUNCTIONS WITH THE EXACT SAME NAME HERE
