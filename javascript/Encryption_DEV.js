@@ -15,31 +15,37 @@ function defaultEncryption(textin) {
     function strToHex(textin){
         var hex, i;
     
-        var result = "";
+        var result = [];
         for (i=0; i < textin.length; i++) {
             hex = textin.charCodeAt(i).toString(16);
-            result += ("000"+hex).slice(-4); //pretty sure this is the problem it needs to be an array i think but my brain is already fried from getting this far haha
+            result[i] = ("000"+hex).slice(-4); //pretty sure this is the problem it needs to be an array i think but my brain is already fried from getting this far haha
             //alert(result);
-            return result
+            
         }
+        return result.join("");
     }
         
     return strToHex(textin);
 }
 
 function defaultEncryption_REVERSE(textin) {
-    /*function hexToString(textin){
+    function hexToString(textin){
         var j;
         var hexes = textin.match(/.{1,4}/g) || [];
-        var back = "";
+        //alert(hexes);
+        /*var back = "";
         for(j = 0; j < hexes.length; j++) {
             back += String.fromCharCode(parseInt(hexes[j], 16));
         }
     
-        return back;
+        return back;*/
+        var binCode = [];
+        for (i = 0; i < hexes.length; i++) {
+            binCode.push(String.fromCharCode(parseInt(hexes[i], 16)));
+        }
+        return binCode.join("");
     }
-    return hexToString(textin);*/
-    return textin;
+    return hexToString(textin);
 }
 
 function plain_text(textin) {
