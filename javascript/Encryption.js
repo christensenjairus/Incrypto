@@ -53,7 +53,7 @@ function Example () {
 }
 
 function Example_Reverse() {
-
+    
 }
 
 // Make sure to add your encryption's name into the array on line 10

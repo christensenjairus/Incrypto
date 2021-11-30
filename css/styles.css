@@ -10,7 +10,7 @@
     color:white; /* this color to change text color */
 }
 html, body {
-    height: 100%;
+    /* height: 100%; */
     /* padding-top: 100px; */
 }
 p {
@@ -25,8 +25,10 @@ h2 {
 }
 div { 
     /* width:500px;  */
+    /* position: relative; */
     margin-left:auto; 
     margin-right:auto;
+    /* margin: auto; */
 }
 footer { 
     text-align: center;
@@ -40,10 +42,10 @@ footer {
     border-radius:5px;
     overflow-y: scroll; 
     border:1px solid #4f4f4f;
-    height: max-content;
+    /* height: max-content; */
     margin-top:15px; 
-    min-height: 10vh; 
-    height: 92vh;
+    /* min-height: 10vh; */
+    height: 90vh;
     /* min-height: 10px; */
     /* min-width: 60vh; */
     /* max-width: 60vh; */
@@ -51,7 +53,7 @@ footer {
     margin: auto;
     margin-left: 5px; /*for some reason this is needed becayse of the scroll bar on the right*/
     margin-right: 5px;
-    /* block-size: fit-content; */
+    /* block-size: fill; */
 }
 #textEntry {
     margin: 5px;
@@ -59,8 +61,8 @@ footer {
     width: 100%;
     padding: 10px;
     display: flex;
-    /* position: absolute;
-    bottom: 0; */ 
+    position: absolute;
+    bottom: 0;
 }
 #input { 
     border-radius:2px; 
@@ -90,10 +92,10 @@ footer {
     /* white-space: nowrap; */
     /* overflow:visible; */
 }
-body{
+body {
     background-color: #0a0a0a; /*background of chat screen*/
     
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 ::-webkit-scrollbar {
@@ -117,8 +119,8 @@ body{
     overflow: hidden;
     background-color: black;
     font-family: Arial;
-    /* position: relative;
-    top: 15px; */
+    /* position: sticky; */
+    /* top: 0px; */
   }
   
   /* Links inside the navbar */
@@ -182,5 +184,6 @@ body{
   /* Show the dropdown menu on hover */
   .dropdown:hover .dropdown-content {
     display: block;
+    /* z-index: 1; */
   }
 /* Add styles here to customize the appearance of your app */
