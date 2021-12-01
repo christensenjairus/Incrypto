@@ -101,6 +101,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     let pingCount = 0;
     let pongCount = 0;
     let lengthOfHistory5SecondsAgo = "";
+    let history5SecondsAgo = "";
 
     /*
     * What to do when the socket receives a message
@@ -154,16 +155,26 @@ $(function() { // this syntax means it's a function that will be run once once d
         }
     };
 
-    async function populateChat(message, json) { // this was done in an attempt to speed up onmessage handler
+    function populateChat(message, json) { // this was done in an attempt to speed up onmessage handler
         pongCount = 0;
         pingCount = 0;
             if (DEBUG) console.log("Message received: \n" + message.data);
             // insert every single message to the chat window
-            if (json.data.length === lengthOfHistory5SecondsAgo) {
-                return; // don't waste time if number of messages is the same
-            }
+
+            // this code was supposed to speed it up, it does not
+            // if (json.data.length === lengthOfHistory5SecondsAgo) { // don't waste time if number of messages and message colors are the same
+            //     let AllTheSame = true;
+            //     for (let i = 0; i < json.data.length; ++i) { // make sure all the colors are the same too
+            //         if (history5SecondsAgo[i].color == json.data[i].color) {
+            //             AllTheSame = false;
+            //         }
+            //     }
+            //     if (AllTheSame === true) return;
+            // }
+
             document.getElementById("chatbox").innerHTML = "";
             lengthOfHistory5SecondsAgo = json.data.length;
+            history5SecondsAgo = json.data;
             let dtOfLastMessage = "";
             for (var i=0; i < json.data.length; i++) {
                 addMessage(json.data[i].author, json.data[i].text, json.data[i].color, json.data[i].time, dtOfLastMessage, json.data[i].encryption);
@@ -228,7 +239,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             let message = {"type":"historyRequest", "user":myName, "color":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
             send(connection, JSON.stringify(message)); // reget the history every 3 seconds
         }
-    }, 5000);
+    }, 30000); // grab history every 30 seconds
     pingIntervalID = setInterval(function() {
         let message = {type:"ping"}
         send(connection, JSON.stringify(message));

@@ -226,8 +226,7 @@ function checkLoginCreds(connection, username, passhash) {
 	// }
 	// console.log("	count is at " + count)
 	// if (count >= 2) return "already_loggedin" // 1 connection for this login, and then 1 connection for another app using the chat with that name
-	// if (ProtectAgainstMultipleLogons && store.get(username + "_loggedin", false) == true) {
-	// if (alreadyLoggedIn == true)
+	// if (ProtectAgainstMultipleLogonsmessage
 	// 	return "already_loggedin"
 	// }
 	if (passhash == store.get("passwordHash_" + username, "")) {
@@ -300,3 +299,20 @@ function logOutOthers(thisConnection, username) {
 		// clients[i].connection.sendUTF(json);
 	}
 }
+
+var ONE_DAY = 12 * 60 * 60 * 1000; /* ms */
+setInterval(function() {
+	console.log("Daily Removal Of Old Messages: ")
+	for (let i = 0; i < history.length; ++i) {
+		if (new Date() - history[i].time > ONE_DAY) {
+			console.log("		removing message: " + history[i].text)
+			history.splice(i, 1);
+		}
+	}
+	fs.writeFile("chat.json", JSON.stringify(history), function(err) {
+		if (err) {
+			console.log(err);
+		}
+	});
+	sendHistoryToAll();
+}, ONE_DAY); // every day
