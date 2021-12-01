@@ -227,3 +227,17 @@ webview {
     background-color: #000000;
     background-image: linear-gradient(310deg, #050a7967 0%, #3110445b 74%);
 }
+
+/* FONT SIZES AFFETCED BELOW */
+
+.name {
+    font-size: smaller;
+}
+
+.msg {
+    font-size: medium;
+}
+
+.between {
+    font-size: 11px;
+}
