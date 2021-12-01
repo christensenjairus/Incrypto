@@ -104,7 +104,7 @@ wsServer.on('request', function(request) {
 					json = JSON.stringify({ type:'AuthResponse', result: "failure", key:key });
 				}
 				else if (key != "") {
-					userColor = store.get(inComingMsg.user + "_Color", "white");
+					userColor = store.get(inComingMsg.user + "_Color", "blue");
 					json = JSON.stringify({ type:'AuthResponse', color:userColor, result: "success", key:key }); // make valid response
 				}
 				// send response
@@ -124,7 +124,7 @@ wsServer.on('request', function(request) {
 					json = JSON.stringify({ type:'RegistrationResponse', result: "failure", key:"password_wrong" });
 				}
 				else if (key != "") {
-					userColor = store.get(inComingMsg.user + "_Color", "white");
+					userColor = store.get(inComingMsg.user + "_Color", "blue");
 					json = JSON.stringify({ type:'RegistrationResponse', color:userColor, result: "success", key:key }); // make valid response
 				}
 				connection.sendUTF(json)

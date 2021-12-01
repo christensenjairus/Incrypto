@@ -6,6 +6,7 @@ const { ipcMain, ipcRenderer } = require('electron');
 const Store = require('electron-store');
 const { server, connection } = require('websocket');
 const store = new Store();
+const DOMPurify = require('dompurify');
 
 const serverName = store.get("serverName", ""); // default to "" if no valid input
 // const portNum = '42069'
@@ -99,6 +100,7 @@ $(function() { // this syntax means it's a function that will be run once once d
 
     let pingCount = 0;
     let pongCount = 0;
+    let lengthOfHistory5SecondsAgo = "";
 
     /*
     * What to do when the socket receives a message
@@ -115,20 +117,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             return;
         }
         if (json.type === 'history') { // entire message history
-            pongCount = 0;
-            pingCount = 0;
-            if (DEBUG) console.log("Message received: \n" + message.data);
-            // insert every single message to the chat window
-            document.getElementById("chatbox").innerHTML = "";
-            let dtOfLastMessage = "";
-            for (var i=0; i < json.data.length; i++) {
-                addMessage(json.data[i].author, json.data[i].text, json.data[i].color, json.data[i].time, dtOfLastMessage, json.data[i].encryption);
-                dtOfLastMessage = json.data[i].time;
-            }
-            var div = $('#chatbox');
-            div.animate({
-                scrollTop: div[0].scrollHeight
-            }, 0);
+            populateChat(message, json);
         } else if (json.type === 'message') { // it's a single message
             if (DEBUG) console.log("Message received: \n" + message.data);
             // let the user write another message
@@ -165,6 +154,25 @@ $(function() { // this syntax means it's a function that will be run once once d
         }
     };
 
+    async function populateChat(message, json) { // this was done in an attempt to speed up onmessage handler
+        pongCount = 0;
+        pingCount = 0;
+            if (DEBUG) console.log("Message received: \n" + message.data);
+            // insert every single message to the chat window
+            if (json.data.length === lengthOfHistory5SecondsAgo) {
+                return; // don't waste time if number of messages is the same
+            }
+            document.getElementById("chatbox").innerHTML = "";
+            lengthOfHistory5SecondsAgo = json.data.length;
+            let dtOfLastMessage = "";
+            for (var i=0; i < json.data.length; i++) {
+                addMessage(json.data[i].author, json.data[i].text, json.data[i].color, json.data[i].time, dtOfLastMessage, json.data[i].encryption);
+                dtOfLastMessage = json.data[i].time;
+            }
+            var div = $('#chatbox');
+            div[0].scrollTop = div[0].scrollHeight;
+    }
+
     connection.onclose = function () {
         ipcRenderer.invoke('login', "").then((result) => { 
             // used to refresh page
@@ -180,6 +188,9 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (!msg) {
                 return;
             }
+
+
+            // msg = DOMPurify.sanitize(msg);
             msg = Encrypt(msg);
             if (msg == "") return; // if encryption fails
             var tmp = Encrypt(myName);
@@ -372,7 +383,7 @@ function Encrypt(textin) {
     try {
         toReturn = eval(EncryptionFunction + '("' + textin + '")');
     } catch(e) {
-        alert("There's an issue with the selected encryption algorithm.");
+        alert("There's an issue with the selected encryption algorithm: " + e);
         // return textin;
         return "";
     }

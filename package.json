@@ -25,6 +25,7 @@
   "dependencies": {
     "axios": "^0.23.0",
     "bootstrap-icons": "^1.7.1",
+    "dompurify": "^2.3.3",
     "electron-reload": "^2.0.0-alpha.1",
     "electron-store": "^8.0.1",
     "fs": "^0.0.1-security",
