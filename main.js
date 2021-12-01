@@ -305,7 +305,7 @@ function switchToRegistrationPage() {
 }
 
 function switchToChatPage() {
-    replaceCurrentWindow("index.html")
+    replaceCurrentWindow("chat.html")
 }
 
 function createChildWindow(file) {

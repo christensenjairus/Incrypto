@@ -1,0 +1,197 @@
+<!-- CHAT PAGE -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/chat.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
+    <title>Incrypto - Chat</title>
+  </head>
+  <script type="module" src="../javascript/frontend.js"></script> <!-- used to update this page with new chats -->
+  <!-- <div class="navbar" id="mynavbar">
+    <div class="dropdown">
+      <button class="dropbtn">Encryption Type
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div id="status">Connecting...</div>
+      <div class="dropdown-content" id="dropdown">
+        
+      </div>
+    </div>
+        <a href="#home" id="logoutButton">Logout</a>
+  </div> -->
+
+  <nav class="navbar navbar-expand-sm navbar-dark fixed-top">
+    <a class="navbar-brand" href="#">Incrypto Chat</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="navbar-toggler-icon"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <!-- <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li> -->
+        <!-- <li class="nav-item">
+          <a class="nav-link" href="#">Features</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Pricing</a>
+        </li> -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" style="color:grey" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Encryption Types
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="dropdown"></div>
+        </li>
+      </ul>
+    
+    <div class="navbar-nav ml-auto" id="status">Connecting...</div>
+    <div class="navbar-nav" style="color:grey" id="logoutButton">Logout</div>
+    </div>
+  </nav>
+
+
+  <body id='body1'>
+    <!-- <h1>Incrypto - Chat</h1>
+    <div id="content"></div>
+    <div id="textEntry">
+      <span id="status">Connecting...</span>
+      <span id="smallBuffer"></span>
+      <input type="text" id="input" disabled="true" />
+      <input type="text" id="input" /> -->
+    </div>
+
+        <!-- <div class="container py-5 px-4"> -->
+
+        <!-- <div class="row rounded-lg shadow"> -->
+            <!-- Users box-->
+            <!-- <div class="col-5 px-0">
+            <div class="bg-white">
+
+                <div class="bg-gray px-4 py-2 bg-light">
+                <p class="h5 mb-0 py-1">Recent</p>
+                </div>
+
+                <div class="messages-box">
+                <div class="list-group rounded-0">
+                    <a class="list-group-item list-group-item-action active text-white rounded-0">
+                    <div class="media"><img src="https://bootstrapious.com/i/snippets/sn-chat/avatar.svg" alt="user" width="50" class="rounded-circle">
+                        <div class="media-body ml-4">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <h6 class="mb-0">Jason Doe</h6><small class="small font-weight-bold">25 Dec</small>
+                        </div>
+                        <p class="font-italic mb-0 text-small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+                </div>
+                
+            </div>
+            </div> -->
+            <!-- Chat Box-->
+            <!-- <div class="col-7 px-0"> -->
+            <!-- <div class="px-4 py-5 chat-box " id="chatbox"> -->
+                <!-- Reciever Message-->
+                <!-- <div class="media w-50 ml-auto mb-3">
+                <div class="media-body">
+                    <div class="bg-primary rounded py-2 px-3 mb-2">
+                    <p class="text-small mb-0 text-white">Test which is a new approach to have all solutions</p>
+                    </div>
+                    <p class="small text-muted">12:00 PM | Aug 13</p>
+                </div>
+                </div> -->
+
+                <!-- Sender Message-->
+                <!-- <div class="media w-50 mb-3"><img src="https://bootstrapious.com/i/snippets/sn-chat/avatar.svg" alt="user" width="50" class="rounded-circle">
+                <div class="media-body ml-3">
+                    <div class="bg-light rounded py-2 px-3 mb-2">
+                    <p class="text-small mb-0 text-muted">Test, which is a new approach to have</p>
+                    </div>
+                    <p class="small text-muted">12:00 PM | Aug 13</p>
+                </div>
+                </div> -->
+
+            </div>
+
+            <div class="wrapper">
+                <div class="main">
+                    <div class="px-2 scroll" id="chatbox">
+                        <div class="d-flex align-items-center">
+                            <div class="text-left pr-1"><img src="https://img.icons8.com/color/40/000000/guest-female.png" width="30" class="img1" /></div>
+                            <div class="pr-2 pl-1"> <span class="name">Sarah Anderson</span>
+                                <p class="msg">Hi Dr. Hendrikson, I haven't been falling well for past few days.</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center text-right justify-content-end ">
+                            <div class="pr-2"> <span class="name">Dr. Hendrikson</span>
+                                <p class="msg">Let's jump on a video call</p>
+                            </div>
+                            <div><img src="https://i.imgur.com/HpF4BFG.jpg" width="30" class="img1" /></div>
+                        </div>
+                        <div class="text-center"><span class="between">Call started at 10:47am</span></div>
+                        <div class="text-center"><span class="between">Call ended at 11:03am</span></div>
+                        <div class="d-flex align-items-center">
+                            <div class="text-left pr-1"><img src="https://img.icons8.com/color/40/000000/guest-female.png" width="30" class="img1" /></div>
+                            <div class="pr-2 pl-1"> <span class="name">Sarah Anderson</span>
+                                <p class="msg">How often should i take this?</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center text-right justify-content-end ">
+                            <div class="pr-2"> <span class="name">Dr. Hendrikson</span>
+                                <p class="msg">Twice a day, at breakfast and before bed</p>
+                            </div>
+                            <div><img src="https://i.imgur.com/HpF4BFG.jpg" width="30" class="img1" /></div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="text-left pr-1"><img src="https://img.icons8.com/color/40/000000/guest-female.png" width="30" class="img1" /></div>
+                            <div class="pr-2 pl-1"> <span class="name">Sarah Anderson</span>
+                                <p class="msg">How often should i take this?</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div id="inputBox">  -->
+                        
+                        <input type="text number" name="text" class="form-control" placeholder="Type a message..." id="input">
+                        <!-- <div class="icondiv d-flex justify-content-end align-content-center text-center ml-2"> 
+                            <i class="fa fa-paperclip icon1"></i> 
+                            <i class="fa fa-arrow-circle-right icon2"></i>
+                        </div> -->
+                    <!-- </div> -->
+                </div>
+            </div>
+
+            <!-- Typing area -->
+                <!-- <div class="input-group">
+                    <span id="status">Connecting...</span>
+                    <input type="text" placeholder="Type a message" aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light" id="input">
+                    <div class="input-group-append">
+                        <button id="button-addon2" type="submit" class="btn btn-link"> <i class="fa fa-paper-plane"></i></button>
+                    </div>
+                </div> -->
+
+            </div>
+        <!-- </div> -->
+        <!-- </div> -->
+
+
+
+                        <!-- used to encrypt messages before sending them & after receiving them -->
+        <script type="text/javascript" src="../javascript/Encryption_DEV.js"></script> 
+        <!-- <script type="text/javascript" src="../javascript/Encryption.js"></script> -->
+        
+        <!-- <footer></footer> -->
+        <!-- You can also require other files to run in this process -->
+        <script type="text/javascript" src="../javascript/renderer.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </body>
+</html>

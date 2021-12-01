@@ -35,9 +35,13 @@ ipcRenderer.invoke('getEncryptionType', "").then((result) => {
 // EncryptionFunction = "binary";
 console.log("encryption type is " + EncryptionFunction)
 
-var content = $('#content');
-var input = $('#input');
-var mystatus = $('#status');
+// var content = $('#content');
+var content = document.getElementById("chatbox");
+// var input = $('#input');
+var input = document.getElementById("input");
+// var mystatus = $('#status');
+var mystatus = document.getElementById("status");
+
 // var textEntry = $('textEntry');
 let savedInputText = "";
 
@@ -53,7 +57,8 @@ function logout() {
 $(function() { // this syntax means it's a function that will be run once once document.ready is true
     "use strict";
     // for better performance - to avoid searching in DOM
-    content = $('#content');
+    // content = $('#content');
+    content = document.getElementById("chatbox");
     input = $('#input');
     mystatus = $('#status');
     // if user is running mozilla then use it's built-in WebSocket
@@ -83,7 +88,8 @@ $(function() { // this syntax means it's a function that will be run once once d
             input.prop("disabled", false);
             // if (DEBUG) console.log("user should be able to type now")
             input.focus();
-            var div = $('#content');
+            // content.scrollTo(0, content.scrollHeight)
+            var div = $('#chatbox');
             div.animate({
                 scrollTop: div[0].scrollHeight
             }, 0); // lowered the animation time to zero so it wasn't annoying on reload
@@ -92,7 +98,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             input.hide();
             mystatus.text('Error occurred. Username unknown. Please log out and log back in.');
         }
-        content.html($('<p>',{text: 'Welcome to the Incrypto Chat! Type in the text box below to begin chatting!'}));
+        content.innerhtml += `<p>Welcome to the Incrypto Chat! Type in the text box below to begin chatting!</p>`;
     };
 
     /*
@@ -128,11 +134,11 @@ $(function() { // this syntax means it's a function that will be run once once d
             pingCount = 0;
             if (DEBUG) console.log("Message received: \n" + message.data);
             // insert every single message to the chat window
-            document.getElementById("content").innerHTML = "";
+            document.getElementById("chatbox").innerHTML = "";
             for (var i=0; i < json.data.length; i++) {
                 addMessage(json.data[i].author, json.data[i].text, json.data[i].color, json.data[i].time, json.data[i].encryption);
             }
-            var div = $('#content');
+            var div = $('#chatbox');
             div.animate({
                 scrollTop: div[0].scrollHeight
             }, 0);
@@ -143,10 +149,10 @@ $(function() { // this syntax means it's a function that will be run once once d
             addMessage(json.data.author, json.data.text, json.data.color, json.data.time, json.data.encryption);
             // if (DEBUG) console.log("should be able to type - message received")
             input.focus();
-            var div = $('#content');
+            var div = $('#chatbox');
             div.animate({
                 scrollTop: div[0].scrollHeight
-            }, 1000);
+            }, 100);
             // if (json.data.author != myName) {
             //     try {
             //         json.data.text = eval(json.data.encryption + '_REVERSE("' + json.data.text + '")');
@@ -267,12 +273,28 @@ $(function() { // this syntax means it's a function that will be run once once d
         author = Decrypt(author, encryptionType)
         // console.log("author is " + Decrypt(author, encryptionType));
         // console.log("encryption type is " + encryptionType)
-        if (author != myName) {
-            content.append('<div class="myDiv"><p style="text-align: left"><span style="color:' + color + '">'
-            + author + '</span>:    ' + message + '</p></div>');
+        const time = new Date(dt);
+        if (author == myName) {
+            // content.append('<div class="myDiv"><p style="text-align: left"><span style="color:' + color + '">'
+            // + author + '</span>:    ' + message + '</p></div>');
+
+            content.innerHTML += `<div class="d-flex align-items-center text-right justify-content-end ">
+                            <div class="pr-2"> <span class="name">Me</span>
+                                <p class="msg" style="background-color:` + color + `; color:white">`+message+`</p>
+                            </div>
+                            <div><img src="../icons/icons8-hacker-64.png" width="30" class="img1" /></div>
+                        </div>`
         } else {
-            content.append('<div class="myDiv2"><p style="text-align: right"><span style="color:' + color + '">'
-            + "Me" + '</span>:  ' + message + '</p><div class="myDiv">'); 
+            // content.append('<div class="myDiv2"><p style="text-align: right"><span style="color:' + color + '">'
+            // + "Me" + '</span>:  ' + message + '</p><div class="myDiv">'); 
+
+            content.innerHTML += `<!-- Sender Message-->
+            <div class="d-flex align-items-center">
+            <div class="text-left pr-1"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /></div>
+            <div class="pr-2 pl-1"> <span class="name">` + author + `</span>
+                <p class="msg" style="background-color:` + color + `; color:white">` + message + `</p>
+            </div>
+            </div>`;
         };
 
         // content.append('<div class="myDiv"><p style="text-align: left"><span style="color:' + color + '">'
@@ -312,8 +334,7 @@ $(function() { // this syntax means it's a function that will be run once once d
 
     var dropdown = document.getElementById('dropdown');
     for (let i = 0; i < Encryption_Types.length; ++i) {
-        dropdown.innerHTML += '<a href="#" id="encryption_type_' + i + '")>' + Encryption_Types[i] + '</a>'
-        
+        dropdown.innerHTML += '<a class="dropdown-item" href="#" id="encryption_type_' + i + '")>' + Encryption_Types[i] + '</a>'
     }
     for (let i = 0; i < Encryption_Types.length; ++i) {
         document.getElementById("encryption_type_" + i).addEventListener('click', () => {
