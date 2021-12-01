@@ -135,8 +135,10 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (DEBUG) console.log("Message received: \n" + message.data);
             // insert every single message to the chat window
             document.getElementById("chatbox").innerHTML = "";
+            let dtOfLastMessage = "";
             for (var i=0; i < json.data.length; i++) {
-                addMessage(json.data[i].author, json.data[i].text, json.data[i].color, json.data[i].time, json.data[i].encryption);
+                addMessage(json.data[i].author, json.data[i].text, json.data[i].color, json.data[i].time, dtOfLastMessage, json.data[i].encryption);
+                dtOfLastMessage = json.data[i].time;
             }
             var div = $('#chatbox');
             div.animate({
@@ -146,7 +148,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (DEBUG) console.log("Message received: \n" + message.data);
             // let the user write another message
             input.prop("disabled", false)
-            addMessage(json.data.author, json.data.text, json.data.color, json.data.time, json.data.encryption);
+            addMessage(json.data.author, json.data.text, json.data.color, json.data.time, "", json.data.encryption);
             // if (DEBUG) console.log("should be able to type - message received")
             input.focus();
             var div = $('#chatbox');
@@ -268,19 +270,26 @@ $(function() { // this syntax means it's a function that will be run once once d
     /*
     * Add message to the chat window
     */
-    function addMessage(author, message, color, dt, encryptionType) {
+    function addMessage(author, message, color, dt, dtOfLastMessage, encryptionType) {
         message = Decrypt(message, encryptionType);
         author = Decrypt(author, encryptionType)
         // console.log("author is " + Decrypt(author, encryptionType));
         // console.log("encryption type is " + encryptionType)
         const time = new Date(dt);
+        const lastTime = new Date(dtOfLastMessage);
+        let difference = time - lastTime;
+
+        // alert(difference)
+        if (difference > 20000) {
+            content.innerHTML += `<div class="text-center"><span class="between">` + time.toLocaleString() + `</span></div>`;
+        }
         if (author == myName) {
             // content.append('<div class="myDiv"><p style="text-align: left"><span style="color:' + color + '">'
             // + author + '</span>:    ' + message + '</p></div>');
 
             content.innerHTML += `<div class="d-flex align-items-center text-right justify-content-end ">
                             <div class="pr-2"> <span class="name">Me</span>
-                                <p class="msg" style="background-color:` + color + `; color:white">`+message+`</p>
+                                <p class="msg" style="background-color:` + color + `; color:white">` + message + `</p>
                             </div>
                             <div><img src="../icons/icons8-hacker-64.png" width="30" class="img1" /></div>
                         </div>`
