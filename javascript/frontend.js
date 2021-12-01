@@ -356,7 +356,7 @@ function setRandomColor() {
 }
 
 function showNotification(author, text) {
-    const NOTIFICATION_TITLE = 'New message from ' + author
+    const NOTIFICATION_TITLE = author
     const NOTIFICATION_BODY = text
     // const CLICK_MESSAGE = 'Notification clicked!'
     new Notification(NOTIFICATION_TITLE, { body: NOTIFICATION_BODY })
