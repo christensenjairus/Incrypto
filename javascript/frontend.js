@@ -31,15 +31,11 @@ let EncryptionFunction = store.get("encryptionType", Encryption_Types[0]);  // T
 ipcRenderer.invoke('getEncryptionType', "").then((result) => {
     EncryptionFunction = result;
 })
-// EncryptionFunction = "plain_text"; // TODO: COMMENT OUT THIS LINE TO USE ENCRYPTION
-// EncryptionFunction = "binary";
+
 console.log("encryption type is " + EncryptionFunction)
 
-// var content = $('#content');
 var content = document.getElementById("chatbox");
-// var input = $('#input');
 var input = document.getElementById("input");
-// var mystatus = $('#status');
 var mystatus = document.getElementById("status");
 
 // var textEntry = $('textEntry');
@@ -48,11 +44,6 @@ let savedInputText = "";
 function logout() {
     ipcRenderer.invoke('logout');
 }
-
-// var colors = ['purple', 'plum', 'orange', 'red', 'green', 'blue', 'magenta'];
-// colors.sort(function(a,b) {
-//     return Math.random() > 0.5;	
-// });
 
 $(function() { // this syntax means it's a function that will be run once once document.ready is true
     "use strict";
@@ -86,13 +77,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
             // end of getting chat history
             input.prop("disabled", false);
-            // if (DEBUG) console.log("user should be able to type now")
             input.focus();
-            // content.scrollTo(0, content.scrollHeight)
-            var div = $('#chatbox');
-            div.animate({
-                scrollTop: div[0].scrollHeight
-            }, 0); // lowered the animation time to zero so it wasn't annoying on reload
         }
         else {
             input.hide();
@@ -195,10 +180,6 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (!msg) {
                 return;
             }
-            // TODO: get encryption type, encrypt message, get key from authentication
-
-            // send the message as JSON
-            // console.log("myname is " + myName);
             msg = Encrypt(msg);
             if (msg == "") return; // if encryption fails
             var tmp = Encrypt(myName);
@@ -227,11 +208,6 @@ $(function() { // this syntax means it's a function that will be run once once d
     */
     historyIntervalID = setInterval(function() {
         if (connection.readyState !== 1) {
-            // document.getElementById('input').attr('disabled', 'disabled')
-            // document.getElementById('status').val('Can\'t communicate with the WebSocket server. Reload with "View" > "Reload"');
-            // console.log("reloading page")
-            // location.reload();
-            // mystatus.text('Error');
             ipcRenderer.invoke('login', "").then((result) => { 
                 // used to refresh page
             })
@@ -279,14 +255,10 @@ $(function() { // this syntax means it's a function that will be run once once d
         const lastTime = new Date(dtOfLastMessage);
         let difference = time - lastTime;
 
-        // alert(difference)
         if (difference > 20000) {
             content.innerHTML += `<div class="text-center"><span class="between">` + time.toLocaleString() + `</span></div>`;
         }
         if (author == myName) {
-            // content.append('<div class="myDiv"><p style="text-align: left"><span style="color:' + color + '">'
-            // + author + '</span>:    ' + message + '</p></div>');
-
             content.innerHTML += `<div class="d-flex align-items-center text-right justify-content-end ">
                             <div class="pr-2"> <span class="name">Me</span>
                                 <p class="msg" style="background-color:` + color + `; color:white">` + message + `</p>
@@ -294,9 +266,6 @@ $(function() { // this syntax means it's a function that will be run once once d
                             <div><img src="../icons/icons8-hacker-64.png" width="30" class="img1" /></div>
                         </div>`
         } else {
-            // content.append('<div class="myDiv2"><p style="text-align: right"><span style="color:' + color + '">'
-            // + "Me" + '</span>:  ' + message + '</p><div class="myDiv">'); 
-
             content.innerHTML += `<!-- Sender Message-->
             <div class="d-flex align-items-center">
             <div class="text-left pr-1"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /></div>
@@ -305,13 +274,6 @@ $(function() { // this syntax means it's a function that will be run once once d
             </div>
             </div>`;
         };
-
-        // content.append('<div class="myDiv"><p style="text-align: left"><span style="color:' + color + '">'
-        //     + author + '</span> @ ' + (dt.getHours() < 10 ? '0'
-        //     + dt.getHours() : dt.getHours()) + ':'
-        //     + (dt.getMinutes() < 10
-        //     ? '0' + dt.getMinutes() : dt.getMinutes())
-        //     + ': ' + message + '</p></div>');
     }
 
     document.getElementById('status').addEventListener('click', () => {
