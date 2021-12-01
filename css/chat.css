@@ -103,12 +103,6 @@ body {
     border: none;
 }
 
-form-control: focus {
-    box-shadow: none;
-    overflow: hidden;
-    border: none
-}
-
 .form-control:focus {
     box-shadow: none !important
 }
@@ -240,4 +234,11 @@ webview {
 
 .between {
     font-size: 11px;
+}
+
+.form-control {
+    box-shadow: none;
+    overflow: hidden;
+    border: none;
+    font-size: medium;
 }
