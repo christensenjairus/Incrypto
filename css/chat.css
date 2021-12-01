@@ -221,3 +221,9 @@ webview {
     height: 100%;
     padding-bottom: 20px;
 }
+
+.navbar-collapse {
+    padding: 12px;
+    background-color: #000000;
+    background-image: linear-gradient(310deg, #050a7967 0%, #3110445b 74%);
+}
