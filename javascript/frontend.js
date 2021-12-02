@@ -195,11 +195,14 @@ $(function() { // this syntax means it's a function that will be run once once d
     */
     input.keydown(function(e) {
         if (e.keyCode === 13) {
-            var msg = $(this).val();
+            let msg = $(this).val();
             if (!msg) {
                 return;
             }
-
+            msg = msg.split('').map(char => {
+                if (char === '"') char = '\'\''; // replace " with two 's
+                return char;
+            }).join('');
 
             // msg = DOMPurify.sanitize(msg);
             msg = Encrypt(msg);
