@@ -199,11 +199,14 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (!msg) {
                 return;
             }
+            let characterInString = false;
             msg = msg.split('').map(char => {
                 if (char === '"') char = '\'\''; // replace " with two 's
                 else if (char === '\\') char = '/'; // replace backslashes with forward slashes
+                else if (char != " ") characterInString = true;
                 return char;
             }).join('');
+            if (!characterInString) return;
         
 
             msg = DOMPurify.sanitize(msg); // remove cross site scripting possibilities
@@ -275,7 +278,10 @@ $(function() { // this syntax means it's a function that will be run once once d
     */
     function addMessage(author, message, color, dt, dtOfLastMessage, encryptionType) {
         message = Decrypt(message, encryptionType);
-        author = Decrypt(author, encryptionType)
+        author = Decrypt(author, encryptionType);
+
+        message = DOMPurify.sanitize(message);
+        if (message === "") return;
         // console.log("author is " + Decrypt(author, encryptionType));
         // console.log("encryption type is " + encryptionType)
         const time = new Date(dt);
