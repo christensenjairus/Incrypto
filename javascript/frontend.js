@@ -204,8 +204,9 @@ $(function() { // this syntax means it's a function that will be run once once d
                 else if (char === '\\') char = '/'; // replace backslashes with forward slashes
                 return char;
             }).join('');
+        
 
-            // msg = DOMPurify.sanitize(msg);
+            msg = DOMPurify.sanitize(msg); // remove cross site scripting possibilities
             msg = Encrypt(msg);
             if (msg == "") return; // if encryption fails
             var tmp = Encrypt(myName);
