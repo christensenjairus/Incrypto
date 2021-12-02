@@ -209,7 +209,9 @@ $(function() { // this syntax means it's a function that will be run once once d
                 return char;
             }).join('');
             if (!characterInString) return; // the message is only spaces
-            msg = DOMPurify.sanitize(msg); // remove cross site scripting possibilities
+            let tmp1 = DOMPurify.sanitize(msg); // remove cross site scripting possibilities
+            if (tmp1 !== msg) alert("To protect against cross site scripting, we will remove what we view as dangerous text from your message.")
+            msg = tmp1;
             msg = Encrypt(msg);
             if (msg == "") return; // if encryption fails
 
