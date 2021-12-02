@@ -201,6 +201,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             }
             msg = msg.split('').map(char => {
                 if (char === '"') char = '\'\''; // replace " with two 's
+                else if (char === '\\') char = '/'; // replace backslashes with forward slashes
                 return char;
             }).join('');
 
