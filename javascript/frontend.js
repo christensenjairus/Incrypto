@@ -199,6 +199,8 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (!msg) {
                 return;
             }
+
+            // protect against xss and bad characters
             let characterInString = false;
             msg = msg.split('').map(char => {
                 if (char === '"') char = '\'\''; // replace " with two 's
@@ -206,12 +208,11 @@ $(function() { // this syntax means it's a function that will be run once once d
                 else if (char != " ") characterInString = true;
                 return char;
             }).join('');
-            if (!characterInString) return;
-        
-
+            if (!characterInString) return; // the message is only spaces
             msg = DOMPurify.sanitize(msg); // remove cross site scripting possibilities
             msg = Encrypt(msg);
             if (msg == "") return; // if encryption fails
+
             var tmp = Encrypt(myName);
             let message = {"type":"message", "user":myName, "userEnc":tmp, "msg":msg, "userColor":myColor, "encryption":EncryptionFunction, "key":"none", "time": (new Date()).getTime()}
             try {
