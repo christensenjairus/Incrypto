@@ -373,11 +373,14 @@ function showNotification(author, text) {
     const NOTIFICATION_TITLE = author
     const NOTIFICATION_BODY = text
     // const CLICK_MESSAGE = 'Notification clicked!'
-    new Notification(NOTIFICATION_TITLE, { body: NOTIFICATION_BODY })
-    .onclick = () => {
-        document.getElementById('input').focus();
+    const notification = {
+        title: author,
+        body: text,
+        icon: __dirname + "/../icons/hacker-25899.png"
     }
-    // console.log("notification should occur now")
+    new Notification(NOTIFICATION_TITLE, notification).onclick = () => {
+        document.getElementById('input').focus();
+    };
     ipcRenderer.invoke('incBadgeCnt', 1).then((result => {
         // update badge count
     }))

@@ -16,6 +16,39 @@ var openInEditor = require('open-in-editor');
 const {ipcMain} = require('electron')
 require('electron-reload')(__dirname) // this will allow electron to reload on changes
 
+// set app shortcuts
+const createDesktopShortcut = require('create-desktop-shortcuts');
+var basepath = __dirname;
+const linuxAppAdd = createDesktopShortcut({
+    linux: {
+        filePath: basepath + '/RunMeToStartApp.sh',
+        outputPath: '~/.local/share/applications/',
+        name: 'Incrypto',
+        type: 'Application',
+        terminal: false,
+        chmod: true,
+        icon: basepath + '/icons/hacker-25899.png',
+        comment: "Encrypted Messaging App" 
+    }
+});
+const desktopShortcutsCreated = createDesktopShortcut({
+    windows: { filePath: 'C:\\path\\to\\executable.exe' },
+    linux:   { filePath: basepath + '/RunMeToStartApp.sh',
+                name: 'Incrypto',
+                type: 'Application',
+                terminal: false,
+                chmod: true,
+                icon: basepath + '/icons/hacker-25899.png',
+                comment: "Encrypted Messaging App" 
+            },
+    osx:     { filePath: '/home/path/to/executable'     }
+});
+if (desktopShortcutsCreated && linuxAppAdd) {
+    console.log('Setting desktop icons worked correctly!');
+} else {
+    console.log('Could not create the icon or set its permissions (in Linux if "chmod" is set to true, or not set)');
+}
+
 const path = require('path')
 const url = require('url')
 // app.setAppUserModelId(process.execPath); // during development only?
@@ -66,10 +99,13 @@ function createWindow(width, height) {
             webgl: true,
             enableRemoteModule: true,
         },
+        hasShadow: true,
         width: width,
         height: height,
         minWidth: 320,
-        minHeight: 600
+        minHeight: 600,
+        icon: basepath + '/icons/hacker-25899.png',
+        title: "Incrypto"
     }) 
 
     // and load the index.html of the app.
@@ -308,61 +344,63 @@ function switchToChatPage() {
     replaceCurrentWindow("chat.html")
 }
 
-function createChildWindow(file) {
-    let width = store.get('windowWidth', 800); // use size of last use, but 800 is default
-    let height = store.get('windowHeight', 600); // use size of last use, but 600 is default
-    childWindow = new BrowserWindow({
-        width: width,
-        height: height,
-        // modal: true,
-        show: false,
-        parent: mainWindow, // Make sure to add parent window here
+// function createChildWindow(file) {
+//     let width = store.get('windowWidth', 800); // use size of last use, but 800 is default
+//     let height = store.get('windowHeight', 600); // use size of last use, but 600 is default
+//     childWindow = new BrowserWindow({
+//         width: width,
+//         height: height,
+//         // modal: true,
+//         show: false,
+//         icon: basepath + '/icons/hacker-25899.png',
+//         parent: mainWindow, // Make sure to add parent window here
     
-        // Make sure to add webPreferences with below configuration
-        webPreferences: {
-            preload: path.join(__dirname, './javascript/preload.js'),
-            allowRunningInsecureContent: true, // this setting is not ideal, but for now, necessary
-            nodeIntegration: true,
-            contextIsolation: false,
-            webgl: true,
-            enableRemoteModule: true,
-        },
-    });
+//         // Make sure to add webPreferences with below configuration
+//         webPreferences: {
+//             preload: path.join(__dirname, './javascript/preload.js'),
+//             allowRunningInsecureContent: true, // this setting is not ideal, but for now, necessary
+//             nodeIntegration: true,
+//             contextIsolation: false,
+//             webgl: true,
+//             enableRemoteModule: true,
+//             hasShadow: true,
+//         },
+//     });
     
-    // Child window loads settings.html file
-    // childWindow.loadFile("settings.html");
-    childWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'html/' + file),
-        protocol: 'file:',
-        slashes: true
-    }))
+//     // Child window loads settings.html file
+//     // childWindow.loadFile("settings.html");
+//     childWindow.loadURL(url.format({
+//         pathname: path.join(__dirname, 'html/' + file),
+//         protocol: 'file:',
+//         slashes: true
+//     }))
     
-    childWindow.once("ready-to-show", () => {
-        childWindow.show();
-    });
+//     childWindow.once("ready-to-show", () => {
+//         childWindow.show();
+//     });
 
-    childWindow.on('resize', () => {
-        // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with
-        // the height, width, and x and y coordinates.
-        let { width, height } = mainWindow.getBounds();
+//     childWindow.on('resize', () => {
+//         // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with
+//         // the height, width, and x and y coordinates.
+//         let { width, height } = mainWindow.getBounds();
         
-        // Now that we have them, save them using the `set` method.
-        store.set('windowWidth', width);
-        store.set('windowHeight', height);
-    });
+//         // Now that we have them, save them using the `set` method.
+//         store.set('windowWidth', width);
+//         store.set('windowHeight', height);
+//     });
 
-    // Open the DevTools.
-    // childWindow.webContents.openDevTools(); // uncomment this for DevTools
+//     // Open the DevTools.
+//     // childWindow.webContents.openDevTools(); // uncomment this for DevTools
 
-    // Emitted when the window is closed.
-    childWindow.on('closed', function() {
-        // Dereference the window object, usually you would store windows
-        // in an array if your app supports multi windows, this is the time
-        // when you should delete the corresponding element.
-        windows.delete(mainWindow)
-        mainWindow = null
-    })
-}
+//     // Emitted when the window is closed.
+//     childWindow.on('closed', function() {
+//         // Dereference the window object, usually you would store windows
+//         // in an array if your app supports multi windows, this is the time
+//         // when you should delete the corresponding element.
+//         windows.delete(mainWindow)
+//         mainWindow = null
+//     })
+// }
 
 function replaceCurrentWindow(file) {
     // mainWindow.loadURL(url.format({
