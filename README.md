@@ -63,6 +63,8 @@ Note: If you're using Linux Bash for Windows, [see this guide](https://www.howto
 ### Frontend.js and its functions
 ### Socket communication and JSON
 ### Server structure
+### How to compile
+On Windows, open an Administrative PowerShell window and run `npm i -g windows-build-tools`. This will install the compilation tools for an exe and set the right environment variables in your system. From there, run `<PLACEHOLDER>`.
 * * *
 # Things for our Dev Team to know
 #### Building Windows App
