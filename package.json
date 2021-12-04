@@ -24,7 +24,8 @@
           "zip"
         ],
         "linux": [
-          "snap"
+          "deb",
+          "rpm"
         ]
       },
       "electronPackagerConfig": {
@@ -33,8 +34,20 @@
       "electronWinstallerConfig": {
         "name": "Incrypto"
       },
-      "electronInstallerDebian": {},
-      "electronInstallerRedhat": {},
+      "electronInstallerDebian": {
+        "dest": "dist/installers/",
+        "icon": "./icons/hacker-25899.png",
+        "categories": [
+          "Messaging"
+        ]
+      },
+      "electronInstallerRedhat": {
+        "dest": "dist/installers/",
+        "icon": "./icons/hacker-25899.png",
+        "categories": [
+          "Messaging"
+        ]
+      },
       "electronInstallerFlatpak": {
         "dest": "dist/installers/",
         "icon": "./icons/hacker-25899.png",
@@ -42,6 +55,7 @@
           "Messaging"
         ]
       },
+      "electronInstallerSnap": {},
       "github_repository": {
         "owner": "christensenjairus@gmail.com",
         "name": "Jairus Christensen"
@@ -58,7 +72,6 @@
     "create-desktop-shortcuts": "^1.5.0",
     "dompurify": "^2.3.3",
     "electron-compile": "^6.4.4",
-    "electron-forge-maker-snap": "^22.14.10",
     "electron-reload": "^2.0.0-alpha.1",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.0.1",
@@ -77,11 +90,22 @@
     "babel-preset-react": "^6.24.1",
     "electron": "^16.0.4",
     "electron-forge": "^5.2.4",
+    "electron-builder": "^22.14.5",
     "electron-prebuilt-compile": "8.2.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.27.1"
+  },
+  "build": {
+    "appId": "Incrypto",
+    "mac": {
+      "category": "Messaging"
+    },
+    "linux": {
+      "category": "Messaging"
+    },
+    "icon": "./icons/hacker-25899.ico"
   }
 }

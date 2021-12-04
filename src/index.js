@@ -36,7 +36,7 @@ try {
     console.log("Linux File System App Add Failed. (Likely no on Linux)")
 }
 const desktopShortcutsCreated = createDesktopShortcut({
-    windows: { filePath: basepath + '/Incrypto.exe',
+    windows: { filePath: path.dirname(app.getAppPath('exe')),
                 name: 'Incrypto',
                 comment: 'Encrypted Messaging App',
                 icon: basepath + '/../icons/hacker-25899.ico',
