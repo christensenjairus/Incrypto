@@ -18,10 +18,11 @@ require('electron-reload')(__dirname) // this will allow electron to reload on c
 // set app shortcuts
 const createDesktopShortcut = require('create-desktop-shortcuts');
 var basepath = __dirname;
+console.log(app.getPath() + "<- PATH")
 try {
     const linuxAppAdd = createDesktopShortcut({
         linux: {
-            filePath: basepath + '/JustRun.sh',
+            filePath: app.getPath(),
             outputPath: '~/.local/share/applications/',
             name: 'Incrypto',
             type: 'Application',
@@ -35,7 +36,7 @@ try {
     console.log("Linux File System App Add Failed. (Likely no on Linux)")
 }
 const desktopShortcutsCreated = createDesktopShortcut({
-    windows: { filePath: app.getAppPath('exe') + '\\Incrypto.exe',
+    windows: { filePath: app.getAppPath('exe') + '\\..\\..\\Incrypto.exe',
                 name: 'Incrypto',
                 comment: 'Encrypted Messaging App',
                 icon: basepath + '/../icons/hacker-25899.ico',
