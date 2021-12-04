@@ -32,7 +32,7 @@ const linuxAppAdd = createDesktopShortcut({
     }
 });
 const desktopShortcutsCreated = createDesktopShortcut({
-    windows: { filePath: basepath + '/JustRun.sh',
+    windows: { filePath: basepath + '/JustRun.bat',
                 name: 'Incrypto',
                 comment: 'Encrypted Messaging App',
                 icon: basepath + '/icons/hacker-25899.png',
