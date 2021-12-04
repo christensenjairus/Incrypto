@@ -12,10 +12,10 @@ const Encryption_Types = ["Default_Encryption", "Plain_Text", "Example"]; // <--
 
 function Default_Encryption(textin) {
     function strToHex(textin){
-        var hex, i;
+        var hex
     
         var result = [];
-        for (i=0; i < textin.length; i++) {
+        for (let i=0; i < textin.length; i++) {
             hex = textin.charCodeAt(i).toString(16);
             result[i] = ("000"+hex).slice(-4);            
         }
@@ -27,10 +27,9 @@ function Default_Encryption(textin) {
 
 function Default_Encryption_REVERSE(textin) {
     function hexToString(textin){
-        var j;
         var hexes = textin.match(/.{1,4}/g) || [];
         var binCode = [];
-        for (i = 0; i < hexes.length; i++) {
+        for (let i = 0; i < hexes.length; i++) {
             binCode.push(String.fromCharCode(parseInt(hexes[i], 16)));
         }
         return binCode.join("");

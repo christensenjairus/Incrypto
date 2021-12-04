@@ -13,10 +13,10 @@ const Encryption_Types = ["Default_Encryption", "Plain_Text", "Binary", "Additio
 // CREATE YOUR FUNCTIONS WITH THE EXACT SAME NAME HERE
 function Default_Encryption(textin) {
     function strToHex(textin){
-        var hex, i;
+        var hex;
     
         var result = [];
-        for (i=0; i < textin.length; i++) {
+        for (let i=0; i < textin.length; i++) {
             hex = textin.charCodeAt(i).toString(16);
             result[i] = ("000"+hex).slice(-4);            
         }
@@ -28,10 +28,9 @@ function Default_Encryption(textin) {
 
 function Default_Encryption_REVERSE(textin) {
     function hexToString(textin){
-        var j;
         var hexes = textin.match(/.{1,4}/g) || [];
         var binCode = [];
-        for (i = 0; i < hexes.length; i++) {
+        for (let i = 0; i < hexes.length; i++) {
             binCode.push(String.fromCharCode(parseInt(hexes[i], 16)));
         }
         return binCode.join("");
@@ -48,7 +47,6 @@ function Plain_Text_REVERSE(textin) {
 }
 
 function Binary(textin) {
-    let textout = "";
     function textToBinary (str = '') {
         let res = '';
         res = str.split('').map(char => {
@@ -63,7 +61,7 @@ function Binary_REVERSE(textin) {
     function binaryAgent(str) {
         var newBin = str.split(" ");
         var binCode = [];
-        for (i = 0; i < newBin.length; i++) {
+        for (let i = 0; i < newBin.length; i++) {
             binCode.push(String.fromCharCode(parseInt(newBin[i], 2)));
         }
         return binCode.join("");

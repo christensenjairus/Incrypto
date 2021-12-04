@@ -431,9 +431,9 @@ function Decrypt(textin, encryptionType) {
     let toReturn = "";
     try {
         toReturn = eval(encryptionType + '_REVERSE("' + textin + '")');
-        // console.log("success: toReturn=" + toReturn);
+        // alert("success: toReturn=" + toReturn);
     } catch(e) {
-        // console.log("error in decryption: " + e);
+        // alert("error in decryption: " + e);
         return textin;
     }
     return toReturn;

@@ -100,7 +100,7 @@ function createWindow(width, height) {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         webPreferences: {
-            preload: path.join(__dirname, './javascript/preload.js'),
+            preload: path.join(__dirname, '../javascript/preload.js'),
             allowRunningInsecureContent: true, // this setting is not ideal, but for now, necessary
             nodeIntegration: true,
             contextIsolation: false,
@@ -120,7 +120,7 @@ function createWindow(width, height) {
     if (store.get("lastUser", "") == "") {
         mainWindow.loadURL(url.format({
             // pathname: path.join(__dirname, 'html/index.html'),
-            pathname: path.join(__dirname, 'html/register.html'), // start with registration page if noone has logged in
+            pathname: path.join(__dirname, '../html/register.html'), // start with registration page if noone has logged in
             protocol: 'file:',
             slashes: true
         }))
@@ -128,7 +128,7 @@ function createWindow(width, height) {
     else {
         mainWindow.loadURL(url.format({
             // pathname: path.join(__dirname, 'html/index.html'),
-            pathname: path.join(__dirname, 'html/login.html'), // start with login page if previous user
+            pathname: path.join(__dirname, '../html/login.html'), // start with login page if previous user
             protocol: 'file:',
             slashes: true
         }))
@@ -315,7 +315,7 @@ function openEncryptionFileForEditing() {
     var editor = openInEditor.configure({
         editor: codeEditor
     });
-    editor.open('./javascript/Encryption.js:52:4').then(function() {
+    editor.open('../javascript/Encryption.js:52:4').then(function() {
         // console.log('Success!');
     }, function(err) {
         // console.error('Something went wrong: ' + err);
@@ -416,7 +416,7 @@ function replaceCurrentWindow(file) {
     //     protocol: 'file:',
     //     slashes: true
     // }))
-    mainWindow.loadURL('file://' + __dirname + '/html/' + file)
+    mainWindow.loadURL('file://' + __dirname + '/../html/' + file)
 }
 
 ipcMain.handle('login', async (event, someArgument) => {
