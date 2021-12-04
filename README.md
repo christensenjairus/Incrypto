@@ -29,11 +29,14 @@ You can do this in 2 ways
 ```bash
 git clone https://github.com/christensenjairus/Incrypto.git
 ```
-#### Run Incrypto
+#### Install Incrypto
 * Open a terminal (or powershell) and navigate using `cd` to the Incrypto folder that you've just downloaded. Enter it with `cd Incrypto`
-* On Linux, run `./RunMeToStartApp.sh`
-   * You may need to give the file permission to be executed --> `chmod 755 ./RunMeToStartApp.sh`
+* On Linux, run `./InstallOnLinux.sh`
+   * You may need to give the file permission to be executed --> `chmod 755 ./InstallOnLinux.sh`
 * On Windows, ...
+* On Mac, ...
+
+After these steps, Incrypto will be searchable in your OS and have a desktop icon.
 
 #### Run Incrypto Server
 While in a terminal (or powershell), navigate into the Incrypto folder using `cd` (as done previously)
