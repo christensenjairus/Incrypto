@@ -6,4 +6,3 @@ cd ..
 cp -r Incrypto ~/.local/share/
 cd ~/.local/share/Incrypto/
 npm i
-npm start

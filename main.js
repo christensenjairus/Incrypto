@@ -21,7 +21,7 @@ const createDesktopShortcut = require('create-desktop-shortcuts');
 var basepath = __dirname;
 const linuxAppAdd = createDesktopShortcut({
     linux: {
-        filePath: basepath + '/RunMeToStartApp.sh',
+        filePath: basepath + '/JustRun.sh',
         outputPath: '~/.local/share/applications/',
         name: 'Incrypto',
         type: 'Application',
@@ -33,7 +33,7 @@ const linuxAppAdd = createDesktopShortcut({
 });
 const desktopShortcutsCreated = createDesktopShortcut({
     windows: { filePath: 'C:\\path\\to\\executable.exe' },
-    linux:   { filePath: basepath + '/RunMeToStartApp.sh',
+    linux:   { filePath: basepath + '/JustRun.sh',
                 name: 'Incrypto',
                 type: 'Application',
                 terminal: false,
@@ -41,7 +41,7 @@ const desktopShortcutsCreated = createDesktopShortcut({
                 icon: basepath + '/icons/hacker-25899.png',
                 comment: "Encrypted Messaging App" 
             },
-    osx:     { filePath: basepath + '/RunMeToStartApp.sh',
+    osx:     { filePath: basepath + '/JustRun.sh',
                 name: 'Incrypto',
                 overwrite: true     }
 });
