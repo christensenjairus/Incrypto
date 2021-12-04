@@ -2,3 +2,4 @@ node_modules
 chat.json
 # Encryption_DEV.js
 out
+package-lock.json

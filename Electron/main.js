@@ -315,7 +315,7 @@ function openEncryptionFileForEditing() {
     var editor = openInEditor.configure({
         editor: codeEditor
     });
-    editor.open('../javascript/Encryption.js:52:4').then(function() {
+    editor.open('./javascript/Encryption.js:52:4').then(function() {
         // console.log('Success!');
     }, function(err) {
         // console.error('Something went wrong: ' + err);
