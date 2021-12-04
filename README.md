@@ -65,6 +65,10 @@ Note: If you're using Linux Bash for Windows, [see this guide](https://www.howto
 ### Server structure
 ### How to compile
 On Windows, open an Administrative PowerShell window and run `npm i -g windows-build-tools`. This will install the compilation tools for an exe and set the right environment variables in your system. From there, run `<PLACEHOLDER>`.
+`set-ExecutionPolicy RemoteSigned -Scope CurrentUser`
+`npm i -g electron-forge`
+(do all your encryption file changes...)
+`npm package`
 * * *
 # Things for our Dev Team to know
 #### Building Windows App
