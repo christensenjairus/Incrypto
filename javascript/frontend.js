@@ -372,7 +372,6 @@ function setRandomColor() {
 function showNotification(author, text) {
     const NOTIFICATION_TITLE = author
     const NOTIFICATION_BODY = text
-    // const CLICK_MESSAGE = 'Notification clicked!'
     const notification = {
         title: author,
         body: text,

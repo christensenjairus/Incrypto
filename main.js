@@ -41,7 +41,9 @@ const desktopShortcutsCreated = createDesktopShortcut({
                 icon: basepath + '/icons/hacker-25899.png',
                 comment: "Encrypted Messaging App" 
             },
-    osx:     { filePath: '/home/path/to/executable'     }
+    osx:     { filePath: basepath + '/RunMeToStartApp.sh',
+                name: 'Incrypto',
+                overwrite: true     }
 });
 if (desktopShortcutsCreated && linuxAppAdd) {
     console.log('Setting desktop icons worked correctly!');
