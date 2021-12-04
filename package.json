@@ -3,7 +3,7 @@
   "productName": "Incrypto",
   "version": "1.0.0",
   "description": "Encrypted Messaging App",
-  "main": "Electron/Main.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
@@ -24,9 +24,6 @@
           "zip"
         ],
         "linux": [
-          "deb",
-          "rpm",
-          "flatpak",
           "snap"
         ]
       },
@@ -38,6 +35,13 @@
       },
       "electronInstallerDebian": {},
       "electronInstallerRedhat": {},
+      "electronInstallerFlatpak": {
+        "dest": "dist/installers/",
+        "icon": "./icons/hacker-25899.png",
+        "categories": [
+          "Messaging"
+        ]
+      },
       "github_repository": {
         "owner": "christensenjairus@gmail.com",
         "name": "Jairus Christensen"
@@ -54,6 +58,7 @@
     "create-desktop-shortcuts": "^1.5.0",
     "dompurify": "^2.3.3",
     "electron-compile": "^6.4.4",
+    "electron-forge-maker-snap": "^22.14.10",
     "electron-reload": "^2.0.0-alpha.1",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.0.1",
@@ -70,6 +75,7 @@
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "electron": "^16.0.4",
     "electron-forge": "^5.2.4",
     "electron-prebuilt-compile": "8.2.0",
     "eslint": "^3.19.0",
