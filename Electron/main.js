@@ -19,39 +19,43 @@ require('electron-reload')(__dirname) // this will allow electron to reload on c
 // set app shortcuts
 const createDesktopShortcut = require('create-desktop-shortcuts');
 var basepath = __dirname;
-const linuxAppAdd = createDesktopShortcut({
-    linux: {
-        filePath: basepath + '/JustRun.sh',
-        outputPath: '~/.local/share/applications/',
-        name: 'Incrypto',
-        type: 'Application',
-        terminal: false,
-        chmod: true,
-        icon: basepath + '/icons/hacker-25899.png',
-        comment: "Encrypted Messaging App" 
-    }
-});
+try {
+    const linuxAppAdd = createDesktopShortcut({
+        linux: {
+            filePath: basepath + '/JustRun.sh',
+            outputPath: '~/.local/share/applications/',
+            name: 'Incrypto',
+            type: 'Application',
+            terminal: false,
+            chmod: true,
+            icon: basepath + '/icons/hacker-25899.png',
+            comment: "Encrypted Messaging App" 
+        }
+    });
+} catch (e) {
+    console.log("Linux File System App Add Failed. (Likely no on Linux)")
+}
 const desktopShortcutsCreated = createDesktopShortcut({
-    windows: { filePath: 'C:\\Windows\\System32\\cmd.exe'/*filePath: basepath + '/JustRun.bat'*/,
+    windows: { filePath: basepath + '/Incrypto.exe',
                 name: 'Incrypto',
                 comment: 'Encrypted Messaging App',
-                icon: basepath + '/icons/hacker-25899.ico',
+                icon: basepath + '/../icons/hacker-25899.ico',
                 workingDirectory: basepath,
                 windowMode: "normal",
-                arguments: '/k JustRun.bat start /max' },
+                arguments: '' },
     linux:   { filePath: basepath + '/JustRun.sh',
                 name: 'Incrypto',
                 type: 'Application',
                 terminal: false,
                 chmod: true,
-                icon: basepath + '/icons/hacker-25899.png',
+                icon: basepath + '/../icons/hacker-25899.png',
                 comment: "Encrypted Messaging App" 
             },
     osx:     { filePath: basepath + '/JustRun.sh',
                 name: 'Incrypto',
                 overwrite: true     }
 });
-if (desktopShortcutsCreated && linuxAppAdd) {
+if (desktopShortcutsCreated) {
     console.log('Setting desktop icons worked correctly!');
 } else {
     console.log('Could not create the icon or set its permissions (in Linux if "chmod" is set to true, or not set)');
@@ -276,7 +280,7 @@ function createWindow(width, height) {
                                     
                             ]
                         },
-                        {label: 'Enter algorithm',
+                        {label: 'Enter Algorithm (can\'t be done from EXE)',
                             click() {
                                 openEncryptionFileForEditing();
                             },
@@ -315,21 +319,25 @@ function openEncryptionFileForEditing() {
     var editor = openInEditor.configure({
         editor: codeEditor
     });
-    editor.open('./javascript/Encryption.js:52:4').then(function() {
-        // console.log('Success!');
-    }, function(err) {
-        // console.error('Something went wrong: ' + err);
-        const options = {
-            type: 'question',
-            buttons: ['I understand'],
-            defaultId: 0,
-            title: "Can't open that editor",
-            message: "You don't seem to have the selected code editor installed"
-        }
-        console.log(dialog.showMessageBox(null, options, (response) => {
-        //can do something here with the response
-        }))
-    });
+    try {
+        editor.open('./javascript/Encryption.js:52:4').then(function() {
+            // console.log('Success!');
+        }, function(err) {
+            // console.error('Something went wrong: ' + err);
+            const options = {
+                type: 'question',
+                buttons: ['I understand'],
+                defaultId: 0,
+                title: "Can't open that editor",
+                message: "There's been an error with using this application. Try another one."
+            }
+            console.log(dialog.showMessageBox(null, options, (response) => {
+            //can do something here with the response
+            }))
+        });
+    } catch (e) {
+        dialog.showMessageBox("This must be done before compilation (can't be done in an EXE)")
+    }
 }
 
 function changeMessageEncryptionType(type) {

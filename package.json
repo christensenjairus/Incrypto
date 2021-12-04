@@ -3,7 +3,7 @@
   "productName": "Incrypto",
   "version": "1.0.0",
   "description": "Encrypted Messaging App",
-  "main": "Electron/main.js",
+  "main": "Electron/Main.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
@@ -12,7 +12,7 @@
     "lint": "eslint src --color"
   },
   "keywords": [],
-  "author": "Jairus Christensen (christensenjairus@gmail.com)",
+  "author": "Jairus Christensen",
   "license": "MIT",
   "config": {
     "forge": {
@@ -21,8 +21,7 @@
           "squirrel"
         ],
         "darwin": [
-          "zip",
-          "dmg"
+          "zip"
         ],
         "linux": [
           "deb",
@@ -32,7 +31,7 @@
         ]
       },
       "electronPackagerConfig": {
-        "packageManager": "yarn"
+        "packageManager": "npm"
       },
       "electronWinstallerConfig": {
         "name": "Incrypto"
@@ -40,7 +39,7 @@
       "electronInstallerDebian": {},
       "electronInstallerRedhat": {},
       "github_repository": {
-        "owner": "christensenjairus",
+        "owner": "christensenjairus@gmail.com",
         "name": "Jairus Christensen"
       },
       "windowsStoreConfig": {
@@ -65,19 +64,18 @@
     "svg.draggable.js": "^2.2.1",
     "svg.js": "^2.6.3",
     "typescript": "^4.5.0-dev.20211101",
-    "websocket": "^1.0.34"
+    "ws": "^8.3.0"
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
-    "electron": "^15.3.0",
     "electron-forge": "^5.2.4",
     "electron-prebuilt-compile": "8.2.0",
-    "eslint": "^3",
-    "eslint-config-airbnb": "^15",
-    "eslint-plugin-import": "^2",
-    "eslint-plugin-jsx-a11y": "^5",
-    "eslint-plugin-react": "^7"
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.27.1"
   }
 }

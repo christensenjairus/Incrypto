@@ -4,7 +4,7 @@
 
 const { ipcMain, ipcRenderer } = require('electron');
 const Store = require('electron-store');
-const { server, connection } = require('websocket');
+const { server, connection } = require('ws');
 const store = new Store();
 const DOMPurify = require('dompurify');
 

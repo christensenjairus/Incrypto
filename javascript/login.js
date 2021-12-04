@@ -4,7 +4,7 @@
 
 const { ipcRenderer } = require('electron');
 const Store = require('electron-store')
-const { server, connection } = require('websocket');
+const { server, connection } = require('ws');
 const store = new Store(); // initalize Store
 var attempt = 3; // Variable to count number of attempts.
 
