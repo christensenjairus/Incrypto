@@ -7,7 +7,7 @@
 */
 
 // ADD YOUR ENCRYPTION NAME HERE ------------------------------
-const Encryption_Types = ["Default_Encryption", "Plain_Text", "Binary", "Addition"]; // <--- add name in here
+const Encryption_Types = ["Default_Encryption", "Plain_Text", "Binary"]; // <--- add name in here
 // ------------------------------------------------------------
 
 // CREATE YOUR FUNCTIONS WITH THE EXACT SAME NAME HERE
@@ -67,18 +67,4 @@ function Binary_REVERSE(textin) {
         return binCode.join("");
     }
     return binaryAgent(textin);
-}
-
-function Addition(textin) {
-    //simple encryption of adding a key value to each char value (ASCII addition)
-    let newText = textin.value() + 3;
-    alert(newText);
-    return newText;
-}
-
-function Addition_REVERSE(textin) {
-    //the reverse
-    let revText = textin.value() - 3;
-    alert(newText);
-    return newText;
 }

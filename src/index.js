@@ -3,7 +3,6 @@
     You can run functions in this file from other files using IpcRenderer. (see example at end where we log in)
 */
 
-
 const {app, BrowserWindow, Menu, MenuItem} = require('electron')
 const shell = require('electron').shell
 const {dialog} = require('electron')
@@ -36,7 +35,7 @@ try {
     console.log("Linux File System App Add Failed. (Likely no on Linux)")
 }
 const desktopShortcutsCreated = createDesktopShortcut({
-    windows: { filePath: app.getAppPath('exe'),
+    windows: { filePath: app.getAppPath('exe') + '\\Incrypto.exe',
                 name: 'Incrypto',
                 comment: 'Encrypted Messaging App',
                 icon: basepath + '/../icons/hacker-25899.ico',
@@ -336,7 +335,7 @@ function openEncryptionFileForEditing() {
             }))
         });
     } catch (e) {
-        dialog.showMessageBox("This must be done before compilation (can't be done in an EXE)")
+        dialog.showMessageBox("This must be done before compilation (can't be done if already compiled)")
     }
 }
 

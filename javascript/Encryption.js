@@ -7,7 +7,7 @@
 */
 
 // ADD YOUR ENCRYPTION NAME HERE ------------------------------
-const Encryption_Types = ["Default_Encryption", "Plain_Text", "Example"]; // <--- add name in here
+const Encryption_Types = ["Default_Encryption", "Plain_Text", /*"Example"*/]; // <--- add name in here
 // ------------------------------------------------------------
 
 function Default_Encryption(textin) {
@@ -47,12 +47,12 @@ function Plain_Text_REVERSE(textin) {
 
 // CREATE YOUR FUNCTIONS WITH THE EXACT SAME NAME HERE
 
-function Example () {
+// function Example () {
     
-}
+// }
 
-function Example_Reverse() {
+// function Example_Reverse() {
     
-}
+// }
 
 // Make sure to add your encryption's name into the array on line 10
