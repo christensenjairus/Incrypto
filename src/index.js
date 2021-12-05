@@ -9,7 +9,7 @@ const {dialog} = require('electron')
 const Store = require('electron-store')
 const path = require('path');
 // var cp = require('child_process');
-// const fs = require('fs')
+const fs = require('fs')
 const store = new Store({
     // name: "serverConfig.json"
 })
@@ -40,7 +40,7 @@ require('electron-reload')(__dirname) // this will allow electron to reload on c
 // set app shortcuts
 const createDesktopShortcut = require('create-desktop-shortcuts');
 var basepath = __dirname;
-console.log('icon path is: ' + basepath + '/icons/hacker-25899.png');
+console.log('icon path is: ' + basepath + '/../icons/hacker-25899.png');
 console.log('process.execPath: ' + process.execPath);
 // console.log('app.Path(): ' + app.get);
 if (!((process.execPath).includes("node_modules/electron-prebuilt-compile/node_modules/electron/dist/electron"))) {
@@ -144,23 +144,46 @@ app.on('activate', function() {
 
 function createWindow(width, height) {
     // Create the browser window.
-    mainWindow = new BrowserWindow({
-        webPreferences: {
-            preload: path.join(__dirname, '../javascript/preload.js'),
-            allowRunningInsecureContent: true, // this setting is not ideal, but for now, necessary
-            nodeIntegration: true,
-            contextIsolation: false,
-            webgl: true,
-            enableRemoteModule: true,
-        },
-        hasShadow: true,
-        width: width,
-        height: height,
-        minWidth: 320,
-        minHeight: 600,
-        icon: basepath + '/../icons/hacker-25899.ico', // works in linux/windows with an ico
-        title: "Incrypto"
-    }) 
+    if (fs.existsSync(process.execPath + '.png')) {
+        console.log("AppImage detected")
+        mainWindow = new BrowserWindow({
+            webPreferences: {
+                preload: path.join(__dirname, '../javascript/preload.js'),
+                allowRunningInsecureContent: true, // this setting is not ideal, but for now, necessary
+                nodeIntegration: true,
+                contextIsolation: false,
+                webgl: true,
+                enableRemoteModule: true,
+            },
+            hasShadow: true,
+            width: width,
+            height: height,
+            minWidth: 320,
+            minHeight: 600,
+            icon: process.execPath + '.png', // for AppImage
+            title: "Incrypto"
+        }) 
+    }
+    else {
+        console.log("not an AppImage. Can grab picture file")
+        mainWindow = new BrowserWindow({
+            webPreferences: {
+                preload: path.join(__dirname, '../javascript/preload.js'),
+                allowRunningInsecureContent: true, // this setting is not ideal, but for now, necessary
+                nodeIntegration: true,
+                contextIsolation: false,
+                webgl: true,
+                enableRemoteModule: true,
+            },
+            hasShadow: true,
+            width: width,
+            height: height,
+            minWidth: 320,
+            minHeight: 600,
+            icon: basepath + '/../icons/hacker-25899.ico', // works in linux/windows with an ico
+            title: "Incrypto"
+        }) 
+    }
 
     // and load the index.html of the app.
     if (store.get("lastUser", "") == "") {
