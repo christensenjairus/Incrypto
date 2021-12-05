@@ -18,11 +18,11 @@ require('electron-reload')(__dirname) // this will allow electron to reload on c
 // set app shortcuts
 const createDesktopShortcut = require('create-desktop-shortcuts');
 var basepath = __dirname;
-console.log(app.getPath() + "<- PATH")
+console.log(basepath + '/Incrypto-1.0.0.AppImage' + "<- PATH")
 try {
     const linuxAppAdd = createDesktopShortcut({
         linux: {
-            filePath: app.getPath(),
+            filePath: basepath + '/runMe.sh',
             outputPath: '~/.local/share/applications/',
             name: 'Incrypto',
             type: 'Application',
@@ -43,7 +43,7 @@ const desktopShortcutsCreated = createDesktopShortcut({
                 workingDirectory: basepath,
                 windowMode: "normal",
                 arguments: '' },
-    linux:   { filePath: app.getAppPath(),
+    linux:   { filePath: basepath + '/RunMe.sh',
                 name: 'Incrypto',
                 type: 'Application',
                 terminal: false,
@@ -280,7 +280,7 @@ function createWindow(width, height) {
                                     
                             ]
                         },
-                        {label: 'Enter Algorithm (can\'t be done from EXE)',
+                        {label: 'Enter Algorithm (for use before compilation)',
                             click() {
                                 openEncryptionFileForEditing();
                             },
