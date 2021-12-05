@@ -7,6 +7,8 @@ const {app, BrowserWindow, Menu, MenuItem} = require('electron')
 const shell = require('electron').shell
 const {dialog} = require('electron')
 const Store = require('electron-store')
+const path = require('path');
+var cp = require('child_process');
 // const fs = require('fs')
 const store = new Store({
     // name: "serverConfig.json"
@@ -15,10 +17,25 @@ var openInEditor = require('open-in-editor');
 const {ipcMain} = require('electron')
 require('electron-reload')(__dirname) // this will allow electron to reload on changes
 
-function install(done) {
-    var target = path.basename(process.execPath);
-    executeSquirrelCommand(["--createShortcut", target], done);
-};
+try {
+    function executeSquirrelCommand(args, done) {
+        var updateDotExe = path.resolve(path.dirname(process.execPath), 
+            '..', 'update.exe');
+        var child = cp.spawn(updateDotExe, args, { detached: true });
+
+        child.on('close', function(code) {
+            done();
+        });
+    };
+    function install(done) { // add to windows start menu
+        var target = path.basename(process.execPath);
+        executeSquirrelCommand(["--createShortcut", target], done);
+    };
+    install(1);
+} catch (e) {
+    console.log("Couldn't add to windows start menu")
+}
+
 console.log("ExecPath: " + process.execPath);
 // set app shortcuts
 const createDesktopShortcut = require('create-desktop-shortcuts');
@@ -65,7 +82,6 @@ if (desktopShortcutsCreated) {
     console.log('Could not create the icon or set its permissions (in Linux if "chmod" is set to true, or not set)');
 }
 
-const path = require('path')
 const url = require('url')
 // app.setAppUserModelId(process.execPath); // during development only?
 app.setAppUserModelId("Incrypto");
