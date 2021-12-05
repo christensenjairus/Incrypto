@@ -50,7 +50,7 @@ Each operating system (Linux, Windows, MacOS) can compile binaries for their own
    * **To make DEB & RPM**: You may wish to comment out one of the two compilation options in package.json. By default, it **has both DEB & RPM.** If you don't want one of these compilation options, **edit the linux "make_targets" around line 26 of package.json**.
       * You will need...
          * `dpkg` to compile deb packages, 
-         * `rpmbuild` (or `alpmbuild` on Arch-based) for compiling RPM packages, 
+         * `rpm`, or more specifically the `rpmbuild` command (or `alpmbuild` on Arch-based) for compiling RPM packages, 
    * **To make AppImage or Snap**: You can create appimages and snaps with `electron-builder` instead of `electron-forge`. *You can edit the encryption file from these*. 
       * You'll first need to install it globally with `npm i -g electron-builder`
       * Then run `sudo electron-builder` while in the Incrypto directory. It will leave the appimage and snap in the "dist" directory. 
