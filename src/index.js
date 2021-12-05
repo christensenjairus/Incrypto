@@ -144,7 +144,7 @@ app.on('activate', function() {
 
 function createWindow(width, height) {
     // Create the browser window.
-    if (fs.existsSync(process.execPath + '.png')) {
+    if (fs.existsSync(process.execPath + '.png')) { // to make sure AppImages can get the right icon file
         console.log("AppImage detected")
         mainWindow = new BrowserWindow({
             webPreferences: {
@@ -180,7 +180,7 @@ function createWindow(width, height) {
             height: height,
             minWidth: 320,
             minHeight: 600,
-            icon: basepath + '/../icons/hacker-25899.ico', // works in linux/windows with an ico
+            icon: basepath + '/../icons/hacker-25899.ico', // works in linux/windows with an ico -- cant get this to work with npm start anymore
             title: "Incrypto"
         }) 
     }
