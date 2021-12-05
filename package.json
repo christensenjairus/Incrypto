@@ -33,7 +33,6 @@
       },
       "electronWinstallerConfig": {
         "name": "Incrypto",
-        "setupIcon": "./icon/hacker-25899.ico",
         "setupExe": "setup.exe",
         "setupMSI": "setup.msi",
         "noMsi": false
@@ -52,14 +51,6 @@
           "Messaging"
         ]
       },
-      "electronInstallerFlatpak": {
-        "dest": "dist/installers/",
-        "icon": "./icons/hacker-25899.png",
-        "categories": [
-          "Messaging"
-        ]
-      },
-      "electronInstallerSnap": {},
       "github_repository": {
         "owner": "christensenjairus@gmail.com",
         "name": "Jairus Christensen"
@@ -111,6 +102,7 @@
     "linux": {
       "category": "Messaging"
     },
-    "icon": "./icons/hacker-25899.png"
+    "icon": "./icons/hacker-25899.png",
+    "artifactName": "Incrypto"
   }
 }
