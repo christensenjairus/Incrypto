@@ -42,7 +42,7 @@ const createDesktopShortcut = require('create-desktop-shortcuts');
 var basepath = __dirname;
 console.log("icon path is: " + basepath + '/../icons/hacker-25899.png')
 try { // ADD TO APPLIATION LOOKUP SO ITS SEARCHABLE
-    const linuxAppAdd = createDesktopShortcut({
+    const AppAdd = createDesktopShortcut({
         linux: {
             filePath: process.execPath,
             outputPath: '~/.local/share/applications/',
@@ -52,10 +52,18 @@ try { // ADD TO APPLIATION LOOKUP SO ITS SEARCHABLE
             chmod: true,
             icon: basepath + '/../icons/hacker-25899.png',
             comment: "Encrypted Messaging App"
-        }
+        },
+        windows: { filePath: app.getAppPath('exe') + '\\..\\..\\Incrypto.exe',
+            outputPath: "%appdata%\\Microsoft\\Windows\\Start Menu\\Programs",
+            name: 'Incrypto',
+            comment: 'Encrypted Messaging App',
+            icon: basepath + '/../icons/hacker-25899.ico',
+            workingDirectory: basepath,
+            windowMode: "normal",
+            arguments: '' }
     });
 } catch (e) {
-    console.log("Linux File System App Add Failed. (Likely no on Linux)")
+    
 }
 const desktopShortcutsCreated = createDesktopShortcut({
     windows: { filePath: app.getAppPath('exe') + '\\..\\..\\Incrypto.exe',
