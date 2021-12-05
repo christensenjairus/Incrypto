@@ -8,11 +8,13 @@ Incrypto is a cross-platform Electron-based messaging app (both server and clien
 ### Two main options for running Incrypto:
 1. **Easy**: Download and install a pre-built package. **This will offer no encryption flexibility.** You will have to use our default encryption algorithms. **The prebuilt packages are in the PREBUILT_PACKAGES folder. This will not be explained furthur.**
 2. **Recommended**: Clone the repository, run the app, and eventually make your own installer. **Follow steps below.**.
-   * This is recommended because it offers the full flexibility of the app
-   * It also enables you to distrubute your custom compiled packages so that your friends can have your encryption/decryption algorithms without exposing how they work.
+   * This is recommended because it offers the full flexibility of Incrypto
+   * It also enables you to distrubute your custom compiled packages so that your friends can have your encryption/decryption algorithms (which they will be able to see)
 
-#### Prerequisite packages
+### Prerequisite packages
 You'll need Node.js and NPM in order to run the app. Git is optional (for cloning this repository, not downloading it)
+
+**Remember to run the following commands in order of appearance**
 
 **For Mac and Windows** use these links and install and NodeJS and Git (optional) on your computer.
 * [Node.js](https://nodejs.org/en/download/current/) (comes with [npm](http://npmjs.com)) 
@@ -27,7 +29,13 @@ You'll need Node.js and NPM in order to run the app. Git is optional (for clonin
         sudo pacman -S nodejs npm git
 #  -> (on CentOS/Redhat)
         sudo yum install nodejs npm git
+        
+# Now, update Node and NPM to the latest stable version globally
+        sudo npm install -g n
+        sudo n stable
+# Now, close this shell. This is important because the current shell will remember the old location of npm, which we don't want.
 ```
+
 #### Download this repository
 You can do this in 2 ways
 1. Click the download button on Github OR
