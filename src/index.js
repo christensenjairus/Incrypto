@@ -101,18 +101,18 @@ if (!((process.execPath).includes("node_modules/electron-prebuilt-compile/node_m
         },
     });
 } else {
-    console.log("process not compiled")
-    const desktopShortcutsCreated2 = createDesktopShortcut({
-        linux:   { 
-            filePath: basepath + "/../run.sh",
-            name: 'Incrypto',
-            type: 'Application',
-            terminal: false,
-            chmod: true,
-            icon: app.getAppPath() + '/icons/hacker-25899.png', // works in linux from non-compiled and npm start (not from AppImage)  --- Icon does not work in npm start
-            comment: "Encrypted Messaging App",
-        },
-    });
+    // console.log("process not compiled")
+    // const desktopShortcutsCreated2 = createDesktopShortcut({
+    //     linux:   { 
+    //         filePath: basepath + "/../run.sh",
+    //         name: 'Incrypto',
+    //         type: 'Application',
+    //         terminal: false,
+    //         chmod: true,
+    //         icon: app.getAppPath() + '/icons/hacker-25899.png', // works in linux from non-compiled and npm start (not from AppImage)  --- Icon does not work in npm start
+    //         comment: "Encrypted Messaging App",
+    //     },
+    // });
 }
 // if (desktopShortcutsCreated) {
 //     console.log('Setting desktop icons worked correctly!');
