@@ -34,7 +34,7 @@
       "electronWinstallerConfig": {
         "name": "Incrypto",
         "icon": "./icons/hacker-25899.ico",
-        "setupExe": "setup.exe"
+        "setupExe": "Incrypto_Setup.exe"
       },
       "electronInstallerDebian": {
         "dest": "dist/installers/",
@@ -101,7 +101,6 @@
     "linux": {
       "category": "Messaging"
     },
-    "icon": "./icons/hacker-25899.png",
-    "artifactName": "Incrypto"
+    "icon": "./icons/hacker-25899.png"
   }
 }
