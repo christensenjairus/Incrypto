@@ -17,25 +17,6 @@ var openInEditor = require('open-in-editor');
 const {ipcMain} = require('electron')
 require('electron-reload')(__dirname) // this will allow electron to reload on changes
 
-// try {
-//     function executeSquirrelCommand(args, done) {
-//         var updateDotExe = path.resolve(path.dirname(process.execPath), 
-//             '..', 'update.exe');
-//         var child = cp.spawn(updateDotExe, args, { detached: true });
-
-//         child.on('close', function(code) {
-//             done();
-//         });
-//     };
-//     function install(done) { // add to windows start menu
-//         var target = path.basename(process.execPath);
-//         executeSquirrelCommand(["--createShortcut", target], done);
-//     };
-//     install(1);
-// } catch (e) {
-//     console.log("Couldn't add to windows start menu")
-// }
-
 // console.log("ExecPath: " + process.execPath);
 // set app shortcuts
 const createDesktopShortcut = require('create-desktop-shortcuts');
@@ -144,7 +125,7 @@ app.on('activate', function() {
 
 function createWindow(width, height) {
     // Create the browser window.
-    if (fs.existsSync(process.execPath + '.png')) { // to make sure AppImages can get the right icon file
+    if (fs.existsSync(process.execPath + '.png')) { // to make sure AppImages can get the right ico file
         console.log("AppImage detected")
         mainWindow = new BrowserWindow({
             webPreferences: {
