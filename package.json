@@ -32,7 +32,11 @@
         "packageManager": "npm"
       },
       "electronWinstallerConfig": {
-        "name": "Incrypto"
+        "name": "Incrypto",
+        "setupIcon": "./icon/Hacker-25899.ico",
+        "setupExe": "setup.exe",
+        "setupMSI": "setup.msi",
+        "noMsi": false
       },
       "electronInstallerDebian": {
         "dest": "dist/installers/",

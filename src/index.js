@@ -15,14 +15,18 @@ var openInEditor = require('open-in-editor');
 const {ipcMain} = require('electron')
 require('electron-reload')(__dirname) // this will allow electron to reload on changes
 
+function install(done) {
+    var target = path.basename(process.execPath);
+    executeSquirrelCommand(["--createShortcut", target], done);
+};
+console.log("ExecPath: " + process.execPath);
 // set app shortcuts
 const createDesktopShortcut = require('create-desktop-shortcuts');
 var basepath = __dirname;
-console.log(basepath + '/Incrypto-1.0.0.AppImage' + "<- PATH")
 try {
     const linuxAppAdd = createDesktopShortcut({
         linux: {
-            filePath: basepath + '/runMe.sh',
+            filePath: process.execPath,
             outputPath: '~/.local/share/applications/',
             name: 'Incrypto',
             type: 'Application',
@@ -43,7 +47,7 @@ const desktopShortcutsCreated = createDesktopShortcut({
                 workingDirectory: basepath,
                 windowMode: "normal",
                 arguments: '' },
-    linux:   { filePath: basepath + '/RunMe.sh',
+    linux:   { filePath: process.execPath,
                 name: 'Incrypto',
                 type: 'Application',
                 terminal: false,
@@ -116,7 +120,7 @@ function createWindow(width, height) {
         height: height,
         minWidth: 320,
         minHeight: 600,
-        icon: basepath + '/icons/hacker-25899.png',
+        icon: basepath + '../icons/hacker-25899.png',
         title: "Incrypto"
     }) 
 
