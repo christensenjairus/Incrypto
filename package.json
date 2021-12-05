@@ -33,9 +33,8 @@
       },
       "electronWinstallerConfig": {
         "name": "Incrypto",
-        "setupExe": "setup.exe",
-        "setupMSI": "setup.msi",
-        "noMsi": false
+        "icon": "./icons/hacker-25899.ico",
+        "setupExe": "setup.exe"
       },
       "electronInstallerDebian": {
         "dest": "dist/installers/",
