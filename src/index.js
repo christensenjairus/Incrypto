@@ -36,60 +36,89 @@ require('electron-reload')(__dirname) // this will allow electron to reload on c
 //     console.log("Couldn't add to windows start menu")
 // }
 
-console.log("ExecPath: " + process.execPath);
+// console.log("ExecPath: " + process.execPath);
 // set app shortcuts
 const createDesktopShortcut = require('create-desktop-shortcuts');
 var basepath = __dirname;
-console.log("icon path is: " + basepath + '/../icons/hacker-25899.png')
-try { // ADD TO APPLIATION LOOKUP SO ITS SEARCHABLE
-    const AppAdd = createDesktopShortcut({
-        linux: {
-            filePath: process.execPath,
-            outputPath: '~/.local/share/applications/',
-            name: 'Incrypto',
-            type: 'Application',
-            terminal: false,
-            chmod: true,
-            icon: basepath + '/../icons/hacker-25899.png',
-            comment: "Encrypted Messaging App"
-        },
-        windows: { filePath: app.getAppPath('exe') + '\\..\\..\\Incrypto.exe',
-            outputPath: "%appdata%\\Microsoft\\Windows\\Start Menu\\Programs",
-            name: 'Incrypto',
-            comment: 'Encrypted Messaging App',
-            icon: basepath + '/../icons/hacker-25899.ico',
-            workingDirectory: basepath,
-            windowMode: "normal",
-            arguments: '' }
-    });
-} catch (e) {
-    
-}
-const desktopShortcutsCreated = createDesktopShortcut({
-    windows: { filePath: app.getAppPath('exe') + '\\..\\..\\Incrypto.exe',
-                name: 'Incrypto',
-                comment: 'Encrypted Messaging App',
-                icon: basepath + '/../icons/hacker-25899.ico',
-                workingDirectory: basepath,
-                windowMode: "normal",
-                arguments: '' },
-    linux:   { filePath: process.execPath,
+console.log('icon path is: ' + basepath + '/icons/hacker-25899.png');
+console.log('process.execPath: ' + process.execPath);
+// console.log('app.Path(): ' + app.get);
+if (!((process.execPath).includes("node_modules/electron-prebuilt-compile/node_modules/electron/dist/electron"))) {
+    // app is compiled
+    try { // ADD TO APPLIATION LOOKUP SO ITS SEARCHABLE
+        const AppAdd = createDesktopShortcut({
+            linux: {
+                filePath: process.execPath,
+                outputPath: '~/.local/share/applications/',
                 name: 'Incrypto',
                 type: 'Application',
                 terminal: false,
                 chmod: true,
-                icon: basepath + '/../icons/hacker-25899.png', // works in linux
-                comment: "Encrypted Messaging App" 
+                icon: app.getAppPath() + '/icons/hacker-25899.png',
+                comment: "Encrypted Messaging App"
             },
-    osx:     { filePath: basepath + '/JustRun.sh',
+            windows: { filePath: app.getAppPath('exe') + '\\..\\..\\Incrypto.exe',
+                outputPath: "%appdata%\\Microsoft\\Windows\\Start Menu\\Programs",
                 name: 'Incrypto',
-                overwrite: true     }
-});
-if (desktopShortcutsCreated) {
-    console.log('Setting desktop icons worked correctly!');
-} else {
-    console.log('Could not create the icon or set its permissions (in Linux if "chmod" is set to true, or not set)');
+                comment: 'Encrypted Messaging App',
+                icon: basepath + '/../icons/hacker-25899.png',
+                workingDirectory: basepath,
+                windowMode: "normal",
+                arguments: '' }
+        });
+    } catch (e) {
+
+    }
 }
+
+// Desktop Shortcuts (Windows, Mac)
+const desktopShortcutsCreated1 = createDesktopShortcut({
+    windows: { filePath: app.getAppPath('exe') + '\\..\\..\\Incrypto.exe',
+        name: 'Incrypto',
+        comment: 'Encrypted Messaging App',
+        icon: basepath + '/../icons/hacker-25899.ico',
+        workingDirectory: basepath,
+        windowMode: "normal",
+        arguments: '' },
+    osx:     { 
+        filePath: basepath + '/JustRun.sh',
+        name: 'Incrypto',
+        overwrite: true     }
+});
+
+// Linux Desktop Shortcut
+if (!((process.execPath).includes("node_modules/electron-prebuilt-compile/node_modules/electron/dist/electron"))) {
+    console.log("process is compiled")
+    const desktopShortcutsCreated2 = createDesktopShortcut({
+        linux:   { 
+            filePath: process.execPath,
+            name: 'Incrypto',
+            type: 'Application',
+            terminal: false,
+            chmod: true,
+            icon: app.getAppPath() + '/icons/hacker-25899.png', // works in linux from non-compiled and npm start (not from AppImage)  --- Icon does not work in npm start
+            comment: "Encrypted Messaging App",
+        },
+    });
+} else {
+    console.log("process not compiled")
+    const desktopShortcutsCreated2 = createDesktopShortcut({
+        linux:   { 
+            filePath: basepath + "/../run.sh",
+            name: 'Incrypto',
+            type: 'Application',
+            terminal: false,
+            chmod: true,
+            icon: app.getAppPath() + '/icons/hacker-25899.png', // works in linux from non-compiled and npm start (not from AppImage)  --- Icon does not work in npm start
+            comment: "Encrypted Messaging App",
+        },
+    });
+}
+// if (desktopShortcutsCreated) {
+//     console.log('Setting desktop icons worked correctly!');
+// } else {
+//     console.log('Could not create the icon or set its permissions (in Linux if "chmod" is set to true, or not set)');
+// }
 
 const url = require('url')
 // app.setAppUserModelId(process.execPath); // during development only?
@@ -145,7 +174,7 @@ function createWindow(width, height) {
         height: height,
         minWidth: 320,
         minHeight: 600,
-        icon: basepath + '/../icons/hacker-25899.ico', // works in linux with an ico
+        icon: basepath + '/../icons/hacker-25899.ico', // works in linux/windows with an ico
         title: "Incrypto"
     }) 
 
