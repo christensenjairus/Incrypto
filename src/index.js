@@ -145,7 +145,7 @@ function createWindow(width, height) {
         height: height,
         minWidth: 320,
         minHeight: 600,
-        icon: basepath + '/../icons/hacker-25899.png', // works in linux
+        icon: basepath + '/../icons/hacker-25899.ico', // works in linux with an ico
         title: "Incrypto"
     }) 
 
