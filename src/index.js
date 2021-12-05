@@ -136,7 +136,7 @@ function createWindow(width, height) {
         height: height,
         minWidth: 320,
         minHeight: 600,
-        icon: basepath + '../icons/hacker-25899.png',
+        icon: basepath + '/../icons/hacker-25899.png',
         title: "Incrypto"
     }) 
 
