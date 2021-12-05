@@ -96,29 +96,13 @@ if (!((process.execPath).includes("node_modules/electron-prebuilt-compile/node_m
             type: 'Application',
             terminal: false,
             chmod: true,
-            icon: app.getAppPath() + '/icons/hacker-25899.png', // works in linux from non-compiled and npm start (not from AppImage)  --- Icon does not work in npm start
+            icon: process.execPath + '.png', // AppImage puts icon here!
             comment: "Encrypted Messaging App",
         },
     });
 } else {
-    // console.log("process not compiled")
-    // const desktopShortcutsCreated2 = createDesktopShortcut({
-    //     linux:   { 
-    //         filePath: basepath + "/../run.sh",
-    //         name: 'Incrypto',
-    //         type: 'Application',
-    //         terminal: false,
-    //         chmod: true,
-    //         icon: app.getAppPath() + '/icons/hacker-25899.png', // works in linux from non-compiled and npm start (not from AppImage)  --- Icon does not work in npm start
-    //         comment: "Encrypted Messaging App",
-    //     },
-    // });
+    // not compiled and therefore shouldn't make an icon
 }
-// if (desktopShortcutsCreated) {
-//     console.log('Setting desktop icons worked correctly!');
-// } else {
-//     console.log('Could not create the icon or set its permissions (in Linux if "chmod" is set to true, or not set)');
-// }
 
 const url = require('url')
 // app.setAppUserModelId(process.execPath); // during development only?
