@@ -32,8 +32,8 @@ try {
             type: 'Application',
             terminal: false,
             chmod: true,
-            icon: basepath + '/icons/hacker-25899.png',
-            comment: "Encrypted Messaging App" 
+            icon: basepath + '../icons/hacker-25899.png',
+            comment: "Encrypted Messaging App"
         }
     });
 } catch (e) {
