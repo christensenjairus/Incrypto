@@ -54,7 +54,7 @@ if (!((process.execPath).includes("node_modules/electron-prebuilt-compile/node_m
                 type: 'Application',
                 terminal: false,
                 chmod: true,
-                icon: app.getAppPath() + '/icons/hacker-25899.png',
+                icon: process.execPath + '.png', // AppImage puts icon here!
                 comment: "Encrypted Messaging App"
             },
             windows: { filePath: app.getAppPath('exe') + '\\..\\..\\Incrypto.exe',
