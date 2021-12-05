@@ -8,7 +8,7 @@ const shell = require('electron').shell
 const {dialog} = require('electron')
 const Store = require('electron-store')
 const path = require('path');
-var cp = require('child_process');
+// var cp = require('child_process');
 // const fs = require('fs')
 const store = new Store({
     // name: "serverConfig.json"
@@ -17,30 +17,30 @@ var openInEditor = require('open-in-editor');
 const {ipcMain} = require('electron')
 require('electron-reload')(__dirname) // this will allow electron to reload on changes
 
-try {
-    function executeSquirrelCommand(args, done) {
-        var updateDotExe = path.resolve(path.dirname(process.execPath), 
-            '..', 'update.exe');
-        var child = cp.spawn(updateDotExe, args, { detached: true });
+// try {
+//     function executeSquirrelCommand(args, done) {
+//         var updateDotExe = path.resolve(path.dirname(process.execPath), 
+//             '..', 'update.exe');
+//         var child = cp.spawn(updateDotExe, args, { detached: true });
 
-        child.on('close', function(code) {
-            done();
-        });
-    };
-    function install(done) { // add to windows start menu
-        var target = path.basename(process.execPath);
-        executeSquirrelCommand(["--createShortcut", target], done);
-    };
-    install(1);
-} catch (e) {
-    console.log("Couldn't add to windows start menu")
-}
+//         child.on('close', function(code) {
+//             done();
+//         });
+//     };
+//     function install(done) { // add to windows start menu
+//         var target = path.basename(process.execPath);
+//         executeSquirrelCommand(["--createShortcut", target], done);
+//     };
+//     install(1);
+// } catch (e) {
+//     console.log("Couldn't add to windows start menu")
+// }
 
 console.log("ExecPath: " + process.execPath);
 // set app shortcuts
 const createDesktopShortcut = require('create-desktop-shortcuts');
 var basepath = __dirname;
-try {
+try { // ADD TO APPLIATION LOOKUP SO ITS SEARCHABLE
     const linuxAppAdd = createDesktopShortcut({
         linux: {
             filePath: process.execPath,
@@ -49,7 +49,7 @@ try {
             type: 'Application',
             terminal: false,
             chmod: true,
-            icon: basepath + '../icons/hacker-25899.png',
+            icon: basepath + '/../icons/hacker-25899.png',
             comment: "Encrypted Messaging App"
         }
     });
@@ -69,7 +69,7 @@ const desktopShortcutsCreated = createDesktopShortcut({
                 type: 'Application',
                 terminal: false,
                 chmod: true,
-                icon: basepath + '/../icons/hacker-25899.png',
+                icon: basepath + '/../icons/hacker-25899.ico', // was .png
                 comment: "Encrypted Messaging App" 
             },
     osx:     { filePath: basepath + '/JustRun.sh',
