@@ -40,6 +40,7 @@ console.log("ExecPath: " + process.execPath);
 // set app shortcuts
 const createDesktopShortcut = require('create-desktop-shortcuts');
 var basepath = __dirname;
+console.log("icon path is: " + basepath + '/../icons/hacker-25899.png')
 try { // ADD TO APPLIATION LOOKUP SO ITS SEARCHABLE
     const linuxAppAdd = createDesktopShortcut({
         linux: {
@@ -69,7 +70,7 @@ const desktopShortcutsCreated = createDesktopShortcut({
                 type: 'Application',
                 terminal: false,
                 chmod: true,
-                icon: basepath + '/../icons/hacker-25899.ico', // was .png
+                icon: basepath + '/../icons/hacker-25899.png', // works in linux
                 comment: "Encrypted Messaging App" 
             },
     osx:     { filePath: basepath + '/JustRun.sh',
@@ -136,7 +137,7 @@ function createWindow(width, height) {
         height: height,
         minWidth: 320,
         minHeight: 600,
-        icon: basepath + '/../icons/hacker-25899.png',
+        icon: basepath + '/../icons/hacker-25899.png', // works in linux
         title: "Incrypto"
     }) 
 
