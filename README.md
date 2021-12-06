@@ -9,7 +9,7 @@ Incrypto is a cross-platform Electron-based messaging app (both server and clien
 1. **Easy**: Download and install a pre-built package. **This will offer no encryption flexibility.** You will have to use our default encryption algorithms. *Most types of packages are too large for GitHub. If you can't find the package type you want, you'll have to compile it yourself (see option #2).* **The prebuilt packages are in the PRECOMPILED_PACKAGES folder.** This will not be explained further.
 2. **Recommended**: Clone the repository, run the app, and eventually make your own installer. **Follow steps below.**.
    * This is recommended because it offers the full flexibility of Incrypto
-   * It also enables you to distrubute your custom compiled packages so that your friends can have your encryption/decryption algorithms (which they will be able to see)
+   * It also enables you to distrubute your custom compiled packages so that your friends can have your encryption/decryption algorithms (which they will be able to see in most cases)
 
 ### Prerequisite packages
 You'll need Node.js and NPM in order to run the app. Git is optional (for cloning this repository, not downloading it)
