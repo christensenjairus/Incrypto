@@ -53,19 +53,19 @@ if (!((process.execPath).includes("node_modules/electron-prebuilt-compile/node_m
 }
 
 // Desktop Shortcuts (Windows, Mac)
-const desktopShortcutsCreated1 = createDesktopShortcut({
-    windows: { filePath: app.getAppPath('exe') + '\\..\\..\\Incrypto.exe',
-        name: 'Incrypto',
-        comment: 'Encrypted Messaging App',
-        icon: basepath + '/../icons/hacker-25899.ico',
-        workingDirectory: basepath,
-        windowMode: "normal",
-        arguments: '' },
-    osx:     { 
-        filePath: basepath + '/JustRun.sh',
-        name: 'Incrypto',
-        overwrite: true     }
-});
+// const desktopShortcutsCreated1 = createDesktopShortcut({
+//     windows: { filePath: app.getAppPath('exe') + '\\..\\..\\Incrypto.exe',
+//         name: 'Incrypto',
+//         comment: 'Encrypted Messaging App',
+//         icon: basepath + '/../icons/hacker-25899.ico',
+//         workingDirectory: basepath,
+//         windowMode: "normal",
+//         arguments: '' },
+//     osx:     { 
+//         filePath: basepath + '/JustRun.sh',
+//         name: 'Incrypto',
+//         overwrite: true     }
+// });
 
 // Linux Desktop Shortcut
 // if (!((process.execPath).includes("node_modules/electron-prebuilt-compile/node_modules/electron/dist/electron"))) {
