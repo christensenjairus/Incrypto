@@ -51,6 +51,10 @@ git clone https://github.com/christensenjairus/Incrypto.git
 	* `electron .` will simply run it. You'll need electron installed globally for this. Install it with `npm i -g electron` and then `electron .` will run the app.
 	* `electron-forge` will compile it first. Run `npm i -g electron-forge` to install the compilation engine allowing `npm start` to function. Then run `npm start` to run the app.
 
+On Windows, you may need to enable scripts to be run in order for this to work
+
+        `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force`
+
 These commands will ***not install*** the app, only *run* it, which is great for manipulating the `encryption.js` file (see "Encryption File and Rules" below)
 
 #### To Package & Install Incrypto (Making your own Installer)
