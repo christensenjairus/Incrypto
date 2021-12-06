@@ -6,7 +6,7 @@ Incrypto is a cross-platform Electron-based messaging app (both server and clien
 
 ## Getting Started
 ### Two main options for running Incrypto:
-1. **Easy**: Download and install a pre-built package. **This will offer no encryption flexibility.** You will have to use our default encryption algorithms. **The prebuilt packages are in the PREBUILT_PACKAGES folder. This will not be explained furthur.**
+1. **Easy**: Download and install a pre-built package. **This will offer no encryption flexibility.** You will have to use our default encryption algorithms. *Most types of packages are too large for GitHub. If you can't find the package type you want, you'll have to compile it yourself (see option #2).* **The prebuilt packages are in the PRECOMPILED_PACKAGES folder.** This will not be explained further.
 2. **Recommended**: Clone the repository, run the app, and eventually make your own installer. **Follow steps below.**.
    * This is recommended because it offers the full flexibility of Incrypto
    * It also enables you to distrubute your custom compiled packages so that your friends can have your encryption/decryption algorithms (which they will be able to see)
@@ -18,6 +18,7 @@ You'll need Node.js and NPM in order to run the app. Git is optional (for clonin
 
 **For Mac and Windows** use these links and install and NodeJS and Git (optional) on your computer.
 * [Node.js](https://nodejs.org/en/download/current/) (comes with [npm](http://npmjs.com)) 
+   * Note: If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
 * [Git](https://git-scm.com) (when installing, the default options are fine))
 
 **For Linux**, use these commands to install NodeJS and Git
@@ -52,14 +53,14 @@ git clone https://github.com/christensenjairus/Incrypto.git
 Each operating system (Linux, Windows, MacOS) can compile binaries for their own OS.
 * They will all need Electron-Forge installed globally
 `npm i -g electron-forge`
-   * On Windows, you may need to enable scripts to be run in order for this to work --> ``
+   * On Windows, you may need to enable scripts to be run in order for this to work --> `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force`
 
 * **On Linux**
    * **To make DEB & RPM**: You may wish to comment out one of the two compilation options in package.json. By default, it **has both DEB & RPM.** If you don't want one of these compilation options, **edit the linux "make_targets" around line 26 of package.json**.
       * You will need...
          * `dpkg` to compile deb packages, 
          * `rpm`, or more specifically the `rpmbuild` command (or `alpmbuild` on Arch-based) for compiling RPM packages, 
-   * **To make AppImage or Snap**: You can create appimages and snaps with `electron-builder` instead of `electron-forge`. *You can edit the encryption file from these*. 
+   * **To make an AppImage or Snap**: You can create appimages and snaps with `electron-builder` instead of `electron-forge`. *You can edit the encryption file from these*. 
       * You'll first need to install it globally with `npm i -g electron-builder`
       * Then run `sudo electron-builder` while in the Incrypto directory. It will leave the appimage and snap in the "dist" directory. 
       * To install the *snap*, you'll need to run `sudo snap install dist/Incrypto_1.0.0_amd64.snap --dangerous`.
@@ -74,16 +75,33 @@ node ./Server_Standalone/server.js
 ```
 You may need to run this as `sudo` or as an Administrator.
 
-Note: If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
 * * *
 # Things to Know as a User
-### Basic Navigation
 ### Connecting to Server
+Incrypto server needs to be running on a computer that's within network reach of your computer. This means that if you ping it, it will respond. The "Server Name" on the Incrypto login and registration pages can take both the network hostname of that computer or it's IP address. If the server is running on your own computer, "localhost" will work.
+### Basic Navigation
+Accounts - The "File" or "Electron" (on Mac) menu item on the top left-hand corner of the app has options to move around. It's here that you can go to "Login" from "Account Registration" and vice versa.
 ### Changing chat color
+Simply click on your username at the top right-hand corner of the app.
 ### Encryption File and Rules
+This file exists so that you as the user can add and manipulate encryption algorithms of your own. You could say this is the most important concept of a make-your-own-encryption app like Incrypto. There are two algorithms for every encryption type - one to encrypt and one to decrypt.
+
+The `Encryption.js` file has multiple rules that you should know before manipulating it. These rules go as follows:
+1. Decryption algorithm name must be idential (in case as well) to encryption the name, but with '_REVERSE' appended to the end.
+   * Thus, if my new encryption type is a function titled "Example" then there must be another function titled "Example_REVERSE".
+
+2. Encryption_Types is an array holding the names of all the encryption algorithms so they can be selected from the chat page. The encryption name in this array should be identical to the encryption function name. (not the decryption name)
+
+Thus, the steps to add an encryption type would be, 
+1. add name to Encryption_Types array, 
+2. create encryption function with the very same name, 
+3. create decryption function with your name and "_REVERSE" added onto the end. 
+
+See Encryption.js for an example.
 * * *
 # Things to Know as a Developer
 ### Electron backbone
+
 ##### What Electron does and index.js file 
 ##### How it switches between windows 
 ##### Ipc Renderer
