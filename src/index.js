@@ -146,7 +146,7 @@ function createWindow(width, height) {
         }) 
     }
     else {
-        console.log("not an AppImage. Can grab picture file")
+        console.log("not an AppImage. Can grab picture file at " + basepath + '/../icons/hacker-25899.png')
         mainWindow = new BrowserWindow({
             webPreferences: {
                 preload: path.join(__dirname, '../javascript/preload.js'),
@@ -161,7 +161,7 @@ function createWindow(width, height) {
             height: height,
             minWidth: 320,
             minHeight: 600,
-            icon: basepath + '/../icons/hacker-25899.ico', // works in linux/windows with an ico -- cant get this to work with npm start anymore
+            icon: basepath + '/../icons/hacker-25899.png', // works in linux with a png! / windows with a ico?
                                                             // TODO: doesn't work in macOS
             title: "Incrypto"
         }) 
