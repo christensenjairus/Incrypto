@@ -254,6 +254,7 @@ Upon receiving a message, it will sort through what type of message it is and ac
 * * *
 # Things for our Dev Team to know
 #### TODO:
+* Find a way to remove out and dist directories from all compilation options
 * Login/register buttons on login/register pages
 * `npm start` doesn't set correct desktop icon in Linux
 * Dock icon isn't set correctly in macOS
