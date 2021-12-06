@@ -51,24 +51,36 @@ git clone https://github.com/christensenjairus/Incrypto.git
 
 #### To Package & Install Incrypto
 Each operating system (Linux, Windows, MacOS) can compile binaries for their own OS.
-* They will all need Electron-Forge installed globally
-`npm i -g electron-forge`
-   * On Windows, you may need to enable scripts to be run in order for this to work --> `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force`
+* RPMs (Linux), DEBs (Linux), and EXEs (Windows) will need Electron-Forge installed globally
+
+    `npm i -g electron-forge`
+   * On Windows, you may need to enable scripts to be run in order for this to work
+
+        `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force`
+* DMGs (MacOS), AppImages (Linux), and Snaps (Linux) can be created with Electron-Builder
+
+    `npm i -g electron-builder`
+
+More details and instructions on compilation are given below
 
 * **On Linux**
    * **To make DEB & RPM**: You may wish to comment out one of the two compilation options in package.json. By default, it **has both DEB & RPM.** If you don't want one of these compilation options, **edit the linux "make_targets" around line 26 of package.json**.
       * You will need...
          * `dpkg` to compile deb packages, 
-         * `rpm`, or more specifically the `rpmbuild` command (or `alpmbuild` on Arch-based) for compiling RPM packages, 
-   * **To make an AppImage or Snap**: You can create appimages and snaps with `electron-builder` instead of `electron-forge`. *You can edit the encryption file from these*. 
-      * You'll first need to install it globally with `npm i -g electron-builder`
-      * Then run `sudo electron-builder` while in the Incrypto directory. It will leave the appimage and snap in the "dist" directory. 
-      * To install the *snap*, you'll need to run `sudo snap install dist/Incrypto_1.0.0_amd64.snap --dangerous`.
-      * To use the *AppImage*, store it somewhere where you won't delete it and simply run it.
-* **On Windows**
-   * Run `electron-forge make` and it will output `Incrypto_Setup.exe` in `out\make\squirrel.windows\x64\`
+         * `rpm`, or more specifically the `rpmbuild` command (or `alpmbuild` on Arch-based) for compiling RPM packages.
 
-#### Run Incrypto Server
+      * To compile, run `electron-forge make` and the .DEB and .RPM files will be in the `dist` directory.
+   * **To make an AppImage or Snap**: *You can edit the encryption file from these*. 
+      * To compile, run `sudo electron-builder` while in the Incrypto directory. It will leave the appimage and snap in the "dist" directory. 
+      * To install the *snap*, you'll need to run `sudo snap install dist/Incrypto_1.0.0_amd64.snap --dangerous`.
+      * To use the *AppImage*, store it somewhere where you won't delete it and simply run it. You'll need to run or click on this file every time to run it.
+
+* **On MacOS**
+   * To compile, run `sudo electron-builder` while in the `Incrypto` folder and the .DMG will appear in the `dist/` directory
+* **On Windows**
+   * To compile, run `electron-forge make` while in the `Incrypto` directory and `Incrypto_Setup.exe` will be in `out\make\squirrel.windows\x64\`
+
+### Run Incrypto Server
 While in a terminal (or powershell), navigate into the Incrypto folder using `cd` (as done previously)
 ```bash
 node ./Server_Standalone/server.js
@@ -81,8 +93,14 @@ You may need to run this as `sudo` or as an Administrator.
 Incrypto server needs to be running on a computer that's within network reach of your computer. This means that if you ping it, it will respond. The "Server Name" on the Incrypto login and registration pages can take both the network hostname of that computer or it's IP address. If the server is running on your own computer, "localhost" will work.
 ### Basic Navigation
 Accounts - The "File" or "Electron" (on Mac) menu item on the top left-hand corner of the app has options to move around. It's here that you can go to "Login" from "Account Registration" and vice versa.
+
+![image](https://user-images.githubusercontent.com/58751387/144778297-13e3edc9-3194-4a4a-9bd0-14637e8fc9eb.png)
+
 ### Changing chat color
 Simply click on your username at the top right-hand corner of the app.
+
+![image](https://user-images.githubusercontent.com/58751387/144778261-2230553f-510f-4bea-ab0c-a8576cfca68f.png)
+
 ### Encryption File and Rules
 This file exists so that you as the user can add and manipulate encryption algorithms of your own. You could say this is the most important concept of a make-your-own-encryption app like Incrypto. There are two algorithms for every encryption type - one to encrypt and one to decrypt.
 
@@ -101,14 +119,115 @@ See Encryption.js for an example.
 * * *
 # Things to Know as a Developer
 ### Electron backbone
+"Electron is an open source library developed by GitHub for building cross-platform desktop applications with HTML, CSS, and JavaScript. Electron accomplishes this by combining Chromium and Node.js into a single runtime and apps can be packaged for Mac, Windows, and Linux."
 
-##### What Electron does and index.js file 
-##### How it switches between windows 
-##### Ipc Renderer
+Electron, because it's running on Node.js, allows for the code to act the same on each machine it runs on. There are differences when it comes to User Interface, but the code in Incrypto is exactly the same on each operating system. Small changes needed to be made while packaging the app, but for the most part the code will act identially on other machines.
+#### What Electron does and index.js file 
+Electron uses a web-based user interface, so the code for Incrypto is built like a website, with HTML, CSS, and JavaScript. Refer to webpage programming concepts when it comes to ***every .html, .css, and .js file*** except for `index.js`, `renderer.js`, and `preload.js` which are files that the Electron backbone uses. 
+
+`index.js` is of supreme importance when it comes to Electron. We've organized the app so that all the app logic (not included in the webpages) is in `index.js`. The normal webpages that electron runs and surrounds (`login`, `chat`, `register`) cannot do many of the global functions that Electron's index.js can do. 
+
+Index.js takes care of...
+* Storing your settings locally
+* Creating desktop shortcuts and adding the app to the Windows Start Menu
+* Creating (and adding the options to) the settings bar at the top of app. "File", "Edit", "View", etc.
+* Window logic
+* Setting the icon and name of the app
+* Window sizing
+* Storing user data
+#### Switching Between Windows and Inter-Process Comminication
+Because the individual webpages can't switch windows, they need to communicate somehow with the Electron instance. (ex. frontend.js needing index.js to switch the pages so that user can log out) This is done through interprocess comminication. Any webpage can call an instance of `ipcRenderer` and use it's `.invoke()` method to call an `ipcMain` function in `index.js`. 
+
+For example, in frontend.js, there's this code: 
+```js
+// frontend.js
+ipcRenderer.invoke('logout');
+```
+Which will call this function in `index.js`
+```js
+// index.js
+ipcMain.handle('logout', (event) => {
+    switchToLoginPage();
+})
+```
+This same structure is used to get data from `index.js` as well as ipcMain can pass back a value. This is how values are set/get in the local storage file that `index.js` keeps track of.
+```js
+// frontend.js
+var myColor;
+ipcRenderer.invoke('getColor').then((result) => { 
+    myColor = result;
+});
+```
+```js
+// index.js
+ipcMain.handle('getColor', (event) => {
+    return myColor;
+})
+```
+
 ### App local storage
-### App organization
+`index.js` saves data in a `config.json` file stored in another part of the computer (`~/.config/Incrypto/` in Linux). This data is used for standard operation of the app and can be acquired through interprocess communication (see last section).
+
+Data here keeps track of...
+* Who was last logged in
+* Their color
+* Last encryption type used
+* Selected code editor
+* Stored Window Size
+```JSON
+{
+	"lastUser": "line6",
+	"serverName": "jrcb-jairus.byu.edu",
+	"windowWidth": 1280,
+	"windowHeight": 1440,
+	"line6_Color": "#3F9CA3",
+	"encryptionType": "Default_Encryption",
+	"codeEditor": "atom"
+}              
+```
 ### Frontend.js and its functions
+'frontend.js` is the main brains behind the chat functions of the app. It (like `login.js`) opens a websocket and passes JSON through that socket. It then manipulates the DOM to account for the data it receives from the server.
+It takes care of...
+* Navbar functionality
+* Adding encryption types to the "Encryption Types" navbar dropdown
+* Sending ping messages / recieving pong messages (every 100ms) in order to know that the websocket is still open (and changing DOM if websocket closed)
+* Opening a connection to the server
+* Recieving messages whenever they're received from the websocket
+* Adding HTML to `chat.html` to add messages to DOM
+* Showing notifications to the user when a message is recieved
+* Logging the user out if the server sends a "logout" message (the user is logged in somewhere else)
+* Encrypting messages sent by the user
+* Decrypting the messages sent by other users
+* Ask the server for a full message refresh (every 30 seconds)
+* Sending a "color change" request to the server whenever the user clicks their username to change their chat color.
+
 ### Socket communication and JSON
+When the user logs in, `login.js` sends JSON with this format (Registration has a similar format)
+```JSON
+{"type":"AuthRequest","user":"line6","passwordHash":-1234153003,"encryption":"plain_text","time":1638759642869}
+```
+To which the server responds (with this format) - **The key is randomly generated upon each login**
+```JSON
+{"type":"AuthResponse","color":"#FB811A","result":"success","key":"6d73ab1b-e990-4b2e-eac9-a4dcc2b84983"}
+```
+When the user sends a message, `frontend.js` sends JSON with this format
+```JSON
+{"type":"message","user":"line6","userEnc":"006c0069006e00650036","msg":"0074006500730074","userColor":"#FB811A","encryption":"Default_Encryption","key":"none","time":1638759480542}
+```
+Every time someone sends a message, everyone receives JSON with this format
+```JSON
+{"type":"message","user":"line6","userEnc":"006c0069006e00650036","msg":"0074006500730074","userColor":"#FB811A","encryption":"Default_Encryption","key":"none","time":1638759480542}
+```
+Every 30 seconds, the client will ask for a full history refresh in which it will send
+```JSON
+{"type":"historyRequest","user":"line6","color":"#FB811A","encryption":"plain_text","key":"none","time":1638759772046}
+```
+The server sends the entire chat in JSON format
+```JSON
+{"type":"history","data":[{"time":1638460329819,"text":"00200020","author":"0062006c0061006b0065007000320032","color":"#2F74E9","encryption":"Default_Encryption"},{"time":1638603330171,"text":"0069006e0074006500720065007300740069006e00670020006c006f006c","author":"006c0069006e00650036","color":"#FB811A","encryption":"Default_Encryption"}]}
+```
+In a color change request, frontend.js will send an array of all the possible encrypted usernames of that user. The server changes all the colors of the messages associated with that username and sends an entire history refresh to every client once its done.
+
 ### Server structure
 ## How to compile
 
