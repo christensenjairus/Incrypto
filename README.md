@@ -5,11 +5,11 @@ Incrypto is a cross-platform Electron-based messaging app (both server and clien
 **Supported platforms: Windows, Linux, MacOS.**
 
 ## Getting Started
-### Two main options for running Incrypto:
-1. **Easy**: Download and install a pre-built package. **This will offer no encryption flexibility.** You will have to use our default encryption algorithms. *Most types of packages are too large for GitHub. If you can't find the package type you want, you'll have to compile it yourself (see option #2).* **The prebuilt packages are in the PRECOMPILED_PACKAGES folder.** This will not be explained further.
-2. **Recommended**: Clone the repository, run the app, and eventually make your own installer. **Follow steps below.**.
-   * This is recommended because it offers the full flexibility of Incrypto
-   * It also enables you to distrubute your custom compiled packages so that your friends can have your encryption/decryption algorithms (which they will be able to see in most cases)
+### Incrypto can be used in two ways.
+1. **Quick**: Run it from the terminal. This is great for making and debugging encryption algorithms.
+2. **Recommended**: Run the app but eventually make your own installer. *You should recompile it ***after*** *you edit* `encryption.js`. **Ease of use long term**.
+   * This is recommended because it offers the full flexibility of Incrypto, including being able to run like any other app (Desktop Icons, Start Menu, etc)
+   * It also enables you to distrubute your custom compiled packages so that your friends can easily have your encryption/decryption algorithms without having to go through the trouble of copying and pasting from `encryption.js` (which they will be able to see if they look for it, in most cases)
 
 ### Prerequisite packages
 You'll need Node.js and NPM in order to run the app. Git is optional (for cloning this repository, not downloading it)
@@ -50,7 +50,7 @@ git clone https://github.com/christensenjairus/Incrypto.git
 * Run `npm start` to run the app. (this will *not* install it)
 * You may like running `electron .` more, as it will not try to compile it like npm start will. You'll need electron installed globally for this. Install it with `npm i -g electron` and then `electron .` should work.
 
-#### To Package & Install Incrypto
+#### To Package & Install Incrypto (Making your own Installer)
 Each operating system (Linux, Windows, MacOS) can compile binaries for their own OS.
 * RPMs (Linux), DEBs (Linux), and EXEs (Windows) will need Electron-Forge installed globally
 
