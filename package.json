@@ -13,7 +13,7 @@
   },
   "keywords": [],
   "author": "Jairus Christensen",
-  "license": "MIT",
+  "license": "BYU",
   "config": {
     "forge": {
       "make_targets": {
@@ -33,18 +33,19 @@
       },
       "electronWinstallerConfig": {
         "name": "Incrypto",
+        "dest": "COMPILED_PACKAGES/",
         "icon": "./icons/hacker-25899.ico",
         "setupExe": "Incrypto_Setup.exe"
       },
       "electronInstallerDebian": {
-        "dest": "dist/installers/",
+        "dest": "COMPILED_PACKAGES/",
         "icon": "./icons/hacker-25899.png",
         "categories": [
           "Messaging"
         ]
       },
       "electronInstallerRedhat": {
-        "dest": "dist/installers/",
+        "dest": "COMPILED_PACKAGES/",
         "icon": "./icons/hacker-25899.png",
         "categories": [
           "Messaging"

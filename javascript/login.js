@@ -134,7 +134,7 @@ if (document.getElementById('register') != null) {
 
       // open web socket and verify credentials
       // const portNum = '42069'
-      portNum = '80'
+      const portNum = '80'
       const serverIPandPortNum = serverName + ':' + portNum; // <---- Insert hostname or IP of server here
       
       // if user is running mozilla then use it's built-in WebSocket
