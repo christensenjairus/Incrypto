@@ -48,6 +48,7 @@ git clone https://github.com/christensenjairus/Incrypto.git
 * Open a terminal (or powershell) and navigate using `cd` to the Incrypto folder that you've just downloaded. Enter it with `cd Incrypto`
 * Run `npm i` to install the node_modules.
 * Run `npm start` to run the app. (this will *not* install it)
+* You may like running `electron .` more, as it will not try to compile it like npm start will. You'll need electron installed globally for this. Install it with `npm i -g electron` and then `electron .` should work.
 
 #### To Package & Install Incrypto
 Each operating system (Linux, Windows, MacOS) can compile binaries for their own OS.
@@ -229,7 +230,19 @@ The server sends the entire chat in JSON format
 In a color change request, frontend.js will send an array of all the possible encrypted usernames of that user. The server changes all the colors of the messages associated with that username and sends an entire history refresh to every client once its done.
 
 ### Server structure
-## How to compile
+The server has a similar structure to `frontend.js` in that it runs on as websocket completely based on events. Those events are listed below. For reference, the server stores the chat and each message in a file called `chat.json` which is stored in the `Incrypto` folder. Remember that the server will only store what each client sends it. Since the chat has only encrypted usernames and encrypted text, an intruder would need to know your decryption algorithm in order to read your chat messages. The server stores user data (including usernames, hashed passwords, and user's colors) in a `config.json` that's stored elsewhere on the computer, much like the `config.json` for each client. 
+
+#### Server Events
+Upon receiving a message, it will sort through what type of message it is and act accordingly.
+
+| Message Type | Server Action and Response |
+| --- | --- |
+| ping | send a pong message back |
+| colorChange | All the messages associated with that user change to the new specified color then send out the entire chat to everyone so that they're chats are refreshed, reflecting the color change |
+| historyRequest | (every client sends a historyRequest every 30 seconds so that their chats are refreshed) Send the entire chat back to that one user |
+| AuthRequest | Check its own `config.json` file to know if the user logging in is valid. Send a response either telling the client that their credentials are incorrect, or sending them a new randomly generated key upon a successful login |
+| RegistrationRequest | similar to an AuthRequest, but make sure no users have the same hashed password before returning a randomly generated key |
+| message | Add text to the chat and the server will send out that (and only that one) message to everyone |
 
 * * *
 # Things for our Dev Team to know
@@ -241,6 +254,10 @@ In a color change request, frontend.js will send an array of all the possible en
 
 #### TODO:
 * Login/register buttons on login/register pages
+* `npm start` doesn't set correct desktop icon in Linux
+* Dock icon isn't set correctly in macOS
+* MacOS `npm start` displays text strangely
+* Linux AppImage icon needs to be set (Snap too)
 * Make webserver use WSS instead of WS protocol
 * Implement keys and key validation
 * Run on port 443 and use HTTPS instead of HTTP
