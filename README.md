@@ -7,7 +7,7 @@ Incrypto is a cross-platform Electron-based messaging app (both server and clien
 ## Getting Started
 ### Incrypto can be used in two ways.
 1. **Quick**: Run it from the terminal. This is great for making and debugging encryption algorithms.
-2. **Recommended**: Run the app but eventually make your own installer. *You should recompile it ***after*** *you edit* `encryption.js`. **Ease of use long term**.
+2. **Recommended**: Run the app but eventually make your own installer. *You should recompile it* ***after*** *you edit* `encryption.js`. **Ease of use long term**.
    * This is recommended because it offers the full flexibility of Incrypto, including being able to run like any other app (Desktop Icons, Start Menu, etc)
    * It also enables you to distrubute your custom compiled packages so that your friends can easily have your encryption/decryption algorithms without having to go through the trouble of copying and pasting from `encryption.js` (which they will be able to see if they look for it, in most cases)
 
@@ -47,9 +47,11 @@ git clone https://github.com/christensenjairus/Incrypto.git
 #### Run Incrypto
 * Open a terminal (or powershell) and navigate using `cd` to the Incrypto folder that you've just downloaded. Enter it with `cd Incrypto`
 * Run `npm i` to install the node_modules.
-* Run `npm i -g electron-forge`	to install the compilation engine allowing `npm start` to function.
-* Run `npm start` to run the app. (this will *not* install it)
-* You may like running `electron .` more, as it will not try to compile it like npm start will. You'll need electron installed globally for this. Install it with `npm i -g electron` and then `electron .` should work.
+* Then, you can run it using **either** electron (non compile) or electron-forge (compile).
+	* `electron .` will simply run it. You'll need electron installed globally for this. Install it with `npm i -g electron` and then `electron .` will run the app.
+	* `electron-forge` will compile it first. Run `npm i -g electron-forge` to install the compilation engine allowing `npm start` to function. Then run `npm start` to run the app.
+
+These commands will ***not install*** the app, only *run* it, which is great for manipulating the `encryption.js` file (see "Encryption File and Rules" below)
 
 #### To Package & Install Incrypto (Making your own Installer)
 Each operating system (Linux, Windows, MacOS) can compile binaries for their own OS.
