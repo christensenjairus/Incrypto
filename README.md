@@ -70,7 +70,7 @@ More details and instructions on compilation are given below
          * `dpkg` to compile deb packages, 
          * `rpm`, or more specifically the `rpmbuild` command (or `alpmbuild` on Arch-based) for compiling RPM packages.
 
-      * To compile, run `electron-forge make` and the .DEB and .RPM files will be in the `out/` directory.
+      * To compile, run `electron-forge make` and the .DEB and .RPM files will be in the `out/make/` directory.
    * **To make an AppImage or Snap**: *You can edit the encryption file from these*. 
       * To compile, run `sudo electron-builder` while in the Incrypto directory. It will leave the appimage and snap in the 'dist/' directory. 
       * To install the *snap*, you'll need to run `sudo snap install dist/Incrypto_1.0.0_amd64.snap --dangerous`.
