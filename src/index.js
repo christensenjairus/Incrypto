@@ -162,6 +162,7 @@ function createWindow(width, height) {
             minWidth: 320,
             minHeight: 600,
             icon: basepath + '/../icons/hacker-25899.ico', // works in linux/windows with an ico -- cant get this to work with npm start anymore
+                                                            // TODO: doesn't work in macOS
             title: "Incrypto"
         }) 
     }

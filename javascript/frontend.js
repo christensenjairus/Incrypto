@@ -388,7 +388,7 @@ function showNotification(author, text) {
 function send(connection, message) {
     try {
         connection.send(message);
-
+        // console.log(message);
         input.removeAttr('disabled')
         if (document.getElementById('input').value === "Can\'t communicate with the WebSocket server.") {
             document.getElementById('input').value = savedInputText;
