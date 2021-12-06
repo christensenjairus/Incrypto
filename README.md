@@ -246,12 +246,6 @@ Upon receiving a message, it will sort through what type of message it is and ac
 
 * * *
 # Things for our Dev Team to know
-#### Building Windows App
-- [How to found here](https://ourcodeworld.com/articles/read/365/how-to-create-a-windows-installer-for-an-application-built-with-electron-framework) - some online document that might work
-
-#### Client-Server Javascript Communication Resources
-- [WebSocket Example](https://www.cronj.com/blog/node-js-websocket-examples-chat-features-client-server-communication/)
-
 #### TODO:
 * Login/register buttons on login/register pages
 * `npm start` doesn't set correct desktop icon in Linux
