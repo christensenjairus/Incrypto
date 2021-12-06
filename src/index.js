@@ -162,7 +162,7 @@ function createWindow(width, height) {
             minWidth: 320,
             minHeight: 600,
             icon: basepath + '/../icons/hacker-25899.png', // works in linux with a png! / windows with a png as well!
-                                                            // TODO: doesn't work in macOS
+                                                            // TODO: still doesn't work in macOS
             title: "Incrypto"
         }) 
     }
