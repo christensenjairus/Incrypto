@@ -21,23 +21,23 @@ require('electron-reload')(__dirname) // this will allow electron to reload on c
 // set app shortcuts
 const createDesktopShortcut = require('create-desktop-shortcuts');
 var basepath = __dirname;
-console.log('icon path is: ' + basepath + '/../icons/hacker-25899.png');
-console.log('process.execPath: ' + process.execPath);
+// console.log('icon path is: ' + basepath + '/../icons/hacker-25899.png');
+// console.log('process.execPath: ' + process.execPath);
 // console.log('app.Path(): ' + app.get);
 if (!((process.execPath).includes("node_modules/electron-prebuilt-compile/node_modules/electron/dist/electron"))) {
     // app is compiled
     try { // ADD TO APPLIATION LOOKUP SO ITS SEARCHABLE
         const AppAdd = createDesktopShortcut({
-            linux: {
-                filePath: process.execPath,
-                outputPath: '~/.local/share/applications/',
-                name: 'Incrypto',
-                type: 'Application',
-                terminal: false,
-                chmod: true,
-                icon: process.execPath + '.png', // AppImage puts icon here!
-                comment: "Encrypted Messaging App"
-            },
+            // linux: {
+            //     filePath: process.execPath,
+            //     outputPath: '~/.local/share/applications/',
+            //     name: 'Incrypto',
+            //     type: 'Application',
+            //     terminal: false,
+            //     chmod: true,
+            //     icon: process.execPath + '.png', // AppImage puts icon here!
+            //     comment: "Encrypted Messaging App"
+            // },
             windows: { filePath: app.getAppPath('exe') + '\\..\\..\\Incrypto.exe',
                 outputPath: "%appdata%\\Microsoft\\Windows\\Start Menu\\Programs",
                 name: 'Incrypto',
@@ -68,22 +68,22 @@ const desktopShortcutsCreated1 = createDesktopShortcut({
 });
 
 // Linux Desktop Shortcut
-if (!((process.execPath).includes("node_modules/electron-prebuilt-compile/node_modules/electron/dist/electron"))) {
-    console.log("process is compiled")
-    const desktopShortcutsCreated2 = createDesktopShortcut({
-        linux:   { 
-            filePath: process.execPath,
-            name: 'Incrypto',
-            type: 'Application',
-            terminal: false,
-            chmod: true,
-            icon: process.execPath + '.png', // AppImage puts icon here!
-            comment: "Encrypted Messaging App",
-        },
-    });
-} else {
-    // not compiled and therefore shouldn't make an icon
-}
+// if (!((process.execPath).includes("node_modules/electron-prebuilt-compile/node_modules/electron/dist/electron"))) {
+//     console.log("process is compiled")
+//     const desktopShortcutsCreated2 = createDesktopShortcut({
+//         linux:   { 
+//             filePath: process.execPath,
+//             name: 'Incrypto',
+//             type: 'Application',
+//             terminal: false,
+//             chmod: true,
+//             icon: process.execPath + '.png', // AppImage puts icon here!
+//             comment: "Encrypted Messaging App",
+//         },
+//     });
+// } else {
+//     // not compiled and therefore shouldn't make an icon
+// }
 
 const url = require('url')
 // app.setAppUserModelId(process.execPath); // during development only?

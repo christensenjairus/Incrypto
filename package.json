@@ -33,19 +33,16 @@
       },
       "electronWinstallerConfig": {
         "name": "Incrypto",
-        "dest": "COMPILED_PACKAGES/",
         "icon": "./icons/hacker-25899.ico",
         "setupExe": "Incrypto_Setup.exe"
       },
       "electronInstallerDebian": {
-        "dest": "COMPILED_PACKAGES/",
         "icon": "./icons/hacker-25899.png",
         "categories": [
           "Messaging"
         ]
       },
       "electronInstallerRedhat": {
-        "dest": "COMPILED_PACKAGES/",
         "icon": "./icons/hacker-25899.png",
         "categories": [
           "Messaging"
@@ -71,7 +68,6 @@
     "electron-reload": "^2.0.0-alpha.1",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.0.1",
-    "electron-webpack": "^2.8.2",
     "fs": "^0.0.1-security",
     "open-in-editor": "^2.2.0",
     "perfect-scrollbar": "^1.5.3",
@@ -99,10 +95,12 @@
     "asar": false,
     "appId": "Incrypto",
     "mac": {
-      "category": "Messaging"
+      "category": "Messaging",
+      "icon": "./icons/hacker-25899.png"
     },
     "linux": {
-      "category": "Messaging"
+      "category": "Messaging",
+      "icon": "./icons/hacker-25899.png"
     },
     "icon": "./icons/hacker-25899.png"
   }
