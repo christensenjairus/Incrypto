@@ -47,6 +47,7 @@ git clone https://github.com/christensenjairus/Incrypto.git
 #### Run Incrypto
 * Open a terminal (or powershell) and navigate using `cd` to the Incrypto folder that you've just downloaded. Enter it with `cd Incrypto`
 * Run `npm i` to install the node_modules.
+* Run `npm i -g electron-forge`	to install the compilation engine allowing `npm start` to function.
 * Run `npm start` to run the app. (this will *not* install it)
 * You may like running `electron .` more, as it will not try to compile it like npm start will. You'll need electron installed globally for this. Install it with `npm i -g electron` and then `electron .` should work.
 
