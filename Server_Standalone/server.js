@@ -304,7 +304,7 @@ var ONE_DAY = 12 * 60 * 60 * 1000; /* ms */
 setInterval(function() {
 	console.log("Daily Removal Of Old Messages: ")
 	for (let i = 0; i < history.length; ++i) {
-		if (new Date() - history[i].time > ONE_DAY) {
+		if (new Date() - history[i].time > (ONE_DAY * 3)) { // 3 days
 			console.log("		removing message: " + history[i].text)
 			history.splice(i, 1);
 		}
@@ -315,4 +315,4 @@ setInterval(function() {
 		}
 	});
 	sendHistoryToAll();
-}, ONE_DAY); // every day
+}, ONE_DAY); // every day delete messages older than 3 days

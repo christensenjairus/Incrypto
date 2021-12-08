@@ -42,7 +42,7 @@ if (!((process.execPath).includes("node_modules/electron-prebuilt-compile/node_m
                 outputPath: "%appdata%\\Microsoft\\Windows\\Start Menu\\Programs",
                 name: 'Incrypto',
                 comment: 'Encrypted Messaging App',
-                icon: basepath + '/../icons/hacker-25899.ico', // used to be png, not working
+                icon: basepath + '/../icons/hacker-25899.ico', // windows needs ico
                 workingDirectory: basepath,
                 windowMode: "normal",
                 arguments: '' }
