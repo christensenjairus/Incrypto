@@ -102,7 +102,6 @@
     "linux": {
       "category": "Messaging",
       "icon": "./icons/hacker-25899.png"
-    },
-    "icon": "./icons/hacker-25899.png"
+    }
   }
 }
