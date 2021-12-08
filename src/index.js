@@ -144,6 +144,25 @@ function createWindow(width, height) {
             icon: process.execPath + '.png', // for AppImage
             title: "Incrypto"
         }) 
+    } else if (process.platform === "darwin") {
+        console.log("MacOS detected")
+        mainWindow = new BrowserWindow({
+            webPreferences: {
+                preload: path.join(__dirname, '../javascript/preload.js'),
+                allowRunningInsecureContent: true, // this setting is not ideal, but for now, necessary
+                nodeIntegration: true,
+                contextIsolation: false,
+                webgl: true,
+                enableRemoteModule: true,
+            },
+            hasShadow: true,
+            width: width,
+            height: height,
+            minWidth: 320,
+            minHeight: 600,
+            icon: process.execPath + '.ico', // mac takes .ico?
+            title: "Incrypto"
+        })
     }
     else {
         console.log("not an AppImage. Can grab picture file at " + basepath + '/../icons/hacker-25899.png')
