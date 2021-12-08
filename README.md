@@ -49,7 +49,7 @@ git clone https://github.com/christensenjairus/Incrypto.git
 * Run `npm i` to install the node_modules.
 * Then, you can run it using **either** electron (non compile) or electron-forge (compile).
 	* `electron .` will simply run it. You'll need electron installed globally for this. Install it with `npm i -g electron` and then `electron .` will run the app.
-	* `electron-forge` will compile it first. Run `npm i -g electron-forge` to install the compilation engine allowing `npm start` to function. Then run `npm start` to run the app.
+	* `electron-forge` will compile it first. Run `npm i -g electron-forge` to install the compilation engine allowing `npm start` to function. Then run `npm start` to run the app. This can also be done by running `run.sh`.
 
 On Windows, you may need to enable scripts to be run in order for this to work
 
