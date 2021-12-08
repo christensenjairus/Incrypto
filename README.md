@@ -7,7 +7,7 @@ Incrypto is a cross-platform Electron-based messaging app (both server and clien
 ## Getting Started
 ### Incrypto can be used in two ways.
 1. **Quick**: Run it from the terminal. This is great for making and debugging encryption algorithms.
-2. **Recommended**: Run the app but eventually make your own installer. *You should recompile it* ***after*** *you edit* `encryption.js`. **Ease of use long term**.
+2. **Recommended**: *Ease of use long-term.* Run the app but eventually make your own installer. *You should recompile it* ***after*** *you edit* `encryption.js`.
    * This is recommended because it offers the full flexibility of Incrypto, including being able to run like any other app (Desktop Icons, Start Menu, etc)
    * It also enables you to distrubute your custom compiled packages so that your friends can easily have your encryption/decryption algorithms without having to go through the trouble of copying and pasting from `encryption.js` (which they will be able to see if they look for it, in most cases)
 
@@ -37,19 +37,19 @@ You'll need Node.js and NPM in order to run the app. Git is optional (for clonin
 # Now, close this shell. This is important because the current shell will remember the old location of npm, which we don't want.
 ```
 
-#### Download this repository
+## Download this repository
 You can do this in 2 ways
 1. Click the download button on Github OR
 2. Run the following command
 ```bash
 git clone https://github.com/christensenjairus/Incrypto.git
 ```
-#### Run Incrypto
+## Run Incrypto
 * Open a terminal (or powershell) and navigate using `cd` to the Incrypto folder that you've just downloaded. Enter it with `cd Incrypto`
 * Run `npm i` to install the node_modules.
 * Then, you can run it using **either** electron (non compile) or electron-forge (compile).
 	* `electron .` will simply run it. You'll need electron installed globally for this. Install it with `npm i -g electron` and then `electron .` will run the app.
-	* `electron-forge` will compile it first. Run `npm i -g electron-forge` to install the compilation engine allowing `npm start` to function. Then run `npm start` to run the app.
+	* `electron-forge` will compile it first. Run `npm i -g electron-forge` to install the compilation engine allowing `npm start` to function. Then run `npm start` to run the app. This can also be done by running `run.sh`.
 
 On Windows, you may need to enable scripts to be run in order for this to work
 
@@ -57,8 +57,10 @@ On Windows, you may need to enable scripts to be run in order for this to work
 
 These commands will ***not install*** the app, only *run* it, which is great for manipulating the `encryption.js` file (see "Encryption File and Rules" below)
 
-#### To Package & Install Incrypto (Making your own Installer)
+## To Package & Install Incrypto (Making your own Installer)
 Each operating system (Linux, Windows, MacOS) can compile binaries for their own OS.
+
+**Move or delete the `out` and `dist` directories before compilation, or else your packages will be much larger than they need to be**
 * RPMs (Linux), DEBs (Linux), and EXEs (Windows) will need Electron-Forge installed globally
 
     `npm i -g electron-forge`
@@ -88,7 +90,7 @@ More details and instructions on compilation are given below
 * **On Windows**
    * To compile, run `electron-forge make` while in the `Incrypto` directory and `Incrypto_Setup.exe` will be in `out\make\squirrel.windows\x64\`
 
-### Run Incrypto Server
+## Run Incrypto Server
 While in a terminal (or powershell), navigate into the Incrypto folder using `cd` (as done previously)
 ```bash
 node ./Server_Standalone/server.js
@@ -239,6 +241,8 @@ In a color change request, frontend.js will send an array of all the possible en
 ### Server structure
 The server has a similar structure to `frontend.js` in that it runs on as websocket completely based on events. Those events are listed below. For reference, the server stores the chat and each message in a file called `chat.json` which is stored in the `Incrypto` folder. Remember that the server will only store what each client sends it. Since the chat has only encrypted usernames and encrypted text, an intruder would need to know your decryption algorithm in order to read your chat messages. The server stores user data (including usernames, hashed passwords, and user's colors) in a `config.json` that's stored elsewhere on the computer, much like the `config.json` for each client. 
 
+The server is programmed to **delete any chats older than 1 day** every 24 hours from the last time the server was started. Thus, if we start the server at 2:05pm on Friday then on Saturday at 2:05pm it should delete all messages that are from before 2:05pm on Friday.
+
 #### Server Events
 Upon receiving a message, it will sort through what type of message it is and act accordingly.
 
@@ -254,13 +258,14 @@ Upon receiving a message, it will sort through what type of message it is and ac
 * * *
 # Things for our Dev Team to know
 #### TODO:
+* Generate some kind of key upon login in the client and send it so that the server can detect when someone replays the packet and not let them log in as another user.
 * Find a way to remove out and dist directories from all compilation options
 * Login/register buttons on login/register pages
+* Long messages without spaces will overflow from sides of screen instead of wrapping
 * `npm start` doesn't set correct desktop icon in Linux
 * Dock icon isn't set correctly in macOS
 * MacOS `npm start` displays text strangely
 * Linux AppImage icon needs to be set (Snap too)
-* Make webserver use WSS instead of WS protocol
+* Make webserver use WSS instead of WS protocol --> OR change protocol completely to use HTTP protocol, which could be way more secure and reliable.
 * Implement keys and key validation
-* Run on port 443 and use HTTPS instead of HTTP
 * BUG: Windows requires that you click outside the chat first before you can type anything in the chat right when chat loads
