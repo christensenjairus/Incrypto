@@ -20,26 +20,12 @@ require('electron-reload')(__dirname) // this will allow electron to reload on c
 var basepath = __dirname;
 if (process.platform === "darwin") app.dock.setIcon(basepath + '/../icons/hacker-25899.png'); // set doc icon in macOS
 
-// console.log("ExecPath: " + process.execPath);
 // set app shortcuts
 const createDesktopShortcut = require('create-desktop-shortcuts');
-// console.log('icon path is: ' + basepath + '/../icons/hacker-25899.png');
-// console.log('process.execPath: ' + process.execPath);
-// console.log('app.Path(): ' + app.get);
 if (!((process.execPath).includes("node_modules/electron-prebuilt-compile/node_modules/electron/dist/electron"))) {
     // app is compiled
     try { // ADD TO APPLIATION LOOKUP SO ITS SEARCHABLE
         const AppAdd = createDesktopShortcut({
-            // linux: {
-            //     filePath: process.execPath,
-            //     outputPath: '~/.local/share/applications/',
-            //     name: 'Incrypto',
-            //     type: 'Application',
-            //     terminal: false,
-            //     chmod: true,
-            //     icon: process.execPath + '.png', // AppImage puts icon here!
-            //     comment: "Encrypted Messaging App"
-            // },
             windows: { filePath: app.getAppPath('exe') + '\\..\\..\\Incrypto.exe',
                 outputPath: "%appdata%\\Microsoft\\Windows\\Start Menu\\Programs",
                 name: 'Incrypto',
@@ -54,43 +40,8 @@ if (!((process.execPath).includes("node_modules/electron-prebuilt-compile/node_m
     }
 }
 
-// Desktop Shortcuts (Windows, Mac)
-// const desktopShortcutsCreated1 = createDesktopShortcut({
-//     windows: { filePath: app.getAppPath('exe') + '\\..\\..\\Incrypto.exe',
-//         name: 'Incrypto',
-//         comment: 'Encrypted Messaging App',
-//         icon: basepath + '/../icons/hacker-25899.ico',
-//         workingDirectory: basepath,
-//         windowMode: "normal",
-//         arguments: '' },
-//     osx:     { 
-//         filePath: basepath + '/JustRun.sh',
-//         name: 'Incrypto',
-//         overwrite: true     }
-// });
-
-// Linux Desktop Shortcut
-// if (!((process.execPath).includes("node_modules/electron-prebuilt-compile/node_modules/electron/dist/electron"))) {
-//     console.log("process is compiled")
-//     const desktopShortcutsCreated2 = createDesktopShortcut({
-//         linux:   { 
-//             filePath: process.execPath,
-//             name: 'Incrypto',
-//             type: 'Application',
-//             terminal: false,
-//             chmod: true,
-//             icon: process.execPath + '.png', // AppImage puts icon here!
-//             comment: "Encrypted Messaging App",
-//         },
-//     });
-// } else {
-//     // not compiled and therefore shouldn't make an icon
-// }
-
 const url = require('url')
-// app.setAppUserModelId(process.execPath); // during development only?
 app.setAppUserModelId("Incrypto");
-// app.setBadgeCount(1);
 
 let codeEditor = store.get("codeEditor", "code"); // VS Code is the default
 
@@ -164,7 +115,6 @@ function createWindow(width, height) {
             minWidth: 320,
             minHeight: 600,
             icon: basepath + '/../icons/hacker-25899.png', // works in linux with a png! / windows with a png as well!
-                                                            // TODO: still doesn't work in macOS
             title: "Incrypto"
         }) 
     } // macs icon is set near the top of this file
