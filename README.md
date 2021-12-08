@@ -37,14 +37,14 @@ You'll need Node.js and NPM in order to run the app. Git is optional (for clonin
 # Now, close this shell. This is important because the current shell will remember the old location of npm, which we don't want.
 ```
 
-#### Download this repository
+## Download this repository
 You can do this in 2 ways
 1. Click the download button on Github OR
 2. Run the following command
 ```bash
 git clone https://github.com/christensenjairus/Incrypto.git
 ```
-#### Run Incrypto
+## Run Incrypto
 * Open a terminal (or powershell) and navigate using `cd` to the Incrypto folder that you've just downloaded. Enter it with `cd Incrypto`
 * Run `npm i` to install the node_modules.
 * Then, you can run it using **either** electron (non compile) or electron-forge (compile).
@@ -57,8 +57,10 @@ On Windows, you may need to enable scripts to be run in order for this to work
 
 These commands will ***not install*** the app, only *run* it, which is great for manipulating the `encryption.js` file (see "Encryption File and Rules" below)
 
-#### To Package & Install Incrypto (Making your own Installer)
+## To Package & Install Incrypto (Making your own Installer)
 Each operating system (Linux, Windows, MacOS) can compile binaries for their own OS.
+
+**Move or delete the `out` and `dist` directories before compilation, or else your packages will be much larger than they need to be**
 * RPMs (Linux), DEBs (Linux), and EXEs (Windows) will need Electron-Forge installed globally
 
     `npm i -g electron-forge`
@@ -88,7 +90,7 @@ More details and instructions on compilation are given below
 * **On Windows**
    * To compile, run `electron-forge make` while in the `Incrypto` directory and `Incrypto_Setup.exe` will be in `out\make\squirrel.windows\x64\`
 
-### Run Incrypto Server
+## Run Incrypto Server
 While in a terminal (or powershell), navigate into the Incrypto folder using `cd` (as done previously)
 ```bash
 node ./Server_Standalone/server.js
