@@ -256,6 +256,7 @@ Upon receiving a message, it will sort through what type of message it is and ac
 * * *
 # Things for our Dev Team to know
 #### TODO:
+* Generate some kind of key upon login in the client and send it so that the server can detect when someone replays the packet and not let them log in as another user.
 * Find a way to remove out and dist directories from all compilation options
 * Login/register buttons on login/register pages
 * Long messages without spaces will overflow from sides of screen instead of wrapping
