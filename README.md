@@ -262,10 +262,9 @@ Upon receiving a message, it will sort through what type of message it is and ac
 * Find a way to remove out and dist directories from all compilation options
 * Login/register buttons on login/register pages
 * Long messages without spaces will overflow from sides of screen instead of wrapping
-* `npm start` doesn't set correct desktop icon in Linux
-* Dock icon isn't set correctly in macOS
 * MacOS `npm start` displays text strangely
-* Linux AppImage icon needs to be set (Snap too)
+* Linux AppImage and Snap icon needs to be set
+* Snap can't display any messages from an alert()
 * Make webserver use WSS instead of WS protocol --> OR change protocol completely to use HTTP protocol, which could be way more secure and reliable.
 * Implement keys and key validation
 * BUG: Windows requires that you click outside the chat first before you can type anything in the chat right when chat loads
