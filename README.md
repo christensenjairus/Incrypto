@@ -267,4 +267,4 @@ Upon receiving a message, it will sort through what type of message it is and ac
 * Snap can't display any messages from an alert()
 * Make webserver use WSS instead of WS protocol --> OR change protocol completely to use HTTP protocol, which could be way more secure and reliable.
 * Implement keys and key validation
-* BUG: Windows requires that you click outside the chat first before you can type anything in the chat right when chat loads
+* BUG: Windows requires that you click outside the chat at times
