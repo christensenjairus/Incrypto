@@ -166,6 +166,7 @@ function createWindow(width, height) {
             title: "Incrypto"
         }) 
     }
+    app.dock.setIcon(basepath + '/../icons/hacker-25899.png'); // attempt to use this for mac
 
     // and load the index.html of the app.
     if (store.get("lastUser", "") == "") {
