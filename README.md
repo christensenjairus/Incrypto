@@ -264,7 +264,6 @@ Upon receiving a message, it will sort through what type of message it is and ac
 * Dock icon isn't set correctly in macOS
 * MacOS `npm start` displays text strangely
 * Linux AppImage icon needs to be set (Snap too)
-* Make webserver use WSS instead of WS protocol
+* Make webserver use WSS instead of WS protocol --> OR change protocol completely to use HTTP protocol, which could be way more secure and reliable.
 * Implement keys and key validation
-* Run on port 443 and use HTTPS instead of HTTP
 * BUG: Windows requires that you click outside the chat first before you can type anything in the chat right when chat loads
