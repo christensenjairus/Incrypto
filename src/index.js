@@ -17,7 +17,7 @@ var openInEditor = require('open-in-editor');
 const {ipcMain} = require('electron')
 require('electron-reload')(__dirname) // this will allow electron to reload on changes
 
-app.dock.setIcon(basepath + '/../icons/hacker-25899.png'); // set doc icon in macOS
+if (app.platform === "darwin") app.dock.setIcon(basepath + '/../icons/hacker-25899.png'); // set doc icon in macOS
 
 // console.log("ExecPath: " + process.execPath);
 // set app shortcuts
@@ -167,7 +167,7 @@ function createWindow(width, height) {
                                                             // TODO: still doesn't work in macOS
             title: "Incrypto"
         }) 
-    }
+    } // macs icon is set near the top of this file
 
     // and load the index.html of the app.
     if (store.get("lastUser", "") == "") {
