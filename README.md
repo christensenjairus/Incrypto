@@ -241,7 +241,7 @@ In a color change request, frontend.js will send an array of all the possible en
 ### Server structure
 The server has a similar structure to `frontend.js` in that it runs on as websocket completely based on events. Those events are listed below. For reference, the server stores the chat and each message in a file called `chat.json` which is stored in the `Incrypto` folder. Remember that the server will only store what each client sends it. Since the chat has only encrypted usernames and encrypted text, an intruder would need to know your decryption algorithm in order to read your chat messages. The server stores user data (including usernames, hashed passwords, and user's colors) in a `config.json` that's stored elsewhere on the computer, much like the `config.json` for each client. 
 
-The server is programmed to **delete any chats older than 1 day** every 24 hours from the last time the server was started. Thus, if we start the server at 2:05pm on Friday then on Saturday at 2:05pm it should delete all messages that are from before 2:05pm on Friday.
+The server is programmed to **delete any chats older than 3 days** every 24 hours from the last time the server was started. Thus, if we start the server at 2:05pm on Friday then on Saturday at 2:05pm it should delete all messages that are from before 2:05pm on Wednesday.
 
 #### Server Events
 Upon receiving a message, it will sort through what type of message it is and act accordingly.
