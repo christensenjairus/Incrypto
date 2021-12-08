@@ -17,12 +17,12 @@ var openInEditor = require('open-in-editor');
 const {ipcMain} = require('electron')
 require('electron-reload')(__dirname) // this will allow electron to reload on changes
 
+var basepath = __dirname;
 if (process.platform === "darwin") app.dock.setIcon(basepath + '/../icons/hacker-25899.png'); // set doc icon in macOS
 
 // console.log("ExecPath: " + process.execPath);
 // set app shortcuts
 const createDesktopShortcut = require('create-desktop-shortcuts');
-var basepath = __dirname;
 // console.log('icon path is: ' + basepath + '/../icons/hacker-25899.png');
 // console.log('process.execPath: ' + process.execPath);
 // console.log('app.Path(): ' + app.get);
