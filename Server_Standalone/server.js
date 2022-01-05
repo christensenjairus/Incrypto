@@ -20,7 +20,7 @@ const DEBUG = true;
 "use strict";
 process.title = 'Chat_Server';
 // const webSocketsServerPort = 42069;
-const webSocketsServerPort = 80;
+const webSocketsServerPort = 5050;
 const webSocketServer = require('websocket').server;
 const http = require('http');
 var history = [ ];

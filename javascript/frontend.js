@@ -10,7 +10,7 @@ const DOMPurify = require('dompurify');
 
 const serverName = store.get("serverName", ""); // default to "" if no valid input
 // const portNum = '42069'
-const portNum = '80'
+const portNum = '5050'
 const serverIPandPortNum = serverName + ':' + portNum; // <---- Insert hostname or IP of server here
 
 const DEBUG = true; // turn this on & use it with 'if(DEBUG)' to display more console.log info
@@ -280,36 +280,39 @@ $(function() { // this syntax means it's a function that will be run once once d
     * Add message to the chat window
     */
     function addMessage(author, message, color, dt, dtOfLastMessage, encryptionType) {
-        message = Decrypt(message, encryptionType);
+        let UnencryptedMessage = Decrypt(message, encryptionType);
         author = Decrypt(author, encryptionType);
 
-        message = DOMPurify.sanitize(message);
-        if (message === "") return;
+        let purifiedMessage = DOMPurify.sanitize(UnencryptedMessage);
+        if (purifiedMessage === "") return;
         // console.log("author is " + Decrypt(author, encryptionType));
         // console.log("encryption type is " + encryptionType)
         const time = new Date(dt);
         const lastTime = new Date(dtOfLastMessage);
         let difference = time - lastTime;
 
-        if (difference > 20000) {
-            content.innerHTML += `<div class="text-center"><span class="between">` + time.toLocaleString() + `</span></div>`;
+        if (UnencryptedMessage !== message || displayAll) { // either we've decypted the message, or displayAll is toggled
+            message = purifiedMessage;
+            if (difference > 20000) {
+                content.innerHTML += `<div class="text-center"><span class="between">` + time.toLocaleString() + `</span></div>`;
+            }
+            if (author == myName) {
+                content.innerHTML += `<div class="d-flex align-items-center text-right justify-content-end ">
+                                <div class="pr-2"> <span class="name">Me</span>
+                                    <p class="msg" style="background-color:` + color + `; color:white">` + message + `</p>
+                                </div>
+                                <div><img src="../icons/icons8-hacker-64.png" width="30" class="img1" /></div>
+                            </div>`
+            } else {
+                content.innerHTML += `<!-- Sender Message-->
+                <div class="d-flex align-items-center">
+                <div class="text-left pr-1"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /></div>
+                <div class="pr-2 pl-1"> <span class="name">` + author + `</span>
+                    <p class="msg" style="background-color:` + color + `; color:white">` + message + `</p>
+                </div>
+                </div>`;
+            };
         }
-        if (author == myName) {
-            content.innerHTML += `<div class="d-flex align-items-center text-right justify-content-end ">
-                            <div class="pr-2"> <span class="name">Me</span>
-                                <p class="msg" style="background-color:` + color + `; color:white">` + message + `</p>
-                            </div>
-                            <div><img src="../icons/icons8-hacker-64.png" width="30" class="img1" /></div>
-                        </div>`
-        } else {
-            content.innerHTML += `<!-- Sender Message-->
-            <div class="d-flex align-items-center">
-            <div class="text-left pr-1"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /></div>
-            <div class="pr-2 pl-1"> <span class="name">` + author + `</span>
-                <p class="msg" style="background-color:` + color + `; color:white">` + message + `</p>
-            </div>
-            </div>`;
-        };
     }
 
     document.getElementById('status').addEventListener('click', () => {
@@ -348,6 +351,19 @@ $(function() { // this syntax means it's a function that will be run once once d
             changeE_Type(Encryption_Types[i]);
         })
     }
+
+    dropdown = document.getElementById('dropdownOptions');
+    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayAllMessages">Show all messages</a>'
+    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayOnlyUnencryptedMessages">Show only unencrypted messages</a>'
+    document.getElementById("displayAllMessages").addEventListener('click', () => {
+        // changeE_Type(Encryption_Types[i]);
+        alert("display all")
+    });
+    document.getElementById("displayOnlyUnencryptedMessages").addEventListener('click', () => {
+        // changeE_Type(Encryption_Types[i]);
+        alert("display unencrypted messages")
+    });
+
 });
 
 // _________________ Helper Functions ________________________________
