@@ -2,10 +2,10 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "name": "Debug Main Electron Process",
+        "name": "Debug Main Process",
         "type": "node",
         "request": "launch",
-        "cwd": "${workspacFolder}",
+        "cwd": "${workspaceFolder}",
         "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
         "windows": {
           "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
@@ -16,7 +16,7 @@
       {
         "type": "node",
         "request": "launch",
-        "name": "Electron Main",
+        "name": "npm start",
         "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron-forge-vscode-nix",
         "windows": {
           "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron-forge-vscode-win.cmd"
@@ -27,6 +27,18 @@
           "bar"
         ],
         "cwd": "${workspaceRoot}"
+      },
+      {
+        "name": "electron .",
+        "type": "node",
+        "request": "launch",
+        "cwd": "${workspaceFolder}",
+        "runtimeExecutable": "electron",
+        "windows": {
+          "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+        },
+        "args" : ["."],
+        "outputCapture": "std"
       }
     ]
   }
