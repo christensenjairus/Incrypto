@@ -63,9 +63,7 @@ if (document.getElementById('submit') != null) {
           }))
           store.set("serverName", serverName);
           connection.close()
-          ipcRenderer.invoke('login', "").then((result) => { 
-            // THIS FUNCTION RUNS THE "LOGIN" HANDLER IN MAIN.JS
-          })
+          ipcRenderer.invoke('login');
         }
         else {
           console.log("login failed")
@@ -167,9 +165,7 @@ if (document.getElementById('register') != null) {
           }))
           store.set("serverName", serverName);
           connection.close()
-          ipcRenderer.invoke('login', "").then((result) => { 
-            // THIS FUNCTION RUNS THE "LOGIN" HANDLER IN MAIN.JS
-          })
+          ipcRenderer.invoke('login');
         }
         else {
           console.log("registration failed")

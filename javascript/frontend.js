@@ -14,13 +14,17 @@ const portNum = '80'
 const serverIPandPortNum = serverName + ':' + portNum; // <---- Insert hostname or IP of server here
 
 const DEBUG = true; // turn this on & use it with 'if(DEBUG)' to display more console.log info
+var displayAll = true;
+ipcRenderer.invoke('getSeeAllMessages').then((result) => { 
+    displayAll = result;
+});
 
 var myName;
-ipcRenderer.invoke('getName', "").then((result) => { 
+ipcRenderer.invoke('getName').then((result) => { 
     myName = result;
 });
 var myColor;
-ipcRenderer.invoke('getColor', "").then((result) => { 
+ipcRenderer.invoke('getColor').then((result) => { 
     myColor = result;
 });
 
@@ -29,7 +33,7 @@ let historyIntervalID;
 
 let EncryptionFunction = store.get("encryptionType", Encryption_Types[0]);  // TODO: switch this back to default Encryption
                                                                             //default encryption type is first in file
-ipcRenderer.invoke('getEncryptionType', "").then((result) => {
+ipcRenderer.invoke('getEncryptionType').then((result) => {
     EncryptionFunction = result;
 })
 
@@ -93,9 +97,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     connection.onerror = function (error) {
         // just in case there were some problems with connection...
         // content.html($('<p>', {text: 'Sorry, but there\'s some problem with your ' + 'connection or the server is down.'}));
-        ipcRenderer.invoke('login', "").then((result) => { 
-            // used to refresh page
-        })
+        ipcRenderer.invoke('login')
     };
 
     let pingCount = 0;
@@ -185,9 +187,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     }
 
     connection.onclose = function () {
-        ipcRenderer.invoke('login', "").then((result) => { 
-            // used to refresh page
-        })
+        ipcRenderer.invoke('login');
     };
 
     /**
@@ -241,9 +241,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     */
     historyIntervalID = setInterval(function() {
         if (connection.readyState !== 1) {
-            ipcRenderer.invoke('login', "").then((result) => { 
-                // used to refresh page
-            })
+            ipcRenderer.invoke('login');
         }
         else {
             // input.removeAttr('disabled')
@@ -291,7 +289,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         const lastTime = new Date(dtOfLastMessage);
         let difference = time - lastTime;
 
-        if (UnencryptedMessage !== message || displayAll) { // either we've decypted the message, or displayAll is toggled
+        if ((UnencryptedMessage !== message) || displayAll === true) { // either we've decypted the message, or displayAll is toggled
             message = purifiedMessage;
             if (difference > 20000) {
                 content.innerHTML += `<div class="text-center"><span class="between">` + time.toLocaleString() + `</span></div>`;
@@ -356,12 +354,12 @@ $(function() { // this syntax means it's a function that will be run once once d
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayAllMessages">Show all messages</a>'
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayOnlyUnencryptedMessages">Show only unencrypted messages</a>'
     document.getElementById("displayAllMessages").addEventListener('click', () => {
-        // changeE_Type(Encryption_Types[i]);
-        alert("display all")
+        ipcRenderer.invoke('setSeeAllMessages', true);
+        ipcRenderer.invoke('login');
     });
     document.getElementById("displayOnlyUnencryptedMessages").addEventListener('click', () => {
-        // changeE_Type(Encryption_Types[i]);
-        alert("display unencrypted messages")
+        ipcRenderer.invoke('setSeeAllMessages', false);
+        ipcRenderer.invoke('login')
     });
 
 });

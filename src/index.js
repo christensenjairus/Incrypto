@@ -44,6 +44,7 @@ const url = require('url')
 app.setAppUserModelId("Incrypto");
 
 let codeEditor = store.get("codeEditor", "code"); // VS Code is the default
+let seeAllMessages = true;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -426,12 +427,10 @@ function replaceCurrentWindow(file) {
     mainWindow.loadURL('file://' + __dirname + '/../html/' + file)
 }
 
-ipcMain.handle('login', async (event, someArgument) => {
-    // const result = await doSomeWork(someArgument)
+ipcMain.handle('login', async (event) => {
     switchToChatPage();
     // mainWindow.webContents.openDevTools(); // open dev tools on chat launch
-    // return result
-    return true;
+    return;
 })
 
 ipcMain.handle('logout', (event) => {
@@ -453,7 +452,7 @@ ipcMain.handle('forceLogout', (event) => {
 let myName = false;
 let myColor = false;
 
-ipcMain.handle('getName', (event, someArgument) => {
+ipcMain.handle('getName', (event) => {
     return myName;
 })
 
@@ -470,12 +469,11 @@ ipcMain.handle('setEncryptionType', (event, name) => {
     return true;
 })
 
-ipcMain.handle('getEncryptionType', (someArgument) => {
+ipcMain.handle('getEncryptionType', (event) => {
     return EncryptionType;
 })
 
-ipcMain.handle('getColor', (event, someArgument) => {
-    // console.log(myColor + ' grabbed')
+ipcMain.handle('getColor', (event) => {
     return myColor;
 })
 
@@ -484,6 +482,15 @@ ipcMain.handle('setColor', (event, color) => {
     myColor = color;
     // console.log("color saved in main.js file: " + color)
     return true;
+})
+
+ipcMain.handle('setSeeAllMessages', (event, value) => {
+    seeAllMessages = value;
+    return;
+})
+
+ipcMain.handle('getSeeAllMessages', (event) => {
+    return seeAllMessages;
 })
 
 let badgeCnt = 0;
