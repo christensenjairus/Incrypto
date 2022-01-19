@@ -320,7 +320,7 @@ function openEncryptionFileForEditing() {
         editor: codeEditor
     });
     try {
-        editor.open('./javascript/Encryption.js:52:4').then(function() {
+        editor.open('./javascript/Encryption.mjs:52:4').then(function() {
             // console.log('Success!');
         }, function(err) {
             // console.error('Something went wrong: ' + err);

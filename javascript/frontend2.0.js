@@ -92,7 +92,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     // connection.onopen = function () {
     //     if (DEBUG) console.log("connection made")
     //     if (myName != "") {
-    mystatus.text(myName + ': ').css('color', myColor);
+    
     getNewMessages("", serverName).then(response => {
         // console.log(response.data.body)
         let messages = JSON.parse(response.data.body)
@@ -104,6 +104,8 @@ $(function() { // this syntax means it's a function that will be run once once d
         }
         
         appendChat(newJSON)
+        mystatus.text(myName).css('color', myColor);
+        input.focus();
     })
     //         // get history of chat
     //         let message = {"type":"historyRequest", "user":myName, "color":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
@@ -119,20 +121,6 @@ $(function() { // this syntax means it's a function that will be run once once d
     //     }
     //     content.innerhtml += `<p>Welcome to the Incrypto Chat! Type in the text box below to begin chatting!</p>`;
     // };
-    
-    // /*
-    // * What to do in case of a socket error
-    // */
-    // connection.onerror = function (error) {
-    //     // just in case there were some problems with connection...
-    //     // content.html($('<p>', {text: 'Sorry, but there\'s some problem with your ' + 'connection or the server is down.'}));
-    //     ipcRenderer.invoke('login')
-    // };
-    
-    let pingCount = 0;
-    let pongCount = 0;
-    let lengthOfHistory5SecondsAgo = "";
-    let history5SecondsAgo = "";
     
     // /*
     // * What to do when the socket receives a message
@@ -188,38 +176,18 @@ $(function() { // this syntax means it's a function that will be run once once d
     
     
     function appendChat(newJSON) { // this was done in an attempt to speed up onmessage handler
-        // pongCount = 0;
-        // pingCount = 0;
-        // if (DEBUG) console.log("Message received: \n" + message.data);
-        // insert every single message to the chat window
-        
-        // document.getElementById("chatbox").innerHTML = "";
-        // lengthOfHistory5SecondsAgo = json.data.length;
-        // history5SecondsAgo = json.data;
-        console.log("ADDING THIS DATA TO CHAT: " + newJSON);
         let dtOfLastMessage = "";
-        // console.log(json)
-        
-        // if (typeof json.length !== 'undefined') {
+        if (chatRoom.length != 0) chatRoom[chatRoom.length - 1].time;
+
         for (var i=0; i < newJSON.length; i++) {
-            var messageIfAlreadyExists = document.getElementById(newJSON[i].guid);
-            if ((typeof(document.getElementById(newJSON[i].guid)) != 'undefined') /*&& (document.getElementById(newJSON[i].guid) != null)*/) { // only add messages that aren't already added!
-                // alert("getting through")
-                addMessage(newJSON[i].author, newJSON[i].text, newJSON[i].color, newJSON[i].time, dtOfLastMessage, newJSON[i].encryption, newJSON[i].guid);
-            }    
+            addMessage(newJSON[i].author, newJSON[i].text, newJSON[i].color, newJSON[i].time, dtOfLastMessage, newJSON[i].encryption, newJSON[i].guid); 
             dtOfLastMessage = newJSON[i].time;
-            // if (i + 1 == newJSON.length) { // scroll to last message
-            //     var message = document.getElementById(newJSON[i].guid);
-            //     message.scrollIntoView({behavior: "smooth"})
-            // }
         }
         chatRoom.push(newJSON);
         var div = $('#chatbox');
             div.animate({
                 scrollTop: div[0].scrollHeight
             }, 100);
-        
-        // $('#chatbox').animate({scrollTop: $('#chatbox').scrollHeight},"fast");
     }
     
     /*
@@ -237,9 +205,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         const time = new Date(dt);
         const lastTime = new Date(dtOfLastMessage);
         let difference = time - lastTime;
-        console.log("message is being added now")
         if ((UnencryptedMessage !== message) || displayAll === true) { // either we've decypted the message, or displayAll is toggled
-            console.log("message is being added now 2")
             message = purifiedMessage;
             if (difference > 20000) {
                 content.innerHTML += `<div class="text-center"><span class="between">` + time.toLocaleString() + `</span></div>`;
@@ -251,8 +217,6 @@ $(function() { // this syntax means it's a function that will be run once once d
                 </div>
                 <div><img src="../icons/icons8-hacker-64.png" width="30" class="img1" /></div>
                 </div>`
-                // var message = document.getElementById(guid);
-                // message.scrollIntoView({behavior: "smooth"})
             } else {
                 content.innerHTML += `<!-- Sender Message-->
                 <div class="d-flex align-items-center" id="` + guid + `">
@@ -261,15 +225,9 @@ $(function() { // this syntax means it's a function that will be run once once d
                 <p class="msg" style="background-color:` + color + `; color:white">` + message + `</p>
                 </div>
                 </div>`;
-                // var message = document.getElementById(guid);
-                // message.scrollIntoView({behavior: "smooth"})
             };
         }
     }
-    
-    // connection.onclose = function () {
-    //     ipcRenderer.invoke('login');
-    // };
     
     /**
     * Send message when user presses Enter key
@@ -297,38 +255,22 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (msg == "") return; // if encryption fails
             
             var tmp = Encrypt(myName);
-            //let message = {"type":"message", "user":myName, "userEnc":tmp, "msg":msg, "userColor":myColor, "encryption":EncryptionFunction, "key":"none", "time": (new Date()).getTime()}
             sendMessage(myName, tmp, msg, myColor, EncryptionFunction, myKey, serverName).then(response => {
                 if (response == false) {
-                    console.error("Message was not sent.");
                     return;
                 }
                 else {
-                    console.log("message sent")
-                    // console.log(response.data.body)
                     let messages = JSON.parse(response.data.body)
                     let newJSON = [];
                     for (var i = 0; i < messages.data.length; ++i) {
-                        // chatRoom.push(messages.data[i])
-                        // console.log("received message from server: " + messages.data[i])
                         newJSON.push(messages.data[i])
                     }
-                    
                     appendChat(newJSON)
+                    savedInputText = "";
+                    document.getElementById('input').value = "";
+                    ipcRenderer.invoke('setBadgeCnt', 0);
                 }
             })
-            // try {
-            //     send(connection, JSON.stringify(message));
-            //     if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
-            //     savedInputText = "";
-            // } catch(error) {
-            //     console.log("message not sent")
-            // }
-            // $(this).val('');
-            // disable the input field to make the user wait until server sends back response
-            // input.attr('disabled', 'disabled');
-            // if (DEBUG) console.log("Input turned off until response is received")
-            ipcRenderer.invoke('setBadgeCnt', 0);
         }
     });
     
@@ -397,6 +339,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         // if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
     })
     
+
     // add NAVBAR functionality
     document.getElementById('logoutButton').addEventListener('click', () => {
         logout();
@@ -461,25 +404,25 @@ function showNotification(author, text) {
     }))
 }
 
-function send(connection, message) {
-    try {
-        connection.send(message);
-        // console.log(message);
-        input.removeAttr('disabled')
-        if (document.getElementById('input').value === "Can\'t communicate with the WebSocket server.") {
-            document.getElementById('input').value = savedInputText;
-        }
-        input.focus();
-        mystatus.text(myName).css('color', myColor);
-    } catch(e) { // will execute if connection.send fails (which means that connection is not set up yet)
-        // change DOM here because of failure
-        if (document.getElementById('input').value != "Can\'t communicate with the WebSocket server.") {
-            savedInputText = document.getElementById('input').value
-        }
-        document.getElementById('input').value = ("Can\'t communicate with the WebSocket server.")
-        input.attr('disabled', 'disabled')
-    }
-}
+// function send(connection, message) {
+//     try {
+//         connection.send(message);
+//         // console.log(message);
+//         input.removeAttr('disabled')
+//         if (document.getElementById('input').value === "Can\'t communicate with the WebSocket server.") {
+//             document.getElementById('input').value = savedInputText;
+//         }
+//         input.focus();
+//         mystatus.text(myName).css('color', myColor);
+//     } catch(e) { // will execute if connection.send fails (which means that connection is not set up yet)
+//         // change DOM here because of failure
+//         if (document.getElementById('input').value != "Can\'t communicate with the WebSocket server.") {
+//             savedInputText = document.getElementById('input').value
+//         }
+//         document.getElementById('input').value = ("Can\'t communicate with the WebSocket server.")
+//         input.attr('disabled', 'disabled')
+//     }
+// }
 
 function Encrypt(textin) {
     let toReturn = "";
