@@ -6,7 +6,7 @@
 \____/ \__\__,_|_| |_|\__,_|\__,_|_|\___/|_| |_|\___| \____/ \___|_|    \_/ \___|_|   
 */
 
-const httpLogic = require('./http_logic.mjs');
+const httpLogic = require('./http_logic.js');
 var fs = require('fs');
 const Store = require('electron-store');
 const store = new Store();
