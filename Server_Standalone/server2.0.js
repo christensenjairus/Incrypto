@@ -6,15 +6,11 @@
 \____/ \__\__,_|_| |_|\__,_|\__,_|_|\___/|_| |_|\___| \____/ \___|_|    \_/ \___|_|   
 */
 
-// var WebSocketServer = require('websocket').server;
-// var WebSocketClient = require('websocket').client;
-// var WebSocketFrame  = require('websocket').frame;
-// var WebSocketRouter = require('websocket').router;
-// var W3CWebSocket = require('websocket').w3cwebsocket;
+// import * as httpLogic from './http_logic.mjs'
+const httpLogic = require("./http_logic.mjs");
 var fs = require('fs');
 const Store = require('electron-store');
 const store = new Store();
-var XMLHttpRequest = require('xhr2');
 const host = 'localhost'
 const port = 5050;
 const http = require('http'); // todo: will need to be encrypted 
@@ -23,12 +19,12 @@ const DEBUG = true;
 "use strict";
 process.title = 'Chat_Server';
 
-var history = [ ];
+var history = [];
 var myChat = "./chat.json"
 if (fs.existsSync(myChat)) {
 	restoreFromFile();
 }
-var clients = [ ];
+var clients = [];
 function htmlEntities(str) {
 	return String(str).replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"');
 }
@@ -37,89 +33,8 @@ colors.sort(function(a,b) {
 	return Math.random() > 0.5;	
 });
 
-
 http.createServer((request, response) => {
-
-	// LOGIN ENDPOINT
-	if (request.method === 'POST' && request.url === '/api/login') {
-		console.log("Login Request")
-		const { headers, method, url } = request;
-		let body = [];
-		request.on('error', (err) => {
-			console.error(err);
-		}).on('data', (chunk) => {
-			let dataIn = JSON.parse(chunk);
-			var json = { type:'AuthResponse', result: "failure", key:"" };
-			let key = checkLoginCreds(dataIn.username, dataIn.password);
-			if (key == "password_wrong") {
-				json = { type:'AuthResponse', result: "failure", key:key };
-			}
-			else if (key == "username_not_exist") {
-				json = { type:'AuthResponse', result: "failure", key:key };
-			}
-			else if (key == "already_loggedin") {
-				json = { type:'AuthResponse', result: "failure", key:key };
-			}
-			else if (key != "") {
-				userColor = store.get(dataIn.username + "_Color", "blue");
-				json = { type:'AuthResponse', color:userColor, result: "success", key:key }; // make valid response
-			}
-			// send response
-			body.push(Buffer.from(JSON.stringify(json)));
-		}).on('end', () => {
-			body = Buffer.concat(body).toString();
-			response.on('error', (err) => {
-				console.error(err);
-			});
-			response.statusCode = 200;
-			response.setHeader('Content-Type', 'application/json');
-			const responseBody = { headers, method, url, body };
-			response.write(JSON.stringify(responseBody));
-			response.end();
-		});
-		return;
-	}
-
-	// REGISTRATION ENDPOINT
-	if (request.method === 'POST' && request.url === '/api/register') {
-		console.log("Registration Request")
-		const { headers, method, url } = request;
-		let body = [];
-		request.on('error', (err) => {
-			console.error(err);
-		}).on('data', (chunk) => {
-			let dataIn = JSON.parse(chunk);
-			var json = { type:'AuthResponse', result: "failure", key:"" };
-			let key = checkRegistrationCreds(dataIn.username, dataIn.password);
-			if (key == "username_exists") {
-				json = { type:'AuthResponse', result: "failure", key:key };
-			}
-			else if (key != "") {
-				userColor = store.get(dataIn.username + "_Color", "blue");
-				json = { type:'AuthResponse', color:userColor, result: "success", key:key }; // make valid response
-			}
-			// send response
-			body.push(Buffer.from(JSON.stringify(json)));
-		}).on('end', () => {
-			body = Buffer.concat(body).toString();
-			response.on('error', (err) => {
-				console.error(err);
-			});
-			response.statusCode = 200;
-			response.setHeader('Content-Type', 'application/json');
-			const responseBody = { headers, method, url, body };
-			response.write(JSON.stringify(responseBody));
-			response.end();
-		});
-		return;
-	}
-	
-	// PING ENDPOINT
-
-	else {
-		response.statusCode = 404;
-		response.end();
-	}
+	httpLogic.serverLogic(request, response);
 }).listen(port, host, () => {
     console.log(`Server is running on http://${host}:${port}`);
 });
@@ -298,39 +213,7 @@ http.createServer((request, response) => {
 // 	}
 // }
 
-function checkLoginCreds(username, passhash) {
-	if (store.get("username_" + username, "") == "") { // username does not exist
-		return "username_not_exist";
-	}
-	// logOutOthers(connection, username);
-	if (passhash == store.get("passwordHash_" + username, "")) {
-		var key = createGuid();  
-		store.set(username + "_key", key);
-		return key;
-	}
-	else{
-		return "password_wrong"; // password did not exist
-	}
-}
-
-function checkRegistrationCreds(username, passhash) {
-	if (store.get("username_" + username, "") != "") { // username already exists
-		return "username_exists";
-	}
-	store.set("username_" + username, username);
-	store.set("passwordHash_" + username, passhash);
-	var key = createGuid();  
-	store.set(username + "_key", key);
-	return key;
-}
-
-function createGuid() {  
-	function _p8(s) {  
-		var p = (Math.random().toString(16)+"000000000").substr(2,8);  
-		return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p ;  
-	}  
-	return _p8() + _p8(true) + _p8(true) + _p8();  
-}  
+  
 
 // function saveToFile(obj) {
 // 	history.push(obj); // save messages
@@ -342,15 +225,15 @@ function createGuid() {
 // 	});
 // }
 
-// function restoreFromFile() {
-// 	fs.readFile('chat.json', function read(err, data) {
-// 		if (err) {
-// 			console.log(err);
-// 			return;
-// 		}
-// 		history = JSON.parse(data);
-// 	})
-// }
+function restoreFromFile() {
+	fs.readFile('chat.json', function read(err, data) {
+		if (err) {
+			console.log(err);
+			return;
+		}
+		history = JSON.parse(data);
+	})
+}
 
 // function displayClients() {
 // 	for (var i=0; i < clients.length; ++i) {
