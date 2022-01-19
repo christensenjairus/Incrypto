@@ -6,8 +6,7 @@
 \____/ \__\__,_|_| |_|\__,_|\__,_|_|\___/|_| |_|\___| \____/ \___|_|    \_/ \___|_|   
 */
 
-// import * as httpLogic from './http_logic.mjs'
-const httpLogic = require("./http_logic.mjs");
+const httpLogic = require('./http_logic.mjs');
 var fs = require('fs');
 const Store = require('electron-store');
 const store = new Store();
