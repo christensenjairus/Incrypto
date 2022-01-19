@@ -14,7 +14,7 @@ const host = 'localhost'
 const port = 5050;
 const http = require('http'); // todo: will need to be encrypted 
 const DEBUG = true;
-
+ 
 "use strict";
 process.title = 'Chat_Server';
 
