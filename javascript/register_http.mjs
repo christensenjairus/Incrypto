@@ -1,26 +1,25 @@
-// CONTAINS LOGIC FOR LOGIN PAGE
+// CONTAINS LOGIC FOR REGISTER PAGE
 
 const { default: axios } = require('axios');
-const Store = require('electron-store');
+const Store = require('electron-store')
 const store = new Store(); // initalize Store
-
-// const portNum = '5050'
-const portNum = '443'
-let serverIPandPortNum = '';
 
 function hashCode(password){
     return password.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);              
 }
 
-export function login(username, password, serverName) {
+export function register(username, password, password2, serverName) {
+    if (password != password2) {
+        alert("Passwords do not match")
+        return false;
+    }
+    password = hashCode(password);
     if (serverName === "") {
         alert("Please enter a valid server name");
         return false;
     }
-    password = hashCode(password);
-    serverIPandPortNum = 'http://' + serverName/* + ":" + portNum*/;
     try {
-        axios.post(serverIPandPortNum + "/api/login", {
+        axios.post('http://' + serverName + "/api/register", {
             username: username,
             password: password,
             encryption: "plain_text", 
@@ -28,22 +27,15 @@ export function login(username, password, serverName) {
         }).then(response => {
             var data = JSON.parse(response.data.body)
             if (data.result === 'success') {
+                store.set(username + "_key", data.key);
                 store.set("lastUser", username);
                 ipcRenderer.invoke('setColor', data.color)
                 store.set("serverName", serverName);
                 ipcRenderer.invoke('login');
             }
             else {
-                if (data.key === "username_not_exist") {
-                    alert("Incorrect credentials")
-                    return false;
-                }
-                else if (data.key === "password_wrong") {
-                    alert("Incorrect credentials")
-                    return false;
-                }
-                else if (data.key === "already_loggedin") {
-                    alert("You're logged in somewhere else. Please log out there before continuing");
+                if (data.key === "username_exists") {
+                    alert("That username is taken. Please try another")
                     return false;
                 }
                 else {
@@ -51,7 +43,7 @@ export function login(username, password, serverName) {
                     return false;
                 }
             }
-            return;
+            return
         })
     } catch (error) {
         console.error(error);

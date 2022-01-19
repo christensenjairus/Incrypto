@@ -1,6 +1,6 @@
 // CONTAINS DOM MANIPULATION FOR REGISTER PAGE
 
-import {register} from './register_logic.mjs';
+import {register} from './register_http.mjs';
 const { ipcRenderer } = require('electron');
 const Store = require('electron-store');
 const store = new Store(); // initalize Store

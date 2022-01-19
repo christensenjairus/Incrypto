@@ -6,36 +6,21 @@
 \____/ \__\__,_|_| |_|\__,_|\__,_|_|\___/|_| |_|\___| \____/ \___|_|    \_/ \___|_|   
 */
 
-const httpLogic = require('./http.js');
-var fs = require('fs');
-const Store = require('electron-store');
-const store = new Store();
+const server = require('./server_http.js');
+const logic = require('./server_logic.js')
 const host = 'localhost'
 const port = 5050;
 const http = require('http'); // todo: will need to be encrypted 
+const { pid } = require('process');
 const DEBUG = true;
  
 "use strict";
-process.title = 'Chat_Server';
-
-var history = [];
-var myChat = "./chat.json"
-if (fs.existsSync(myChat)) {
-	restoreFromFile();
-}
-var clients = [];
-function htmlEntities(str) {
-	return String(str).replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"');
-}
-var colors = ['purple', 'plum', 'orange', 'red', 'green', 'blue', 'magenta'];
-colors.sort(function(a,b) {
-	return Math.random() > 0.5;	
-});
+process.title = 'Incrypto_Server';
 
 http.createServer((request, response) => {
-	httpLogic.serverLogic(request, response);
+	server.serverLogic(request, response);
 }).listen(port, host, () => {
-    console.log(`Server is running on http://${host}:${port}`);
+	logic.logEvent(`Incrypto Server was started on http://${host}:${port} with pid ${pid}`)
 });
 
 
@@ -214,25 +199,9 @@ http.createServer((request, response) => {
 
   
 
-// function saveToFile(obj) {
-// 	history.push(obj); // save messages
-// 	history = history.slice(-100);
-// 	fs.writeFile("chat.json", JSON.stringify(history), function(err) {
-// 		if (err) {
-// 			console.log(err);
-// 		}
-// 	});
-// }
 
-function restoreFromFile() {
-	fs.readFile('chat.json', function read(err, data) {
-		if (err) {
-			console.log(err);
-			return;
-		}
-		history = JSON.parse(data);
-	})
-}
+
+
 
 // function displayClients() {
 // 	for (var i=0; i < clients.length; ++i) {

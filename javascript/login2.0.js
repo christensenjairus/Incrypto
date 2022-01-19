@@ -1,6 +1,6 @@
 // CONTAINS DOM MANIPULATION FOR LOGIN PAGE
 
-import {login} from './login_logic.mjs';
+import {login} from './login_http.mjs';
 const { ipcRenderer } = require('electron');
 const Store = require('electron-store')
 const store = new Store(); // initalize Store
