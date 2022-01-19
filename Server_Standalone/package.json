@@ -1,1 +1,41 @@
-{ "type": "module" }
+{
+    "dependencies": {
+      "ajax": "0.0.4",
+      "axios": "^0.23.0",
+      "bootstrap-icons": "^1.7.1",
+      "child-process": "^1.0.2",
+      "create-desktop-shortcuts": "^1.5.0",
+      "dompurify": "^2.3.3",
+      "electron-compile": "^6.4.4",
+      "electron-reload": "^2.0.0-alpha.1",
+      "electron-squirrel-startup": "^1.0.0",
+      "electron-store": "^8.0.1",
+      "fs": "^0.0.1-security",
+      "https": "^1.0.0",
+      "open-in-editor": "^2.2.0",
+      "perfect-scrollbar": "^1.5.3",
+      "source-map-support": "^0.5.20",
+      "svg.draggable.js": "^2.2.1",
+      "svg.js": "^2.6.3",
+      "typescript": "^4.5.0-dev.20211101",
+      "ws": "^8.3.0",
+      "xhr2": "^0.2.1"
+    },
+    "devDependencies": {
+      "babel-plugin-transform-async-to-generator": "^6.24.1",
+      "babel-preset-env": "^1.7.0",
+      "babel-preset-react": "^6.24.1",
+      "electron": "^16.0.4",
+      "electron-builder": "^22.14.5",
+      "electron-forge": "^5.2.4",
+      "electron-prebuilt-compile": "8.2.0",
+      "eslint": "^3.19.0",
+      "eslint-config-airbnb": "^15.1.0",
+      "eslint-plugin-import": "^2.25.3",
+      "eslint-plugin-jsx-a11y": "^5.1.1",
+      "eslint-plugin-react": "^7.27.1",
+      "websocket": "^1.0.34"
+    },
+    "type":"module"
+  }
+  
