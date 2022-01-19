@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "Encrypted Messaging App",
   "main": "src/index.js",
+  "type":"module",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
