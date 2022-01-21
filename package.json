@@ -59,13 +59,11 @@
     }
   },
   "dependencies": {
-    "ajax": "0.0.4",
     "axios": "^0.23.0",
     "body-parser": "^1.19.1",
     "bootstrap-icons": "^1.7.1",
-    "child-process": "^1.0.2",
     "cookie-parser": "^1.4.6",
-    "create-desktop-shortcuts": "^1.5.0",
+    "create-desktop-shortcuts": "^1.6.0",
     "dompurify": "^2.3.3",
     "dotenv": "^14.2.0",
     "electron-compile": "^6.4.4",
@@ -74,8 +72,6 @@
     "electron-store": "^8.0.1",
     "express": "^4.17.2",
     "fs": "^0.0.1-security",
-    "https": "^1.0.0",
-    "mongo-sync": "^2.0.1",
     "mongodb": "^4.3.1",
     "multer": "^1.4.4",
     "open-in-editor": "^2.2.0",
@@ -83,9 +79,7 @@
     "source-map-support": "^0.5.20",
     "svg.draggable.js": "^2.2.1",
     "svg.js": "^2.6.3",
-    "typescript": "^4.5.0-dev.20211101",
-    "ws": "^8.3.0",
-    "xhr2": "^0.2.1"
+    "typescript": "^4.5.0-dev.20211101"
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
@@ -99,8 +93,7 @@
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.27.1",
-    "websocket": "^1.0.34"
+    "eslint-plugin-react": "^7.27.1"
   },
   "build": {
     "asar": false,

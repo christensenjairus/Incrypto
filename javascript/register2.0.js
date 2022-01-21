@@ -1,6 +1,6 @@
 // CONTAINS DOM MANIPULATION FOR REGISTER PAGE
 
-import {register} from './chat_http.mjs';
+import {register} from '../javascript/chat_http.js';
 const { ipcRenderer } = require('electron');
 const Store = require('electron-store');
 const store = new Store(); // initalize Store
@@ -30,28 +30,28 @@ username = document.getElementById("username");
 username.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
         event.preventDefault();
-        document.getElementById("register").click();
+        document.getElementById("submit").click();
     }
 });
 var password = document.getElementById("password");
 password.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
         event.preventDefault();
-        document.getElementById("register").click();
+        document.getElementById("submit").click();
     }
 });
 var password2 = document.getElementById("password2");
 password2.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
         event.preventDefault();
-        document.getElementById("register").click();
+        document.getElementById("submit").click();
     }
 });
 var serverName = document.getElementById("serverName");
 serverName.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
         event.preventDefault();
-        document.getElementById("register").click();
+        document.getElementById("submit").click();
     }
 });
 username.focus();

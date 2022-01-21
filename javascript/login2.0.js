@@ -1,6 +1,6 @@
 // CONTAINS DOM MANIPULATION FOR LOGIN PAGE
 
-import {login} from './chat_http.mjs';
+import {login} from '../javascript/chat_http.js';
 const { ipcRenderer } = require('electron');
 const Store = require('electron-store')
 const store = new Store(); // initalize Store

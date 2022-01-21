@@ -6,3 +6,4 @@ node_modules
 dist
 my_packages
 .env
+server.log

@@ -59,7 +59,7 @@ app.post('/api/message/new', async function(req, res) {
 
 app.post('/api/color', async function(req, res) {
 	var result = await logic.changeChatColor(req.body)
-	if (result == true) {
+	if (result != false) {
 		res.send("Recieved");
 	}
 	else {

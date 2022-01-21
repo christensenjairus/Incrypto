@@ -32,10 +32,10 @@ async function login(chunk) {
 async function register(chunk) {
 	var key = createGuid();
 	chunk.key = key;
-	chunk.color = "blue"
+	chunk.color = "#0000FF"
 	if (await createUser(chunk)) {
 		logEvent("Successful registration for username: '" + chunk.username + "'")
-		return { type:'AuthResponse', color:"blue", result: "success", key:key };
+		return { type:'AuthResponse', color:"#0000FF", result: "success", key:key };
 	}
 	else {
 		logEvent("Registration attempt made for username: '" + chunk.username + "' who already exists")
@@ -72,17 +72,18 @@ async function changeChatColor(chunk) {
 	var user = await getUser(chunk);
 	if (user != null) {
 		user.color = chunk.color;
-		if (updateUser(user)) {
+		if (await updateUser(user)) {
 			logEvent("User color change for username: '" + chunk.username + "' to color: '" + chunk.color + "'");
-			var result = changeColorOnAllChats(chunk)
-			if (result != false) {
-				logEvent("Chat colors changed for username: '" + chunk.username + "' to color: '" + chunk.color + "'");
-				return true;
-			}
-			else {
-				logEvent("ERROR: Failed chat colors change for username: '" + chunk.username + "' to color: '" + chunk.color + "'");
-				return false;
-			}
+			// var result = await changeColorOnAllChats(chunk)
+			// if (result != false) {
+			// 	logEvent("Chat colors changed for username: '" + chunk.username + "' to color: '" + chunk.color + "'");
+			// 	return true;
+			// }
+			// else {
+			// 	logEvent("ERROR: Failed chat colors change for username: '" + chunk.username + "' to color: '" + chunk.color + "'");
+			// 	return false;
+			// }
+			return true;
 		}
 	}
 	logEvent("ERROR: Color change failed for username: '" + chunk.username + "' and color: '" + chunk.color + "'")
@@ -124,22 +125,22 @@ var _connection;
 var _db;
 
 const closeConnection = () => {
-  _connection.close();
+	_connection.close();
 }
 
 /**
- * @returns Promise<Db> mongo Db instance
- */
+* @returns Promise<Db> mongo Db instance
+*/
 const getDbConnection = async () => {
-  if (_db) {
-    return _db;
-  }
-  logEvent('Connecting to MongoDB...');
-  const mongoClient = new MongoClient(process.env.CONN_STRING, { useNewUrlParser: true });
-  _connection = await mongoClient.connect();
-  _db = _connection.db(process.env.DATABASE_NAME);
-  logEvent("Connected to MongoDB");
-  return _db;
+	if (_db) {
+		return _db;
+	}
+	logEvent('Connecting to MongoDB...');
+	const mongoClient = new MongoClient(process.env.CONN_STRING, { useNewUrlParser: true });
+	_connection = await mongoClient.connect();
+	_db = _connection.db(process.env.DATABASE_NAME);
+	logEvent("Connected to MongoDB");
+	return _db;
 }
 
 async function saveMsgToMongo(chatRoomName, obj) {
@@ -188,14 +189,16 @@ async function updateUser(chunk) {
 	return await _db.collection("Users").findOneAndReplace({username: chunk.username}, chunk)
 }
 
-async function changeColorOnAllChats(chunk) {
-	_db = await getDbConnection();
-	var result = await _db.collection(chunk.chatRoomName).find({author: chunk.username}).forEach(async (chat, index) => {
-		chat.color = chunk.color
-		return await _db.collection(chunk.chatRoomName).findOneAndReplace({_id: chat._id}, chat)
-	});
-	return result;
-}
+// async function changeColorOnAllChats(chunk) {
+// 	_db = await getDbConnection();
+// 	var cursor = await _db.collection(chunk.chatRoomName).find({username: chunk.username});
+// 	while (await cursor.hasNext()) {
+// 		const chat = await cursor.next();
+// 		chat.color = chunk.color
+// 		await _db.collection(chunk.chatRoomName).findOneAndReplace({_id: chat._id}, chat)
+// 	}
+// 	return result;
+// }
 
 exports.getDbConnection = getDbConnection;
 exports.closeConnection = closeConnection;

@@ -128,3 +128,15 @@ export function sendMessage(username, encryptedUsername, msg, color, encryption,
         return false;
     }
 }
+
+export async function changeColor(username, color, serverName) {
+    try {
+        return axios.post('http://' + serverName + "/api/color", {
+            username: username,
+            color: color,
+        })
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}

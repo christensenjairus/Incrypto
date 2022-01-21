@@ -320,7 +320,7 @@ function openEncryptionFileForEditing() {
         editor: codeEditor
     });
     try {
-        editor.open('./javascript/Encryption.mjs:52:4').then(function() {
+        editor.open('./javascript/Encryption.js:52:4').then(function() {
             // console.log('Success!');
         }, function(err) {
             // console.error('Something went wrong: ' + err);
@@ -474,13 +474,14 @@ ipcMain.handle('getEncryptionType', (event) => {
 })
 
 ipcMain.handle('getColor', (event) => {
+    console.log("giving color: "+myColor)
     return myColor;
 })
 
 ipcMain.handle('setColor', (event, color) => {
     // myName = name;
     myColor = color;
-    // console.log("color saved in main.js file: " + color)
+    console.log("color saved in main.js file: " + color)
     return true;
 })
 

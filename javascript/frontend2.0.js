@@ -2,7 +2,7 @@
 SCRIPT FOR CONTROLLING CHAT CLIENT AND INDEX.HTML
 */
 
-import {getNewMessages, getAllMessages, sendMessage} from "./chat_http.mjs"
+import {getNewMessages, getAllMessages, sendMessage, changeColor} from "./chat_http.js"
 const { ipcRenderer } = require('electron');
 const Store = require('electron-store');
 const store = new Store();
@@ -28,6 +28,7 @@ var sessionID = await store.get(myName + "_key", "");
 console.log("SessionID: " + sessionID)
 
 var chatRoom = [];
+var chatRoomName = "ChatRoom1"
 
 let EncryptionFunction = store.get("encryptionType", Encryption_Types[0]);  // TODO: switch this back to default Encryption
 //default encryption type is first in file
@@ -161,7 +162,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     // };
     
     async function refreshChat(timeOfLastFetch, chatRoomName, isStarting) {
-        getNewMessages(timeOfLastFetch, chatRoomName, serverName).then(response => {
+        getNewMessages(timeOfLastFetch, chatRoomName, serverName).then(async response => {
             store.set("timeOfLastFetch_" + sessionID, (new Date()).getTime());
             var messages = response.data;
             let newJSON = [];
@@ -170,16 +171,20 @@ $(function() { // this syntax means it's a function that will be run once once d
                 if (!isStarting && Decrypt(messages[i].author, messages[i].encryption) != myName) {
                     showNotification(Decrypt(messages[i].author, messages[i].encryption), Decrypt(messages[i].text, messages[i].encryption));
                 }
+                // if (Decrypt(messages[i].author, messages[i].encryption) == myName) myColor = messages[i].color;
             }
-            appendChat(newJSON)
-            mystatus.text(myName).css('color', myColor);
+            await appendChat(newJSON)
+            if (myColor) mystatus.text(myName).css('color', myColor);
+            else mystatus.text(myName).css('color', "#0000FF");
             input.focus();
+            scroll();
         })
     }
-    refreshChat("", "ChatRoom1", true)
+    refreshChat("", chatRoomName, true)
     // refresh every 5 seconds
     setInterval(function() {
-        refreshChat(store.get("timeOfLastFetch_" + sessionID, ""), "ChatRoom1", false)
+        refreshChat(store.get("timeOfLastFetch_" + sessionID, ""), chatRoomName, false)
+        scroll();
     }, 5000)
     
     function appendChat(newJSON) {
@@ -191,17 +196,21 @@ $(function() { // this syntax means it's a function that will be run once once d
             dtOfLastMessage = newJSON[i].time;
         }
         
-        var beforeAdding = chatRoom.length;
         if (chatRoom.length > 1) chatRoom.concat(newJSON);
         else chatRoom = newJSON;
         newJSON = [];
+    }
 
-        
-        
+    function scroll() {
         var div = $('#chatbox');
         div.animate({
             scrollTop: div[0].scrollHeight
         }, 100);
+    }
+
+    function jump() {
+        var div = $('#chatbox');
+        div.scrollTop = div.scrollHeight;
     }
     
     /*
@@ -246,7 +255,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     /**
     * Send message when user presses Enter key
     */
-    input.keydown(function(e) {
+    input.keydown(async function(e) {
         if (e.keyCode === 13) {
             let msg = $(this).val();
             if (!msg) {
@@ -268,10 +277,11 @@ $(function() { // this syntax means it's a function that will be run once once d
             msg = Encrypt(msg);
             if (msg == "") return; // if encryption fails
             
-            sendMessage(myName, Encrypt(myName), msg, myColor, EncryptionFunction, sessionID, "ChatRoom1", serverName).then(response => {
+            sendMessage(myName, Encrypt(myName), msg, myColor, EncryptionFunction, sessionID, chatRoomName, serverName).then(async response => {
                 console.log(response.data)
                 if (response.data == 'Recieved') {
-                    refreshChat(store.get("timeOfLastFetch_" + sessionID, ""), "ChatRoom1", false)
+                    await refreshChat(store.get("timeOfLastFetch_" + sessionID, ""), chatRoomName, false)
+                    scroll();
                     savedInputText = "";
                     document.getElementById('input').value = "";
                     ipcRenderer.invoke('setBadgeCnt', 0);
@@ -285,70 +295,26 @@ $(function() { // this syntax means it's a function that will be run once once d
     });
     
     
-    //     /**
-    //     * This method is optional. If the server wasn't able to
-    //     * respond to the in 5 seconds then show some error message
-    //     * to notify the user that something is wrong.
-    //     */
-    //     historyIntervalID = setInterval(function() {
-    //         if (connection.readyState !== 1) {
-    //             ipcRenderer.invoke('login');
-    //         }
-    //         else {
-    //             // input.removeAttr('disabled')
-    //             let message = {"type":"historyRequest", "user":myName, "color":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
-    //             send(connection, JSON.stringify(message)); // reget the history every 3 seconds
-    //         }
-    //     }, 30000); // grab history every 30 seconds
-    //     pingIntervalID = setInterval(function() {
-    //         let message = {type:"ping"}
-    //         send(connection, JSON.stringify(message));
-    //         // console.log("ping sent")
-    //         pingCount = pingCount + 1;
-    //             if (pingCount > 55 && pongCount < 55) {
-    //                 if (document.getElementById('input').value != "Can\'t communicate with the WebSocket server.") {
-    //                     savedInputText = document.getElementById('input').value
-    //                     // console.log("input saved")
-    //                 }
-    //                 document.getElementById('input').value = ("Can\'t communicate with the WebSocket server.")
-    //                 input.attr('disabled', 'disabled')
-    //             }
-    //             else {
-    //                 input.removeAttr('disabled')
-    //                 if (document.getElementById('input').value === "Can\'t communicate with the WebSocket server.") {
-    //                     document.getElementById('input').value = savedInputText;
-    //                     // console.log("input restored");
-    //                 }
-    //                 input.focus();
-    //                 mystatus.text(myName).css('color', myColor);
-    //             }
-    //             return;
-    //     }, 100)
-    
-    
-    
-    
-    
-    document.getElementById('status').addEventListener('click', () => {
-        var newColor = getRandomColor(); // generate random color
-        myColor = newColor
-        store.set(myName + "_Color", newColor);
+    document.getElementById('status').addEventListener('click', async () => {
+        // console.log("Color was " + myColor)
+        myColor = getRandomColor(); // generate random color
+        // console.log("Color is now " + myColor)
+        mystatus.text(myName).css('color', myColor);
         ipcRenderer.invoke('setColor', myColor);
-        mystatus.css('color', myColor)
-        let allMyEncNames = [];
-        for (let i = 0; i < Encryption_Types.length; ++i) {
-            allMyEncNames[i]=EncryptOther(myName, Encryption_Types[i]);
-        }
-        // create array of encrypted names using all encryption algorithms
-        let allNamesJSON = JSON.stringify(allMyEncNames);
-        // json stringify that array
-        console.log(allMyEncNames);
-        // add that value to the message
-        let message = {"type":"colorChange", "user": myName, "allNames":allNamesJSON, "userColor":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
-        send(connection, JSON.stringify(message));
-        // ipcRenderer.invoke('setColor', myColor);
-        
-        // if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
+        var result = changeColor(myName, myColor, serverName);
+
+        // if (result != false) {
+        //     // await store.set(myName + "_Color", myColor);
+        //     // await ipcRenderer.invoke('setColor', myColor);
+        //     // mystatus.css('color', myColor)
+        //     content.innerHTML = "";
+        //     chatRoom = [];
+        //     // await refreshChat("", chatRoomName, true);
+        //     jump();
+        // }
+        // else {
+        //     alert("There's been an issue processing your color change request.")
+        // }
     })
     
     
@@ -396,13 +362,12 @@ function changeE_Type(EncryptionType) {
     ipcRenderer.invoke('changeMessageE_Type', EncryptionType);
 }
 
-function setRandomColor() {
-    $("#colorpad").css("background-color", getRandomColor());
-}
+// function setRandomColor() {
+//     $("#colorpad").css("background-color", getRandomColor());
+// }
 
 function showNotification(author, text) {
     const NOTIFICATION_TITLE = author
-    const NOTIFICATION_BODY = text
     const notification = {
         title: author,
         body: text,
