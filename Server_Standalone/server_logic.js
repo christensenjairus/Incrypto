@@ -1,101 +1,92 @@
 const Store = require('electron-store');
 const store = new Store(); // initalize Store
 var fs = require('fs');
+const { toArray, result } = require('lodash');
+const { exit } = require('process');
 const DEBUG = true;
-
-var history = [];
-var myChat = "./chat.json"
-if (fs.existsSync(myChat)) {
-	restoreFromFile();
-}
-var clients = [];
-
-function checkLoginCreds(chunk) {
-	let dataIn = JSON.parse(chunk);
-	if (store.get("username_" + dataIn.username, "") == "") { // username does not exist
-		logEvent("Login attempt made for username:'" + dataIn.username + "' who does not exist")
-		return { type:'AuthResponse', result: "failure", key:"incorrect_credentials" };
-	}
-	// logOutOthers(connection, username);
-	if (dataIn.password == store.get("passwordHash_" + dataIn.username, "")) {
-		logEvent("Successful login by username:'" + dataIn.username + "'")
-		var key = createGuid();
-		store.set(dataIn.username + "_key", key);
-		userColor = store.get(dataIn.username + "_Color", "blue");
-		return { type:'AuthResponse', color:userColor, result: "success", key:key };
-	}
-	else{
-		logEvent("Login attempt made for " + dataIn.username + " with an incorrect password")
-		return { type:'AuthResponse', result: "failure", key:"incorrect_credentials" };
-	}	
-}
-
-function checkRegistrationCreds(chunk) {
-	let dataIn = JSON.parse(chunk);
-	if (store.get("username_" + dataIn.username, "") != "") { // username already exists
-		logEvent("Registration attempt made for username:'" + dataIn.username + "' who already exists")
-		return { type:'AuthResponse', result: "failure", key:"username_exists" };
-	}
-	else {
-		logEvent("Successful registration for username:'" + dataIn.username+"'")
-		store.set("username_" + dataIn.username, dataIn.username);
-		store.set("passwordHash_" + dataIn.username, dataIn.password);
-		var key = createGuid();  
-		store.set(dataIn.username + "_key", key);
-		userColor = store.get(dataIn.username + "_Color", "blue");
-		return { type:'AuthResponse', color:userColor, result: "success", key:key };
-	}
-}
 
 function ping() {
 	return { type:'Pong', result: "success" };
 }
 
-function receiveChatMessage(chunk) {
-	let dataIn = JSON.parse(chunk);
-	store.set(dataIn.username + "_Color", dataIn.userColor);
-	if (DEBUG) logEvent("Username:'" + dataIn.userEnc + "' sent '" + dataIn.msg + "' with '" + dataIn.encryption + "' encryption")
-	else logEvent("Message recieved from username:'" + dataIn.userEnc + "'");
+async function login(chunk) {
+	var user = await getUser(chunk)
+	if (user != null) {
+		if (user.password == chunk.password) {
+			var key = createGuid();
+			user.key = key;
+			if (updateUser(user)) {
+				logEvent("Successful login by username: '" + chunk.username + "'")
+				return { type:'AuthResponse', color:user.color, result: "success", key:key };
+			}
+			else {
+				logEvent("Server error logging in username: '" + chunk.username + "'")
+				return { type:'AuthResponse', result: "failure", key:"server_error" };
+			}
+		}
+	}
+	logEvent("Login attempt made for username: '" + chunk.username + "' with an incorrect password")
+	return  { type:'AuthResponse', result: "failure", key:"incorrect_credentials" };
+}
+
+async function register(chunk) {
+	var key = createGuid();
+	chunk.key = key;
+	chunk.color = "blue"
+	if (await createUser(chunk)) {
+		logEvent("Successful registration for username: '" + chunk.username + "'")
+		return { type:'AuthResponse', color:"blue", result: "success", key:key };
+	}
+	else {
+		logEvent("Registration attempt made for username: '" + chunk.username + "' who already exists")
+		return { type:'AuthResponse', result: "failure", key:"username_exists" };
+	}
+}
+
+async function receiveChatMessage(chunk) {
+	// store.set(chunk.username + "_Color", chunk.color);
+	if (DEBUG) logEvent("Username:'" + chunk.username + "' sent '" + chunk.msg + "' with '" + chunk.encryption + "' encryption")
+	else logEvent("Message recieved from username: '" + chunk.username + "'");
 	var obj = {
-		time: dataIn.time,
-		text: htmlEntities(dataIn.msg),
-		author: dataIn.userEnc,
-		color: dataIn.userColor,
-		encryption: dataIn.encryption,
+		time: chunk.time,
+		text: replaceEscapeCharacters(chunk.msg),
+		author: chunk.encryptedUsername,
+		username: chunk.username,
+		color: chunk.color,
+		encryption: chunk.encryption,
 		guid: createGuid()
 	};
-	history.push[obj];
-	let secondToLastChatGuid = history[history.length - 1].guid;
-	saveToFile(obj);
-	// sendChatMessage(obj);
-	// TODO: need a way of seeing which messages haven't been sent to client yet.
-	return getNewMessages(JSON.stringify({ guidOfLastMessage: secondToLastChatGuid })); // after sending a message, we'll send the user back all the messages they don't have yet
+	return await saveMsgToMongo(chunk.chatRoomName, obj);
 }
 
-function sendChatMessage(messageObj) {
-	// todo: get all clients and send message to them
-	
+async function sendAllMessages(chunk) {
+	return getAllMessagesFromMongo(chunk.chatRoomName);
 }
 
-function getNewMessages(chunk) {
-	let dataIn = JSON.parse(chunk);
-	if (history.length > 0 && dataIn.guidOfLastMessage == history[history.length - 1].guid) {
-		return { type:'message', data:[] }; // send back nothing
-	}
-	let arrayToSend = [];
-	let foundLastMessage = false;
-	if (dataIn.guidOfLastMessage == "") foundLastMessage = true;
-	for (let i = 0; i < history.length; ++i) {
-		console.log("checking if " + history[i].guid  + "===" + dataIn.guidOfLastMessage)
-		if (history[i].guid == dataIn.guidOfLastMessage) {
-			foundLastMessage = true;
-			continue;
+async function sendNewMessages(chunk) {
+	return getNewMessagesFromMongo(chunk.timeOfLastFetch, chunk.chatRoomName);
+}
+
+async function changeChatColor(chunk) {
+	// change User 
+	var user = await getUser(chunk);
+	if (user != null) {
+		user.color = chunk.color;
+		if (updateUser(user)) {
+			logEvent("User color change for username: '" + chunk.username + "' to color: '" + chunk.color + "'");
+			var result = changeColorOnAllChats(chunk)
+			if (result != false) {
+				logEvent("Chat colors changed for username: '" + chunk.username + "' to color: '" + chunk.color + "'");
+				return true;
+			}
+			else {
+				logEvent("ERROR: Failed chat colors change for username: '" + chunk.username + "' to color: '" + chunk.color + "'");
+				return false;
+			}
 		}
-		if (foundLastMessage === true) {
-			arrayToSend.push(history[i])
-		}
 	}
-	return { type:'message', data: arrayToSend }
+	logEvent("ERROR: Color change failed for username: '" + chunk.username + "' and color: '" + chunk.color + "'")
+	return false;
 }
 
 function createGuid() {  
@@ -106,26 +97,6 @@ function createGuid() {
 	return _p8() + _p8(true) + _p8(true) + _p8();  
 }
 
-function restoreFromFile() {
-	fs.readFile('chat.json', function read(err, data) {
-		if (err) {
-			console.log(err);
-			return;
-		}
-		history = JSON.parse(data);
-	})
-}
-
-function saveToFile(obj) {
-	history.push(obj); // save messages
-	history = history.slice(-100);
-	fs.writeFile("chat.json", JSON.stringify(history), function(err) {
-		if (err) {
-			console.log(err);
-		}
-	});
-}
-
 function getFormattedDate() {
 	var date = new Date();
 	var str = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " +  date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
@@ -133,7 +104,6 @@ function getFormattedDate() {
 }
 
 function logEvent(dataToLog) {
-	// TODO: should create file to save this in!
 	dataToLog = getFormattedDate() + ": " + dataToLog;
 	fs.appendFile("server.log", dataToLog + "\n", function(err) {
 		if (err) { 
@@ -143,18 +113,97 @@ function logEvent(dataToLog) {
 	console.log(dataToLog);
 }
 
-
-function htmlEntities(str) {
+function replaceEscapeCharacters(str) {
 	return String(str).replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"');
 }
-var colors = ['purple', 'plum', 'orange', 'red', 'green', 'blue', 'magenta'];
-colors.sort(function(a,b) {
-	return Math.random() > 0.5;	
-});
 
-exports.checkLoginCreds = checkLoginCreds;
-exports.checkRegistrationCreds = checkRegistrationCreds;
+// MONGO DATABASE FUNCTIONS --------------------------------------------------------- 
+
+const MongoClient = require('mongodb').MongoClient;
+var _connection;
+var _db;
+
+const closeConnection = () => {
+  _connection.close();
+}
+
+/**
+ * @returns Promise<Db> mongo Db instance
+ */
+const getDbConnection = async () => {
+  if (_db) {
+    return _db;
+  }
+  logEvent('Connecting to MongoDB...');
+  const mongoClient = new MongoClient(process.env.CONN_STRING, { useNewUrlParser: true });
+  _connection = await mongoClient.connect();
+  _db = _connection.db(process.env.DATABASE_NAME);
+  logEvent("Connected to MongoDB");
+  return _db;
+}
+
+async function saveMsgToMongo(chatRoomName, obj) {
+	_db = await getDbConnection();
+	return await _db.collection(chatRoomName).insertOne(obj);
+}
+
+async function getAllMessagesFromMongo(chatRoomName) {
+	_db = await getDbConnection();
+	var data = await _db.collection(chatRoomName).find({}, {projection:{username: 0}}).toArray(); // usernames of messages are omitted so they're hidden from clients
+	// closeConnection();
+	return data;
+}
+
+async function getNewMessagesFromMongo(timeOfLastFetch, chatRoomName) {
+	_db = await getDbConnection();
+	var data = "";
+	if (timeOfLastFetch == "") {
+		data = await _db.collection(chatRoomName).find({}).toArray();
+	}
+	else {
+		data = await _db.collection(chatRoomName).find({ time: { $gt: timeOfLastFetch }}, {projection:{username: 0}}).toArray(); // usernames of messages are omitted so they're hidden from clients
+	}
+	// console.log(data)
+	return data;
+}
+
+async function createUser(chunk) {
+	_db = await getDbConnection();
+	var user = await getUser(chunk);
+	if (user == null) {
+		return await _db.collection("Users").insertOne(chunk);
+	}
+	else {
+		return false;
+	}
+}
+
+async function getUser(chunk) {
+	_db = await getDbConnection();
+	return await _db.collection("Users").findOne({username: chunk.username},{});
+}
+
+async function updateUser(chunk) {
+	_db = await getDbConnection();
+	return await _db.collection("Users").findOneAndReplace({username: chunk.username}, chunk)
+}
+
+async function changeColorOnAllChats(chunk) {
+	_db = await getDbConnection();
+	var result = await _db.collection(chunk.chatRoomName).find({author: chunk.username}).forEach(async (chat, index) => {
+		chat.color = chunk.color
+		return await _db.collection(chunk.chatRoomName).findOneAndReplace({_id: chat._id}, chat)
+	});
+	return result;
+}
+
+exports.getDbConnection = getDbConnection;
+exports.closeConnection = closeConnection;
+exports.login = login;
+exports.register = register;
 exports.logEvent = logEvent;
 exports.ping = ping;
 exports.receiveChatMessage = receiveChatMessage;
-exports.getNewMessages = getNewMessages;
+exports.sendAllMessages = sendAllMessages;
+exports.changeChatColor = changeChatColor;
+exports.sendNewMessages = sendNewMessages;

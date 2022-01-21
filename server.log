@@ -1,692 +1,741 @@
-2022-1-19 8:24:32: Registration attempt made for username:'line5' who already exists2022-1-19 8:24:48: Registration attempt made for username:'line5' who already exists2022-1-19 8:26:49: Server Started
-2022-1-19 8:28:8: Incrypto_Server was started on http://${host}:${port} with pid ${pid}
-2022-1-19 8:28:51: Incrypto_Server was started on http://${host}:${port} with pid ${pid}
-2022-1-19 8:29:17: Incrypto_Server was started on http://localhost:5050 with pid 17695
-2022-1-19 8:46:22: Incrypto Server was started on http://localhost:5050 with pid 18265
-2022-1-19 8:46:52: Incrypto Server was started on http://localhost:5050 with pid 18313
-2022-1-19 8:58:56: Incrypto Server was started on http://localhost:5050 with pid 18775
-2022-1-19 8:59:17: Incrypto Server was started on http://localhost:5050 with pid 18829
-2022-1-19 8:59:18: Username:'undefined sent 'hehe'
-2022-1-19 8:59:35: Username:'undefined sent 'hehe'
-2022-1-19 8:59:40: Incrypto Server was started on http://localhost:5050 with pid 18913
-2022-1-19 8:59:42: Username:'undefined sent 'hehe'
-2022-1-19 8:59:54: Incrypto Server was started on http://localhost:5050 with pid 18970
-2022-1-19 8:59:55: Username:'line6 sent 'hehe'
-2022-1-19 9:0:34: Incrypto Server was started on http://localhost:5050 with pid 19054
-2022-1-19 9:0:36: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 9:1:49: Incrypto Server was started on http://localhost:5050 with pid 19191
-2022-1-19 9:2:6: Incrypto Server was started on http://localhost:5050 with pid 19251
-2022-1-19 9:2:8: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 9:2:17: Incrypto Server was started on http://localhost:5050 with pid 19311
-2022-1-19 9:2:19: Message recieved from username:'line6'
-2022-1-19 9:17:45: Incrypto Server was started on http://localhost:5050 with pid 19447
-2022-1-19 9:17:46: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 9:22:11: Incrypto Server was started on http://localhost:5050 with pid 19655
-2022-1-19 9:22:13: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 9:32:39: Incrypto Server was started on http://localhost:5050 with pid 20201
-2022-1-19 9:33:36: Incrypto Server was started on http://localhost:5050 with pid 20301
-2022-1-19 9:33:55: Incrypto Server was started on http://localhost:5050 with pid 20361
-2022-1-19 9:36:38: Incrypto Server was started on http://localhost:5050 with pid 20532
-2022-1-19 9:37:7: Incrypto Server was started on http://localhost:5050 with pid 20604
-2022-1-19 9:38:10: Incrypto Server was started on http://localhost:5050 with pid 20712
-2022-1-19 9:39:18: Incrypto Server was started on http://localhost:5050 with pid 20790
-2022-1-19 9:39:28: Incrypto Server was started on http://localhost:5050 with pid 20836
-2022-1-19 9:39:47: Incrypto Server was started on http://localhost:5050 with pid 20918
-2022-1-19 9:40:32: Incrypto Server was started on http://localhost:5050 with pid 21008
-2022-1-19 9:40:34: Nothing to send back
-2022-1-19 9:41:0: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 9:41:7: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 9:42:16: Incrypto Server was started on http://localhost:5050 with pid 21197
-2022-1-19 9:42:32: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 9:43:18: Incrypto Server was started on http://localhost:5050 with pid 21309
-2022-1-19 9:43:19: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 9:52:59: Incrypto Server was started on http://localhost:5050 with pid 21744
-2022-1-19 9:54:18: Successful login by username:'line6'
-2022-1-19 9:56:22: Incrypto Server was started on http://localhost:5050 with pid 23782
-2022-1-19 9:56:28: Successful login by username:'line6'
-2022-1-19 9:58:4: Successful login by username:'line6'
-2022-1-19 9:59:22: Successful login by username:'line6'
-2022-1-19 10:0:58: Successful login by username:'line6'
-2022-1-19 10:1:29: Successful login by username:'line6'
-2022-1-19 10:2:20: Successful login by username:'line6'
-2022-1-19 10:2:49: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 10:3:15: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 10:3:27: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 10:3:27: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 10:4:16: Incrypto Server was started on http://localhost:5050 with pid 28517
-2022-1-19 10:4:35: Successful login by username:'line6'
-2022-1-19 10:5:29: Successful login by username:'line6'
-2022-1-19 10:6:37: Successful login by username:'line6'
-2022-1-19 10:7:5: Incrypto Server was started on http://localhost:5050 with pid 31349
-2022-1-19 10:7:20: Successful login by username:'line6'
-2022-1-19 10:8:45: Successful login by username:'line6'
-2022-1-19 10:9:24: Successful login by username:'line6'
-2022-1-19 10:11:30: Successful login by username:'line6'
-2022-1-19 10:12:53: Successful login by username:'line6'
-2022-1-19 10:13:28: Successful login by username:'line6'
-2022-1-19 10:14:3: Successful login by username:'line6'
-2022-1-19 10:14:33: Successful login by username:'line6'
-2022-1-19 10:16:0: Successful login by username:'line6'
-2022-1-19 10:16:22: Successful login by username:'line6'
-2022-1-19 10:17:25: Successful login by username:'line6'
-2022-1-19 10:18:20: Successful login by username:'line6'
-2022-1-19 10:19:15: Successful login by username:'line6'
-2022-1-19 10:19:56: Successful login by username:'line6'
-2022-1-19 10:21:43: Successful login by username:'line6'
-2022-1-19 10:22:18: Successful login by username:'line6'
-2022-1-19 10:22:51: Successful login by username:'line6'
-2022-1-19 10:24:10: Successful login by username:'line6'
-2022-1-19 10:25:29: Incrypto Server was started on http://localhost:5050 with pid 16035
-2022-1-19 10:26:58: Successful login by username:'line6'
-2022-1-19 10:27:49: Incrypto Server was started on http://localhost:5050 with pid 17349
-2022-1-19 10:28:9: Successful login by username:'line6'
-2022-1-19 10:29:43: Successful login by username:'line6'
-2022-1-19 10:31:4: Successful login by username:'line6'
-2022-1-19 10:32:55: Successful login by username:'line6'
-2022-1-19 10:35:57: Successful login by username:'line6'
-2022-1-19 10:39:33: Successful login by username:'line6'
-2022-1-19 10:40:28: Successful login by username:'line6'
-2022-1-19 10:41:23: Successful login by username:'line6'
-2022-1-19 10:41:52: Successful login by username:'line6'
-2022-1-19 10:42:46: Successful login by username:'line6'
-2022-1-19 10:46:24: Successful login by username:'line6'
-2022-1-19 10:47:18: Successful login by username:'line6'
-2022-1-19 10:48:2: Successful login by username:'line6'
-2022-1-19 10:48:41: Successful login by username:'line6'
-2022-1-19 12:42:34: Successful login by username:'line6'
-2022-1-19 12:52:28: Successful login by username:'line6'
-2022-1-19 12:53:42: Successful login by username:'line6'
-2022-1-19 12:54:31: Successful login by username:'line6'
-2022-1-19 12:57:20: Registration attempt made for username:'line5' who already exists
-2022-1-19 12:57:32: Successful registration for username:'line7'
-2022-1-19 13:1:22: Successful login by username:'line6'
-2022-1-19 13:1:57: Successful login by username:'line6'
-2022-1-19 13:4:13: Successful login by username:'line6'
-2022-1-19 13:4:18: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 13:7:6: Successful login by username:'line6'
-2022-1-19 13:7:12: Username:'006c0069006e00650036' sent '00680065006c006c006f' with 'Default_Encryption' encryption
-2022-1-19 13:8:0: Successful login by username:'line6'
-2022-1-19 13:8:7: Username:'006c0069006e00650036' sent '0068006500790021' with 'Default_Encryption' encryption
-2022-1-19 13:8:37: Username:'006c0069006e00650036' sent '0068006500790021' with 'Default_Encryption' encryption
-2022-1-19 13:9:18: Username:'006c0069006e00650036' sent '00680065006c006c006f' with 'Default_Encryption' encryption
-2022-1-19 13:10:42: Successful login by username:'line6'
-2022-1-19 13:11:34: Successful login by username:'line6'
-2022-1-19 13:11:40: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:12:15: Successful login by username:'line6'
-2022-1-19 13:12:19: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:12:22: Username:'006c0069006e00650036' sent '00740065007300740074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:13:34: Successful login by username:'line6'
-2022-1-19 13:13:40: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:14:18: Successful login by username:'line6'
-2022-1-19 13:14:22: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:15:2: Successful login by username:'line6'
-2022-1-19 13:15:7: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:16:18: Successful login by username:'line6'
-2022-1-19 13:17:9: Successful login by username:'line6'
-2022-1-19 13:17:22: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:17:33: Username:'006c0069006e00650036' sent '0068006500680065' with 'Default_Encryption' encryption
-2022-1-19 13:17:44: Username:'006c0069006e00650036' sent '0068006500680065' with 'Default_Encryption' encryption
-2022-1-19 13:19:0: Successful login by username:'line6'
-2022-1-19 13:19:6: Username:'006c0069006e00650036' sent '00740065007300740069006e0067' with 'Default_Encryption' encryption
-2022-1-19 13:20:25: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:20:27: Username:'006c0069006e00650036' sent '007400650073' with 'Default_Encryption' encryption
-2022-1-19 13:20:31: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:20:35: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 13:21:6: Successful login by username:'line6'
-2022-1-19 13:21:12: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 13:21:57: Successful login by username:'line6'
-2022-1-19 13:22:1: Username:'006c0069006e00650036' sent '0074' with 'Default_Encryption' encryption
-2022-1-19 13:22:42: Successful login by username:'line6'
-2022-1-19 13:22:47: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:27:0: Successful login by username:'line6'
-2022-1-19 13:27:5: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:27:8: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:28:10: Successful login by username:'line6'
-2022-1-19 13:28:16: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:29:41: Successful login by username:'line6'
-2022-1-19 13:29:46: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 13:30:54: Successful login by username:'line6'
-2022-1-19 13:31:3: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 13:32:4: Successful login by username:'line6'
-2022-1-19 13:32:35: Successful login by username:'line6'
-2022-1-19 13:32:40: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 13:32:43: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 13:33:35: Successful login by username:'line6'
-2022-1-19 13:33:40: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:33:44: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:33:51: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:33:57: Username:'006c0069006e00650036' sent '00790069007000650065' with 'Default_Encryption' encryption
-2022-1-19 13:35:29: Successful login by username:'line6'
-2022-1-19 13:35:34: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:35:39: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:36:42: Successful login by username:'line6'
-2022-1-19 13:36:49: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:38:44: Successful login by username:'line6'
-2022-1-19 13:38:50: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:39:54: Successful login by username:'line6'
-2022-1-19 13:39:59: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 13:40:43: Successful login by username:'line6'
-2022-1-19 13:40:47: Username:'006c0069006e00650036' sent '0074' with 'Default_Encryption' encryption
-2022-1-19 13:41:20: Successful login by username:'line6'
-2022-1-19 13:41:25: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 13:41:30: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 13:47:30: Successful login by username:'line6'
-2022-1-19 13:47:35: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:47:43: Username:'006c0069006e00650036' sent '007700680079003f' with 'Default_Encryption' encryption
-2022-1-19 13:47:50: Username:'006c0069006e00650036' sent '0068006500680065' with 'Default_Encryption' encryption
-2022-1-19 13:49:37: Successful login by username:'line6'
-2022-1-19 13:49:45: Username:'006c0069006e00650036' sent '0063006f006f006c' with 'Default_Encryption' encryption
-2022-1-19 13:50:24: Successful login by username:'line6'
-2022-1-19 13:50:29: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:51:7: Successful login by username:'line6'
-2022-1-19 13:51:15: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 13:53:20: Successful login by username:'line6'
-2022-1-19 13:53:28: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 13:54:4: Successful login by username:'line6'
-2022-1-19 13:54:19: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 13:55:21: Successful login by username:'line6'
-2022-1-19 13:55:27: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 13:55:29: Username:'006c0069006e00650036' sent '00660066' with 'Default_Encryption' encryption
-2022-1-19 13:55:37: Username:'006c0069006e00650036' sent '0061007300640066' with 'Default_Encryption' encryption
-2022-1-19 13:56:39: Successful login by username:'line6'
-2022-1-19 13:56:44: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 13:56:46: Username:'006c0069006e00650036' sent '00660066' with 'Default_Encryption' encryption
-2022-1-19 13:57:1: Successful login by username:'line6'
-2022-1-19 13:57:4: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 13:57:6: Username:'006c0069006e00650036' sent '00660066' with 'Default_Encryption' encryption
-2022-1-19 14:2:49: Successful login by username:'line6'
-2022-1-19 14:5:12: Successful login by username:'line6'
-2022-1-19 14:5:33: Successful login by username:'line6'
-2022-1-19 14:5:41: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:6:14: Successful login by username:'line6'
-2022-1-19 14:8:42: Successful login by username:'line6'
-2022-1-19 14:9:47: Successful login by username:'line6'
-2022-1-19 14:11:12: Successful login by username:'line6'
-2022-1-19 14:12:3: Successful login by username:'line6'
-2022-1-19 14:13:24: Incrypto Server was started on http://localhost:5050 with pid 17401
-2022-1-19 14:13:39: Successful login by username:'line6'
-2022-1-19 14:14:44: Incrypto Server was started on http://localhost:5050 with pid 18395
-2022-1-19 14:15:7: Incrypto Server was started on http://localhost:5050 with pid 18724
-2022-1-19 14:15:14: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:15:24: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:17:2: Successful login by username:'line6'
-2022-1-19 14:17:20: Username:'006c0069006e00650036' sent '00770065006900720064' with 'Default_Encryption' encryption
-2022-1-19 14:17:29: Username:'006c0069006e00650036' sent '00770065006900720064' with 'Default_Encryption' encryption
-2022-1-19 14:17:39: Username:'006c0069006e00650036' sent '00770065006900720064' with 'Default_Encryption' encryption
-2022-1-19 14:18:38: Successful login by username:'line6'
-2022-1-19 14:18:44: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 14:19:41: Successful login by username:'line6'
-2022-1-19 14:19:48: Username:'006c0069006e00650036' sent '0073007400720061006e00670065' with 'Default_Encryption' encryption
-2022-1-19 14:19:56: Username:'006c0069006e00650036' sent '0073007400720061006e00670065' with 'Default_Encryption' encryption
-2022-1-19 14:20:3: Username:'006c0069006e00650036' sent '0073007400720061006e006700650072' with 'Default_Encryption' encryption
-2022-1-19 14:20:31: Successful login by username:'line6'
-2022-1-19 14:20:35: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:37: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:37: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:37: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:38: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:38: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:38: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:38: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:38: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:38: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:39: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:39: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:39: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:39: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:39: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:39: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:39: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:40: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:40: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:40: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:40: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:40: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:40: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:40: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:40: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:40: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:41: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:41: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:41: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:41: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:41: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:41: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:41: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:43: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:44: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:45: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:46: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:20:47: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:22:17: Successful login by username:'line6'
-2022-1-19 14:22:21: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:22: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:22: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:24: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:24: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:24: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:24: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:24: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:24: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:24: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:24: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:24: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:25: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:25: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:26: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:26: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:26: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:26: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:26: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:26: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:22:27: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 14:23:40: Successful login by username:'line6'
-2022-1-19 14:23:44: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:45: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:45: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:45: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:45: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:45: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:45: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:45: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:45: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:45: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:45: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:45: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:46: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:46: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:46: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:46: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:46: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:46: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:46: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:23:46: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:25:10: Successful login by username:'line6'
-2022-1-19 14:25:13: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:25:13: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:25:14: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:25:14: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:25:14: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:25:14: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:25:14: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:25:14: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:25:14: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:25:14: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:25:14: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:25:14: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:25:14: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:25:14: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:25:15: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:25:16: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:25:17: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:25:21: Username:'006c0069006e00650036' sent '00680065007900200068006500790020006800650079' with 'Default_Encryption' encryption
-2022-1-19 14:26:14: Successful login by username:'line6'
-2022-1-19 14:26:17: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:18: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:18: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:18: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:18: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:18: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:18: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:18: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:18: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:18: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:18: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:18: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:18: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:18: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:18: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:18: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:19: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:20: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:20: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:48: Successful login by username:'line6'
-2022-1-19 14:26:51: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:52: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:52: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:52: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:52: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:52: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:52: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:52: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:52: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:52: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:52: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:52: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:52: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:52: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:52: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:52: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:52: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:53: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:26:53: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:27:23: Successful login by username:'line6'
-2022-1-19 14:27:26: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:27:27: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:27:27: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:27:27: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:27:27: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:27:27: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:27:27: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:27:27: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:27:27: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:27:27: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:27:27: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:27:27: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:27:27: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:27:27: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:27:28: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:27:31: Username:'006c0069006e00650036' sent '0061007300640066' with 'Default_Encryption' encryption
-2022-1-19 14:30:41: Successful login by username:'line6'
-2022-1-19 14:30:45: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:30:47: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:31:23: Successful login by username:'line6'
-2022-1-19 14:31:26: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:31:31: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:33:43: Successful login by username:'line6'
-2022-1-19 14:33:47: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:33:50: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:33:56: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:35:59: Successful login by username:'line6'
-2022-1-19 14:36:3: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 14:36:10: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 14:36:52: Successful login by username:'line6'
-2022-1-19 14:36:54: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:36:55: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:36:56: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:36:56: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:36:57: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:36:58: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:36:58: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:36:59: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:36:59: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:37:0: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:39:55: Successful login by username:'line6'
-2022-1-19 14:40:0: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:40:34: Successful login by username:'line6'
-2022-1-19 14:40:37: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:41:37: Successful login by username:'line6'
-2022-1-19 14:41:40: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 14:42:19: Successful login by username:'line6'
-2022-1-19 14:42:21: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:42:22: Username:'006c0069006e00650036' sent '00610061' with 'Default_Encryption' encryption
-2022-1-19 14:42:23: Username:'006c0069006e00650036' sent '006100610061' with 'Default_Encryption' encryption
-2022-1-19 14:42:24: Username:'006c0069006e00650036' sent '0061006100610061' with 'Default_Encryption' encryption
-2022-1-19 14:42:25: Username:'006c0069006e00650036' sent '00610061006100610061' with 'Default_Encryption' encryption
-2022-1-19 14:42:25: Username:'006c0069006e00650036' sent '006100610061006100610061' with 'Default_Encryption' encryption
-2022-1-19 14:42:25: Username:'006c0069006e00650036' sent '0061006100610061006100610061' with 'Default_Encryption' encryption
-2022-1-19 14:42:25: Username:'006c0069006e00650036' sent '00610061006100610061006100610061' with 'Default_Encryption' encryption
-2022-1-19 14:42:25: Username:'006c0069006e00650036' sent '006100610061006100610061006100610061' with 'Default_Encryption' encryption
-2022-1-19 14:43:18: Successful login by username:'line6'
-2022-1-19 14:43:22: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:43:23: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:43:23: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:43:24: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:43:24: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:43:26: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:44:19: Successful login by username:'line6'
-2022-1-19 14:44:22: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:44:23: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:44:24: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:44:25: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:44:26: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:44:27: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:44:28: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:44:29: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:44:29: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:45:57: Successful login by username:'line6'
-2022-1-19 14:46:2: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:46:8: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:46:11: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:46:21: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:47:51: Successful login by username:'line6'
-2022-1-19 14:47:55: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:47:56: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:47:57: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:48:0: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:48:41: Successful login by username:'line6'
-2022-1-19 14:48:45: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:48:48: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:49:10: Successful login by username:'line6'
-2022-1-19 14:49:13: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:49:16: Username:'006c0069006e00650036' sent '00610066' with 'Default_Encryption' encryption
-2022-1-19 14:49:16: Username:'006c0069006e00650036' sent '00610066' with 'Default_Encryption' encryption
-2022-1-19 14:49:17: Username:'006c0069006e00650036' sent '00610066' with 'Default_Encryption' encryption
-2022-1-19 14:49:17: Username:'006c0069006e00650036' sent '00610066' with 'Default_Encryption' encryption
-2022-1-19 14:49:17: Username:'006c0069006e00650036' sent '00610066' with 'Default_Encryption' encryption
-2022-1-19 14:49:17: Username:'006c0069006e00650036' sent '00610066' with 'Default_Encryption' encryption
-2022-1-19 14:49:49: Successful login by username:'line6'
-2022-1-19 14:49:52: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:49:54: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:49:55: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:50:37: Successful login by username:'line6'
-2022-1-19 14:50:43: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:50:44: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:50:44: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:50:44: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:50:44: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:51:59: Successful login by username:'line6'
-2022-1-19 14:52:5: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:52:34: Successful login by username:'line6'
-2022-1-19 14:53:9: Successful login by username:'line6'
-2022-1-19 14:58:46: Successful login by username:'line6'
-2022-1-19 14:58:50: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:59:14: Successful login by username:'line6'
-2022-1-19 14:59:18: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 14:59:26: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 15:1:30: Successful login by username:'line6'
-2022-1-19 15:1:35: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 15:4:41: Incrypto Server was started on http://localhost:5050 with pid 19607
-2022-1-19 15:5:23: Successful login by username:'line6'
-2022-1-19 15:6:27: Successful login by username:'line6'
-2022-1-19 15:7:11: Successful login by username:'line6'
-2022-1-19 15:7:18: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 15:7:23: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 15:7:32: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 15:8:22: Successful login by username:'line6'
-2022-1-19 15:8:28: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 15:9:38: Successful login by username:'line6'
-2022-1-19 15:9:45: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 15:10:19: Successful login by username:'line6'
-2022-1-19 15:10:22: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 15:10:25: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 15:11:32: Successful login by username:'line6'
-2022-1-19 15:11:49: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 15:12:26: Successful login by username:'line6'
-2022-1-19 15:12:35: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 15:13:26: Successful login by username:'line6'
-2022-1-19 15:13:33: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 15:13:37: Username:'006c0069006e00650036' sent '00660061' with 'Default_Encryption' encryption
-2022-1-19 15:14:10: Successful login by username:'line6'
-2022-1-19 15:14:15: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 15:14:18: Username:'006c0069006e00650036' sent '00660066' with 'Default_Encryption' encryption
-2022-1-19 15:14:44: Successful login by username:'line6'
-2022-1-19 15:14:52: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 15:17:16: Successful login by username:'line6'
-2022-1-19 15:17:21: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 15:18:52: Successful login by username:'line6'
-2022-1-19 15:20:29: Successful login by username:'line6'
-2022-1-19 15:20:34: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 15:20:37: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 15:21:46: Successful login by username:'line6'
-2022-1-19 15:21:50: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
-2022-1-19 15:21:53: Username:'006c0069006e00650036' sent '00610066' with 'Default_Encryption' encryption
-2022-1-19 15:22:3: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 15:22:53: Successful login by username:'line6'
-2022-1-19 15:22:57: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 15:22:59: Username:'006c0069006e00650036' sent '00660066' with 'Default_Encryption' encryption
-2022-1-19 15:23:4: Username:'006c0069006e00650036' sent '006600660066' with 'Default_Encryption' encryption
-2022-1-19 15:23:58: Successful login by username:'line6'
-2022-1-19 15:24:3: Username:'006c0069006e00650036' sent '0066' with 'Default_Encryption' encryption
-2022-1-19 15:24:43: Successful login by username:'line6'
-2022-1-19 15:24:46: Username:'006c0069006e00650036' sent '0061007300640066' with 'Default_Encryption' encryption
-2022-1-19 15:24:49: Username:'006c0069006e00650036' sent '00610073006400660066' with 'Default_Encryption' encryption
-2022-1-19 15:27:52: Incrypto Server was started on http://localhost:5050 with pid 5105
-2022-1-19 15:28:40: Incrypto Server was started on http://localhost:5050 with pid 5200
-2022-1-19 15:30:23: Incrypto Server was started on http://localhost:5050 with pid 5281
-2022-1-19 15:31:12: Incrypto Server was started on http://localhost:5050 with pid 5333
-2022-1-19 15:31:38: Incrypto Server was started on http://localhost:5050 with pid 5409
-2022-1-19 15:31:49: Incrypto Server was started on http://localhost:5050 with pid 5457
-2022-1-19 15:31:52: Incrypto Server was started on http://localhost:5050 with pid 5487
-2022-1-19 15:32:8: Incrypto Server was started on http://localhost:5050 with pid 5539
-2022-1-19 15:32:10: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:32:15: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:32:16: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:32:17: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:32:17: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:32:18: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:32:19: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:32:19: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:32:20: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:32:20: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:32:21: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:32:21: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:32:22: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:32:23: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:32:23: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:32:24: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:32:24: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:32:25: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:32:25: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:33:7: Successful login by username:'line6'
-2022-1-19 15:33:11: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 15:33:14: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 15:33:43: Successful login by username:'line6'
-2022-1-19 15:33:47: Username:'006c0069006e00650036' sent '0061006400730066' with 'Default_Encryption' encryption
-2022-1-19 15:33:53: Username:'006c0069006e00650036' sent '0061006400730066' with 'Default_Encryption' encryption
-2022-1-19 15:34:40: Successful login by username:'line6'
-2022-1-19 15:34:44: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 15:34:49: Username:'006c0069006e00650036' sent '0069006e0074006500720065007300740069006e0067' with 'Default_Encryption' encryption
-2022-1-19 15:35:59: Successful login by username:'line6'
-2022-1-19 15:36:6: Username:'006c0069006e00650036' sent '0069006e0074006500720065007300740069006e0067' with 'Default_Encryption' encryption
-2022-1-19 15:36:14: Username:'006c0069006e00650036' sent '0069006e0074006500720065007300740069006e0067002c0020007700680079003f' with 'Default_Encryption' encryption
-2022-1-19 15:36:16: Username:'006c0069006e00650036' sent '0069006e0074006500720065007300740069006e0067002c0020007700680079003f' with 'Default_Encryption' encryption
-2022-1-19 15:36:16: Username:'006c0069006e00650036' sent '0069006e0074006500720065007300740069006e0067002c0020007700680079003f' with 'Default_Encryption' encryption
-2022-1-19 15:36:25: Username:'006c0069006e00650036' sent '0069006e0074006500720065007300740069006e0067002c0020007700680079003f' with 'Default_Encryption' encryption
-2022-1-19 15:37:44: Successful login by username:'line6'
-2022-1-19 15:37:49: Username:'006c0069006e00650036' sent '0063006f006f006c' with 'Default_Encryption' encryption
-2022-1-19 15:38:53: Successful login by username:'line6'
-2022-1-19 15:38:58: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 15:39:3: Username:'006c0069006e00650036' sent '00740065007300740069006e0067' with 'Default_Encryption' encryption
-2022-1-19 15:39:35: Incrypto Server was started on http://localhost:5050 with pid 11407
-2022-1-19 15:39:50: Successful login by username:'line6'
-2022-1-19 15:39:55: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
-2022-1-19 15:39:58: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 15:40:48: Username:'006c0069006e00650036' sent '0077006800610074003f' with 'Default_Encryption' encryption
-2022-1-19 15:41:27: Username:'006c0069006e00650036' sent '0077006800610074003f' with 'Default_Encryption' encryption
-2022-1-19 15:42:50: Incrypto Server was started on http://localhost:5050 with pid 12483
-2022-1-19 15:42:59: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
-2022-1-19 15:43:1: Username:'006c0069006e00650036' sent '0068006500790077006f0072006b0073' with 'Default_Encryption' encryption
-2022-1-19 15:43:3: Username:'006c0069006e00650036' sent '0068006500790077006f0072006b0073' with 'Default_Encryption' encryption
-2022-1-19 15:43:3: Username:'006c0069006e00650036' sent '0068006500790077006f0072006b0073' with 'Default_Encryption' encryption
-2022-1-19 15:45:0: Incrypto Server was started on http://localhost:5050 with pid 12887
-2022-1-19 15:45:3: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:4: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:7: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:8: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:9: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:9: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:10: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:11: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:11: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:12: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:12: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:13: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:13: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:14: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:14: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:15: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:15: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:16: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:16: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:17: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:45:31: Successful login by username:'line6'
-2022-1-19 15:45:34: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 15:45:37: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 15:45:40: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 15:45:42: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 15:46:3: Incrypto Server was started on http://localhost:5050 with pid 13956
-2022-1-19 15:46:5: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:46:6: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:46:7: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:46:8: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:46:11: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:46:13: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:46:14: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:46:15: Username:'line6' sent 'hehe' with 'plain_text' encryption
-2022-1-19 15:46:21: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 15:46:22: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 15:46:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 15:46:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 15:46:24: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 15:46:24: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 15:46:25: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 16:20:42: Successful login by username:'line6'
-2022-1-19 16:21:58: Successful login by username:'line6'
-2022-1-19 16:22:8: Username:'1101100 1101001 1101110 1100101 110110' sent '1101000 1100101 1101000 1100101 1101000 1100001 1101000 1100001' with 'Binary' encryption
-2022-1-19 16:22:34: Successful login by username:'line6'
-2022-1-19 16:23:18: Username:'006c0069006e00650036' sent '00740065007300740069006e0067' with 'Default_Encryption' encryption
-2022-1-19 16:23:27: Successful login by username:'line6'
-2022-1-19 16:24:55: Successful login by username:'line6'
-2022-1-19 16:28:22: Successful login by username:'line6'
-2022-1-19 16:31:35: Successful login by username:'line6'
-2022-1-19 16:32:22: Successful login by username:'line6'
-2022-1-19 16:33:27: Successful login by username:'line6'
-2022-1-19 16:35:51: Successful login by username:'line6'
-2022-1-19 16:35:59: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 16:36:30: Successful login by username:'line6'
-2022-1-19 16:36:35: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 16:36:38: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 16:36:40: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 16:36:41: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 16:36:42: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 16:36:44: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 16:36:44: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 16:36:45: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 16:37:30: Successful login by username:'line6'
-2022-1-19 16:37:38: Username:'006c0069006e00650036' sent '0077006f0072006b0069006e0067003f' with 'Default_Encryption' encryption
-2022-1-19 16:37:43: Username:'006c0069006e00650036' sent '0077006f0072006b0069006e0067003f00730077006500650074' with 'Default_Encryption' encryption
-2022-1-19 16:37:46: Username:'006c0069006e00650036' sent '0077006f0072006b0069006e0067003f007300770065006500740061007300640066' with 'Default_Encryption' encryption
-2022-1-19 16:37:47: Username:'006c0069006e00650036' sent '0077006f0072006b0069006e0067003f007300770065006500740061007300640066' with 'Default_Encryption' encryption
-2022-1-19 16:37:47: Username:'006c0069006e00650036' sent '0077006f0072006b0069006e0067003f007300770065006500740061007300640066' with 'Default_Encryption' encryption
-2022-1-19 16:37:47: Username:'006c0069006e00650036' sent '0077006f0072006b0069006e0067003f007300770065006500740061007300640066' with 'Default_Encryption' encryption
-2022-1-19 16:37:48: Username:'006c0069006e00650036' sent '0077006f0072006b0069006e0067003f007300770065006500740061007300640066' with 'Default_Encryption' encryption
-2022-1-19 16:37:48: Username:'006c0069006e00650036' sent '0077006f0072006b0069006e0067003f007300770065006500740061007300640066' with 'Default_Encryption' encryption
-2022-1-19 16:37:49: Username:'006c0069006e00650036' sent '0077006f0072006b0069006e0067003f007300770065006500740061007300640066' with 'Default_Encryption' encryption
-2022-1-19 16:37:49: Username:'006c0069006e00650036' sent '0077006f0072006b0069006e0067003f007300770065006500740061007300640066' with 'Default_Encryption' encryption
-2022-1-19 16:37:50: Username:'006c0069006e00650036' sent '0077006f0072006b0069006e0067003f007300770065006500740061007300640066' with 'Default_Encryption' encryption
-2022-1-19 16:37:50: Username:'006c0069006e00650036' sent '0077006f0072006b0069006e0067003f007300770065006500740061007300640066' with 'Default_Encryption' encryption
-2022-1-19 16:37:51: Username:'006c0069006e00650036' sent '0077006f0072006b0069006e0067003f007300770065006500740061007300640066' with 'Default_Encryption' encryption
-2022-1-19 16:37:51: Username:'006c0069006e00650036' sent '0077006f0072006b0069006e0067003f007300770065006500740061007300640066' with 'Default_Encryption' encryption
-2022-1-19 16:37:51: Username:'006c0069006e00650036' sent '0077006f0072006b0069006e0067003f007300770065006500740061007300640066' with 'Default_Encryption' encryption
-2022-1-19 16:37:51: Username:'006c0069006e00650036' sent '0077006f0072006b0069006e0067003f007300770065006500740061007300640066' with 'Default_Encryption' encryption
-2022-1-19 16:45:10: Successful login by username:'line6'
-2022-1-19 16:45:15: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 16:45:24: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 16:45:25: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 16:46:5: Successful login by username:'line6'
-2022-1-19 16:46:10: Username:'006c0069006e00650036' sent '00740065007300740069006e0067' with 'Default_Encryption' encryption
-2022-1-19 16:47:18: Successful login by username:'line6'
-2022-1-19 16:47:23: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
-2022-1-19 16:47:26: Username:'006c0069006e00650036' sent '0068006500680065' with 'Default_Encryption' encryption
-2022-1-19 16:47:33: Username:'006c0069006e00650036' sent '007400680069007300200069007300200077006f0072006b0069006e00670020007200650061006c006c0079002000770065006c006c' with 'Default_Encryption' encryption
-2022-1-19 16:47:58: Successful login by username:'line6'
+2022-1-19 20:59:1: Incrypto Server was started on http://localhost:5050 with pid 6733
+2022-1-19 20:59:34: Incrypto Server was started on http://localhost:5050 with pid 6807
+2022-1-19 21:3:53: Incrypto Server was started on http://localhost:5050 with pid 7044
+2022-1-19 21:4:31: Incrypto Server was started on http://localhost:5050 with pid 7115
+2022-1-19 21:5:31: Incrypto Server was started on http://localhost:5050 with pid 7189
+2022-1-19 21:7:8: Incrypto Server was started on http://localhost:5050 with pid 7330
+2022-1-19 21:9:27: Incrypto Server was started on http://localhost:5050 with pid 7444
+2022-1-19 21:9:47: Incrypto Server was started on http://localhost:5050 with pid 7488
+2022-1-19 21:11:11: Incrypto Server was started on http://localhost:5050 with pid 7582
+2022-1-19 21:13:5: Incrypto Server was started on http://localhost:5050 with pid 7681
+2022-1-19 21:15:36: Incrypto Server was started on http://localhost:5050 with pid 8142
+2022-1-19 21:26:56: Incrypto Server was started on http://localhost:5050 with pid 8979
+2022-1-19 21:27:0: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-19 21:27:17: Incrypto Server was started on http://localhost:5050 with pid 9080
+2022-1-19 21:28:30: Incrypto Server was started on http://localhost:5050 with pid 9152
+2022-1-19 21:29:8: Login attempt made for username:'line69' who does not exist
+2022-1-19 21:29:25: Login attempt made for username:'line6' who does not exist
+2022-1-19 21:30:2: Successful registration for username:'line6'
+2022-1-20 6:31:51: Incrypto Server was started on http://localhost:5050 with pid 11825
+2022-1-20 6:33:30: Incrypto Server was started on http://localhost:5050 with pid 11893
+2022-1-20 6:34:23: Incrypto Server was started on http://localhost:5050 with pid 11961
+2022-1-20 6:38:33: Incrypto Server was started on http://localhost:5050 with pid 12203
+2022-1-20 6:39:13: Incrypto Server was started on http://localhost:5050 with pid 12310
+2022-1-20 6:40:47: Incrypto Server was started on http://localhost:5050 with pid 12452
+2022-1-20 6:41:1: Incrypto Server was started on http://localhost:5050 with pid 12516
+2022-1-20 6:41:35: Incrypto Server was started on http://localhost:5050 with pid 12563
+2022-1-20 6:45:1: Incrypto Server was started on http://localhost:5050 with pid 12697
+2022-1-20 6:45:27: Incrypto Server was started on http://localhost:5050 with pid 12756
+2022-1-20 6:49:4: Incrypto Server was started on http://localhost:5050 with pid 12969
+2022-1-20 6:49:27: Incrypto Server was started on http://localhost:5050 with pid 13022
+2022-1-20 6:54:13: Incrypto Server was started on http://localhost:5050 with pid 13268
+2022-1-20 6:54:38: Incrypto Server was started on http://localhost:5050 with pid 13318
+2022-1-20 6:58:19: Incrypto Server was started on http://localhost:5050 with pid 13506
+2022-1-20 7:5:13: Incrypto Server was started on http://localhost:5050 with pid 13637
+2022-1-20 7:5:52: Incrypto Server was started on http://localhost:5050 with pid 13723
+2022-1-20 7:7:4: Incrypto Server was started on http://localhost:5050 with pid 13859
+2022-1-20 7:7:17: Incrypto Server was started on http://localhost:5050 with pid 13908
+2022-1-20 7:7:49: Incrypto Server was started on http://localhost:5050 with pid 13979
+2022-1-20 7:8:3: Incrypto Server was started on http://localhost:5050 with pid 14029
+2022-1-20 7:8:49: Incrypto Server was started on http://localhost:5050 with pid 14090
+2022-1-20 7:9:13: Incrypto Server was started on http://localhost:5050 with pid 14143
+2022-1-20 7:17:49: Incrypto Server was started on http://localhost:5050 with pid 14532
+2022-1-20 7:18:0: Incrypto Server was started on http://localhost:5050 with pid 14588
+2022-1-20 7:19:33: Incrypto Server was started on http://localhost:5050 with pid 14683
+2022-1-20 7:22:19: Incrypto Server was started on http://localhost:5050 with pid 14799
+2022-1-20 7:23:0: Incrypto Server was started on http://localhost:5050 with pid 14889
+2022-1-20 7:23:51: Incrypto Server was started on http://localhost:5050 with pid 14987
+2022-1-20 7:27:22: Incrypto Server was started on http://localhost:5050 with pid 15100
+2022-1-20 7:27:38: Incrypto Server was started on http://localhost:5050 with pid 15150
+2022-1-20 7:27:54: Incrypto Server was started on http://localhost:5050 with pid 15221
+2022-1-20 7:29:35: Incrypto Server was started on http://localhost:5050 with pid 15304
+2022-1-20 7:37:56: Incrypto Server was started on http://localhost:5050 with pid 15426
+2022-1-20 7:39:32: Incrypto Server was started on http://localhost:5050 with pid 15488
+2022-1-20 7:43:56: Incrypto Server was started on http://localhost:5050 with pid 15631
+2022-1-20 7:44:44: Incrypto Server was started on http://localhost:5050 with pid 15733
+2022-1-20 7:46:0: Incrypto Server was started on http://localhost:5050 with pid 15828
+2022-1-20 7:58:15: Incrypto Server was started on http://localhost:5050 with pid 16339
+2022-1-20 8:0:3: Incrypto Server was started on http://localhost:5050 with pid 16452
+2022-1-20 8:0:20: Incrypto Server was started on http://localhost:5050 with pid 16501
+2022-1-20 8:1:1: Incrypto Server was started on http://localhost:5050 with pid 16556
+2022-1-20 8:1:46: Incrypto Server was started on http://localhost:5050 with pid 16620
+2022-1-20 8:2:7: Incrypto Server was started on http://localhost:5050 with pid 16670
+2022-1-20 8:2:24: Incrypto Server was started on http://localhost:5050 with pid 16720
+2022-1-20 8:2:36: Incrypto Server was started on http://localhost:5050 with pid 16763
+2022-1-20 8:7:31: Incrypto Server was started on http://localhost:5050 with pid 16941
+2022-1-20 8:7:53: Incrypto Server was started on http://localhost:5050 with pid 17017
+2022-1-20 8:16:18: Incrypto Server was started on http://localhost:5050 with pid 17124
+2022-1-20 8:16:33: Incrypto Server was started on http://localhost:5050 with pid 17171
+2022-1-20 8:18:34: Incrypto Server was started on http://localhost:5050 with pid 17341
+2022-1-20 8:19:5: Incrypto Server was started on http://localhost:5050 with pid 17406
+2022-1-20 8:19:31: Incrypto Server was started on http://localhost:5050 with pid 17455
+2022-1-20 8:19:51: Incrypto Server was started on http://localhost:5050 with pid 17514
+2022-1-20 8:22:32: Incrypto Server was started on http://localhost:5050 with pid 17567
+2022-1-20 8:23:3: Incrypto Server was started on http://localhost:5050 with pid 17638
+2022-1-20 8:23:25: Incrypto Server was started on http://localhost:5050 with pid 17694
+2022-1-20 8:24:21: Incrypto Server was started on http://localhost:5050 with pid 17753
+2022-1-20 9:21:45: Incrypto Server was started on http://localhost:5050 with pid 19337
+2022-1-20 9:23:8: Incrypto Server was started on http://localhost:5050 with pid 19515
+2022-1-20 9:23:30: Incrypto Server was started on http://localhost:5050 with pid 19589
+2022-1-20 9:24:49: Incrypto Server was started on http://localhost:5050 with pid 19648
+2022-1-20 9:25:17: Incrypto Server was started on http://localhost:5050 with pid 19725
+2022-1-20 9:27:45: Incrypto Server was started on http://localhost:5050 with pid 19805
+2022-1-20 9:29:7: Incrypto Server was started on http://localhost:5050 with pid 19891
+2022-1-20 9:29:26: Incrypto Server was started on http://localhost:5050 with pid 19977
+2022-1-20 9:30:13: Incrypto Server was started on http://localhost:5050 with pid 20075
+2022-1-20 9:31:41: Incrypto Server was started on http://localhost:5050 with pid 20169
+2022-1-20 9:32:14: Incrypto Server was started on http://localhost:5050 with pid 20234
+2022-1-20 9:32:56: Incrypto Server was started on http://localhost:5050 with pid 20347
+2022-1-20 9:33:48: Incrypto Server was started on http://localhost:5050 with pid 20424
+2022-1-20 9:34:39: Incrypto Server was started on http://localhost:5050 with pid 20495
+2022-1-20 9:35:16: Incrypto Server was started on http://localhost:5050 with pid 20557
+2022-1-20 9:35:56: Incrypto Server was started on http://localhost:5050 with pid 20634
+2022-1-20 9:35:58: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-20 9:38:26: Incrypto Server was started on http://localhost:5050 with pid 20740
+2022-1-20 9:39:59: Incrypto Server was started on http://localhost:5050 with pid 20854
+2022-1-20 9:40:25: Incrypto Server was started on http://localhost:5050 with pid 20904
+2022-1-20 9:40:27: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-20 9:40:30: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-20 9:40:42: Successful login by username:'line6'
+2022-1-20 9:41:38: Successful login by username:'line6'
+2022-1-20 9:43:10: Incrypto Server was started on http://localhost:5050 with pid 23254
+2022-1-20 9:43:27: Successful login by username:'line6'
+2022-1-20 9:44:25: Successful login by username:'line6'
+2022-1-20 9:46:15: Successful login by username:'line6'
+2022-1-20 9:46:22: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
+2022-1-20 9:47:17: Successful login by username:'line6'
+2022-1-20 9:47:23: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
+2022-1-20 9:50:33: Incrypto Server was started on http://localhost:5050 with pid 28315
+2022-1-20 9:50:40: Successful login by username:'line6'
+2022-1-20 9:50:45: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
+2022-1-20 9:53:11: Successful login by username:'line6'
+2022-1-20 9:53:15: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
+2022-1-20 9:54:19: Successful login by username:'line6'
+2022-1-20 9:54:25: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
+2022-1-20 9:54:36: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
+2022-1-20 9:56:58: Successful login by username:'line6'
+2022-1-20 9:57:5: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
+2022-1-20 10:10:8: Successful login by username:'line6'
+2022-1-20 10:11:2: Successful login by username:'line6'
+2022-1-20 10:11:31: Successful login by username:'line6'
+2022-1-20 10:11:45: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
+2022-1-20 10:14:7: Successful login by username:'line6'
+2022-1-20 10:14:10: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
+2022-1-20 10:14:51: Successful login by username:'line6'
+2022-1-20 10:14:56: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
+2022-1-20 10:15:2: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
+2022-1-20 10:17:26: Successful login by username:'line6'
+2022-1-20 10:17:29: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
+2022-1-20 10:17:50: Username:'006c0069006e00650036' sent '006b0069006400640069006e00670020006d0065' with 'Default_Encryption' encryption
+2022-1-20 10:18:4: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
+2022-1-20 10:20:33: Successful login by username:'line6'
+2022-1-20 10:20:37: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
+2022-1-20 10:21:13: Successful login by username:'line6'
+2022-1-20 10:21:22: Username:'006c0069006e00650036' sent '0061' with 'Default_Encryption' encryption
+2022-1-20 10:21:35: Username:'006c0069006e00650036' sent '0061007300640066' with 'Default_Encryption' encryption
+2022-1-20 10:22:11: Successful login by username:'line6'
+2022-1-20 10:22:16: Username:'006c0069006e00650036' sent '00610073006400660066' with 'Default_Encryption' encryption
+2022-1-20 10:23:7: Successful login by username:'line6'
+2022-1-20 10:23:17: Username:'006c0069006e00650036' sent '00680065006c006c006f' with 'Default_Encryption' encryption
+2022-1-20 10:23:41: Username:'006c0069006e00650036' sent '006800650079' with 'Default_Encryption' encryption
+2022-1-20 10:23:59: Successful login by username:'line6'
+2022-1-20 10:24:2: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
+2022-1-20 10:24:41: Successful login by username:'line6'
+2022-1-20 10:24:50: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
+2022-1-20 10:25:26: Username:'006c0069006e00650036' sent '00680069' with 'Default_Encryption' encryption
+2022-1-20 10:47:53: Successful login by username:'line6'
+2022-1-20 10:48:7: Username:'006c0069006e00650036' sent '00680065006c006c006f' with 'Default_Encryption' encryption
+2022-1-20 10:52:5: Incrypto Server was started on http://localhost:5050 with pid 18073
+2022-1-20 10:52:26: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-20 10:53:11: Successful login by username:'line6'
+2022-1-20 10:53:20: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
+2022-1-20 10:58:36: Successful login by username:'line6'
+2022-1-20 10:58:52: Username:'006c0069006e00650036' sent '0074006500730074' with 'Default_Encryption' encryption
+2022-1-20 10:58:57: Username:'006c0069006e00650036' sent '00680065006c006c006f' with 'Default_Encryption' encryption
+2022-1-21 6:4:22: Incrypto Server was started on http://localhost:5050 with pid 24586
+2022-1-21 6:5:36: Incrypto Server was started on http://localhost:5050 with pid 24660
+2022-1-21 6:7:4: Incrypto Server was started on http://localhost:5050 with pid 24736
+2022-1-21 6:8:52: Incrypto Server was started on http://localhost:5050 with pid 24823
+2022-1-21 6:9:8: Incrypto Server was started on http://localhost:5050 with pid 24873
+2022-1-21 6:10:20: Incrypto Server was started on http://localhost:5050 with pid 24944
+2022-1-21 6:11:16: Incrypto Server was started on http://localhost:5050 with pid 25017
+2022-1-21 6:12:7: Incrypto Server was started on http://localhost:5050 with pid 25072
+2022-1-21 6:12:24: Incrypto Server was started on http://localhost:5050 with pid 25122
+2022-1-21 6:13:47: Incrypto Server was started on http://localhost:5050 with pid 25228
+2022-1-21 6:19:14: Incrypto Server was started on http://localhost:5050 with pid 25560
+2022-1-21 6:19:31: Incrypto Server was started on http://localhost:5050 with pid 25616
+2022-1-21 6:19:57: Incrypto Server was started on http://localhost:5050 with pid 25672
+2022-1-21 6:21:38: Incrypto Server was started on http://localhost:5050 with pid 25755
+2022-1-21 6:24:2: Incrypto Server was started on http://localhost:5050 with pid 25877
+2022-1-21 6:24:37: Incrypto Server was started on http://localhost:5050 with pid 25932
+2022-1-21 6:24:38: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 6:25:23: Incrypto Server was started on http://localhost:5050 with pid 26000
+2022-1-21 6:25:27: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 6:25:53: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 6:27:36: Incrypto Server was started on http://localhost:5050 with pid 26128
+2022-1-21 6:27:38: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 6:28:7: Incrypto Server was started on http://localhost:5050 with pid 26187
+2022-1-21 6:28:9: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 6:30:6: Incrypto Server was started on http://localhost:5050 with pid 26380
+2022-1-21 6:30:8: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 6:30:52: Incrypto Server was started on http://localhost:5050 with pid 26445
+2022-1-21 6:30:54: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 6:31:56: Incrypto Server was started on http://localhost:5050 with pid 26555
+2022-1-21 6:32:45: Incrypto Server was started on http://localhost:5050 with pid 26623
+2022-1-21 6:34:22: Incrypto Server was started on http://localhost:5050 with pid 26755
+2022-1-21 6:34:52: Incrypto Server was started on http://localhost:5050 with pid 26826
+2022-1-21 6:35:5: Incrypto Server was started on http://localhost:5050 with pid 26876
+2022-1-21 6:37:34: Incrypto Server was started on http://localhost:5050 with pid 27043
+2022-1-21 6:38:3: Incrypto Server was started on http://localhost:5050 with pid 27117
+2022-1-21 6:39:18: Incrypto Server was started on http://localhost:5050 with pid 27188
+2022-1-21 6:39:42: Incrypto Server was started on http://localhost:5050 with pid 27244
+2022-1-21 6:40:59: Incrypto Server was started on http://localhost:5050 with pid 27339
+2022-1-21 6:42:53: Incrypto Server was started on http://localhost:5050 with pid 27467
+2022-1-21 6:43:30: Incrypto Server was started on http://localhost:5050 with pid 27523
+2022-1-21 6:44:13: Incrypto Server was started on http://localhost:5050 with pid 27615
+2022-1-21 6:44:15: Connecting to MongoDB...
+2022-1-21 6:44:16: Connected to MongoDB
+2022-1-21 6:57:47: Incrypto Server was started on http://:::5050 with pid 28049
+2022-1-21 6:58:15: Incrypto Server was started on http://localhost:5050 with pid 28111
+2022-1-21 7:0:45: Incrypto Server was started on http://localhost:5050 with pid 28294
+2022-1-21 7:1:58: Incrypto Server was started on http://localhost:5050 with pid 28368
+2022-1-21 7:2:11: Incrypto Server was started on http://localhost:5050 with pid 28438
+2022-1-21 7:16:17: Incrypto Server was started on http://localhost:5050 with pid 28502
+2022-1-21 7:16:56: Incrypto Server was started on http://localhost:5050 with pid 28564
+2022-1-21 7:17:15: Incrypto Server was started on http://localhost:5050 with pid 28632
+2022-1-21 7:19:6: Incrypto Server was started on http://localhost:5050 with pid 28727
+2022-1-21 7:20:16: Incrypto Server was started on http://localhost:5050 with pid 28803
+2022-1-21 7:20:49: Incrypto Server was started on http://localhost:5050 with pid 28856
+2022-1-21 7:21:24: Incrypto Server was started on http://localhost:5050 with pid 28915
+2022-1-21 7:21:26: Login attempt made for username:'' who does not exist
+2022-1-21 7:22:29: Incrypto Server was started on http://localhost:5050 with pid 29015
+2022-1-21 7:22:30: Login attempt made for username:'' who does not exist
+2022-1-21 7:22:32: Login attempt made for username:'' who does not exist
+2022-1-21 7:22:33: Login attempt made for username:'' who does not exist
+2022-1-21 7:22:33: Login attempt made for username:'' who does not exist
+2022-1-21 7:22:34: Login attempt made for username:'' who does not exist
+2022-1-21 7:23:14: Incrypto Server was started on http://localhost:5050 with pid 29130
+2022-1-21 7:23:20: Successful registration for username:''
+2022-1-21 7:26:32: Incrypto Server was started on http://localhost:5050 with pid 29257
+2022-1-21 7:26:52: Incrypto Server was started on http://localhost:5050 with pid 29310
+2022-1-21 7:28:43: Incrypto Server was started on http://localhost:5050 with pid 29411
+2022-1-21 7:28:45: Connecting to MongoDB...
+2022-1-21 7:28:46: Connected to MongoDB
+2022-1-21 7:29:9: Incrypto Server was started on http://localhost:5050 with pid 29512
+2022-1-21 7:29:11: Connecting to MongoDB...
+2022-1-21 7:29:12: Connected to MongoDB
+2022-1-21 7:32:2: Incrypto Server was started on http://localhost:5050 with pid 29669
+2022-1-21 7:32:11: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 7:32:11: Connecting to MongoDB...
+2022-1-21 7:32:11: Connected to MongoDB
+2022-1-21 7:32:44: Incrypto Server was started on http://localhost:5050 with pid 29743
+2022-1-21 7:32:47: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 7:32:47: Connecting to MongoDB...
+2022-1-21 7:32:47: Connected to MongoDB
+2022-1-21 7:35:47: Incrypto Server was started on http://localhost:5050 with pid 29933
+2022-1-21 7:35:49: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 7:35:49: Connecting to MongoDB...
+2022-1-21 7:35:49: Connected to MongoDB
+2022-1-21 7:36:20: Incrypto Server was started on http://localhost:5050 with pid 29986
+2022-1-21 7:36:22: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 7:36:22: Connecting to MongoDB...
+2022-1-21 7:36:22: Connected to MongoDB
+2022-1-21 7:36:22: 1 chat inserted into ChatRoom2
+2022-1-21 7:38:7: Incrypto Server was started on http://localhost:5050 with pid 30087
+2022-1-21 7:38:8: Connecting to MongoDB...
+2022-1-21 7:38:9: Connected to MongoDB
+2022-1-21 7:38:37: Incrypto Server was started on http://localhost:5050 with pid 30145
+2022-1-21 7:38:39: Connecting to MongoDB...
+2022-1-21 7:38:39: Connected to MongoDB
+2022-1-21 7:39:27: Incrypto Server was started on http://localhost:5050 with pid 30228
+2022-1-21 7:40:7: Incrypto Server was started on http://localhost:5050 with pid 30293
+2022-1-21 7:40:9: Connecting to MongoDB...
+2022-1-21 7:40:10: Connected to MongoDB
+2022-1-21 7:40:41: Incrypto Server was started on http://localhost:5050 with pid 30355
+2022-1-21 7:40:42: Connecting to MongoDB...
+2022-1-21 7:40:43: Connected to MongoDB
+2022-1-21 7:41:43: Incrypto Server was started on http://localhost:5050 with pid 30452
+2022-1-21 7:41:45: Connecting to MongoDB...
+2022-1-21 7:41:45: Connected to MongoDB
+2022-1-21 7:44:43: Incrypto Server was started on http://localhost:5050 with pid 30576
+2022-1-21 7:44:51: Connecting to MongoDB...
+2022-1-21 7:44:52: Connected to MongoDB
+2022-1-21 7:45:29: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 7:45:29: 1 chat inserted into ChatRoom2
+2022-1-21 7:45:35: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 7:45:35: 1 chat inserted into ChatRoom2
+2022-1-21 7:49:29: Incrypto Server was started on http://localhost:5050 with pid 30736
+2022-1-21 7:49:32: Connecting to MongoDB...
+2022-1-21 7:49:33: Connected to MongoDB
+2022-1-21 7:49:36: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 7:49:36: 1 chat inserted into ChatRoom2
+2022-1-21 7:49:44: Successful registration for username:''
+2022-1-21 7:49:46: Successful registration for username:''
+2022-1-21 7:49:48: Successful registration for username:''
+2022-1-21 7:57:6: Incrypto Server was started on http://localhost:5050 with pid 31157
+2022-1-21 7:57:9: Connecting to MongoDB...
+2022-1-21 7:57:10: Connected to MongoDB
+2022-1-21 7:57:27: Incrypto Server was started on http://localhost:5050 with pid 31243
+2022-1-21 7:57:29: Connecting to MongoDB...
+2022-1-21 7:57:29: Connected to MongoDB
+2022-1-21 7:57:47: Incrypto Server was started on http://localhost:5050 with pid 31304
+2022-1-21 7:57:49: Connecting to MongoDB...
+2022-1-21 7:57:50: Connected to MongoDB
+2022-1-21 7:58:43: Incrypto Server was started on http://localhost:5050 with pid 31381
+2022-1-21 7:58:45: Connecting to MongoDB...
+2022-1-21 7:58:46: Connected to MongoDB
+2022-1-21 7:59:7: Incrypto Server was started on http://localhost:5050 with pid 31434
+2022-1-21 7:59:9: Connecting to MongoDB...
+2022-1-21 7:59:9: Connected to MongoDB
+2022-1-21 8:4:31: Incrypto Server was started on http://localhost:5050 with pid 31665
+2022-1-21 8:4:33: Connecting to MongoDB...
+2022-1-21 8:4:34: Connected to MongoDB
+2022-1-21 8:5:47: Incrypto Server was started on http://localhost:5050 with pid 31724
+2022-1-21 8:5:49: Connecting to MongoDB...
+2022-1-21 8:5:50: Connected to MongoDB
+2022-1-21 8:6:11: Incrypto Server was started on http://localhost:5050 with pid 31783
+2022-1-21 8:6:13: Connecting to MongoDB...
+2022-1-21 8:6:14: Connected to MongoDB
+2022-1-21 8:8:27: Incrypto Server was started on http://localhost:5050 with pid 31883
+2022-1-21 8:8:28: Connecting to MongoDB...
+2022-1-21 8:8:29: Connected to MongoDB
+2022-1-21 8:8:46: Incrypto Server was started on http://localhost:5050 with pid 31930
+2022-1-21 8:8:47: Connecting to MongoDB...
+2022-1-21 8:8:48: Connected to MongoDB
+2022-1-21 8:9:49: Incrypto Server was started on http://localhost:5050 with pid 31983
+2022-1-21 8:9:50: Connecting to MongoDB...
+2022-1-21 8:9:51: Connected to MongoDB
+2022-1-21 8:10:5: Incrypto Server was started on http://localhost:5050 with pid 32041
+2022-1-21 8:10:6: Connecting to MongoDB...
+2022-1-21 8:10:7: Connected to MongoDB
+2022-1-21 8:10:23: Incrypto Server was started on http://localhost:5050 with pid 32095
+2022-1-21 8:10:32: Incrypto Server was started on http://localhost:5050 with pid 32148
+2022-1-21 8:10:34: Connecting to MongoDB...
+2022-1-21 8:10:34: Connected to MongoDB
+2022-1-21 8:11:47: Incrypto Server was started on http://localhost:5050 with pid 32212
+2022-1-21 8:11:49: Connecting to MongoDB...
+2022-1-21 8:11:50: Connected to MongoDB
+2022-1-21 8:13:19: Incrypto Server was started on http://localhost:5050 with pid 32326
+2022-1-21 8:13:21: Connecting to MongoDB...
+2022-1-21 8:13:22: Connected to MongoDB
+2022-1-21 8:14:30: Incrypto Server was started on http://localhost:5050 with pid 32385
+2022-1-21 8:14:32: Connecting to MongoDB...
+2022-1-21 8:14:32: Connected to MongoDB
+2022-1-21 8:15:33: Incrypto Server was started on http://localhost:5050 with pid 32461
+2022-1-21 8:15:38: Connecting to MongoDB...
+2022-1-21 8:15:39: Connected to MongoDB
+2022-1-21 8:17:6: Incrypto Server was started on http://localhost:5050 with pid 32541
+2022-1-21 8:17:9: Connecting to MongoDB...
+2022-1-21 8:17:10: Connected to MongoDB
+2022-1-21 8:17:53: Incrypto Server was started on http://localhost:5050 with pid 32633
+2022-1-21 8:17:56: Connecting to MongoDB...
+2022-1-21 8:17:57: Connected to MongoDB
+2022-1-21 8:19:6: Incrypto Server was started on http://localhost:5050 with pid 32751
+2022-1-21 8:19:8: Connecting to MongoDB...
+2022-1-21 8:19:9: Connected to MongoDB
+2022-1-21 8:19:50: Incrypto Server was started on http://localhost:5050 with pid 348
+2022-1-21 8:19:52: Connecting to MongoDB...
+2022-1-21 8:19:52: Connected to MongoDB
+2022-1-21 8:26:53: Incrypto Server was started on http://localhost:5050 with pid 711
+2022-1-21 8:27:14: Connecting to MongoDB...
+2022-1-21 8:27:15: Connected to MongoDB
+2022-1-21 8:27:37: Incrypto Server was started on http://localhost:5050 with pid 805
+2022-1-21 8:27:39: Connecting to MongoDB...
+2022-1-21 8:27:40: Connected to MongoDB
+2022-1-21 8:30:25: Incrypto Server was started on http://localhost:5050 with pid 858
+2022-1-21 8:30:26: Connecting to MongoDB...
+2022-1-21 8:30:27: Connected to MongoDB
+2022-1-21 8:31:26: Incrypto Server was started on http://localhost:5050 with pid 952
+2022-1-21 8:31:28: Connecting to MongoDB...
+2022-1-21 8:31:29: Connected to MongoDB
+2022-1-21 8:32:17: Incrypto Server was started on http://localhost:5050 with pid 1060
+2022-1-21 8:32:18: Connecting to MongoDB...
+2022-1-21 8:32:19: Connected to MongoDB
+2022-1-21 8:35:43: Incrypto Server was started on http://localhost:5050 with pid 1280
+2022-1-21 8:35:45: Connecting to MongoDB...
+2022-1-21 8:35:46: Connected to MongoDB
+2022-1-21 8:35:46: Successful login by username:'line10'
+2022-1-21 8:35:47: Successful login by username:'line10'
+2022-1-21 8:35:48: Successful login by username:'line10'
+2022-1-21 8:35:49: Successful login by username:'line10'
+2022-1-21 8:35:49: Successful login by username:'line10'
+2022-1-21 8:35:50: Successful login by username:'line10'
+2022-1-21 8:35:51: Successful login by username:'line10'
+2022-1-21 8:35:56: Registration attempt made for line10 who already exists
+2022-1-21 8:35:57: Registration attempt made for line10 who already exists
+2022-1-21 8:35:57: Registration attempt made for line10 who already exists
+2022-1-21 8:36:2: Successful registration for line1
+2022-1-21 8:36:3: Registration attempt made for line1 who already exists
+2022-1-21 8:36:8: Successful login by username:'line1'
+2022-1-21 8:36:9: Successful login by username:'line1'
+2022-1-21 8:36:13: Login attempt made for line1 with an incorrect password
+2022-1-21 8:47:50: Incrypto Server was started on http://localhost:5050 with pid 1881
+2022-1-21 8:48:54: Connecting to MongoDB...
+2022-1-21 8:48:54: Connected to MongoDB
+2022-1-21 8:49:26: Incrypto Server was started on http://localhost:5050 with pid 1993
+2022-1-21 8:49:28: Connecting to MongoDB...
+2022-1-21 8:49:28: Connected to MongoDB
+2022-1-21 8:49:28: Color change for username: 'line1' to color: 'red'
+2022-1-21 8:50:45: Incrypto Server was started on http://localhost:5050 with pid 2070
+2022-1-21 8:50:46: Connecting to MongoDB...
+2022-1-21 8:50:47: Connected to MongoDB
+2022-1-21 8:50:47: Color change for username: 'line1' to color: 'red'
+2022-1-21 8:50:56: ERROR: Color change failed for username: 'line2' and color: 'red'
+2022-1-21 8:51:45: Incrypto Server was started on http://localhost:5050 with pid 2159
+2022-1-21 8:51:47: Connecting to MongoDB...
+2022-1-21 8:51:48: Connected to MongoDB
+2022-1-21 8:51:48: ERROR: Color change failed for username: 'line2' and color: 'red'
+2022-1-21 8:51:52: Color change for username: 'line1' to color: 'red'
+2022-1-21 9:1:46: Incrypto Server was started on http://localhost:5050 with pid 2622
+2022-1-21 9:1:48: Connecting to MongoDB...
+2022-1-21 9:1:49: Connected to MongoDB
+2022-1-21 9:1:49: Color change for username: 'line1' to color: 'red'
+2022-1-21 9:1:49: Color change for username: 'line1' to color: 'red'
+2022-1-21 9:2:18: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 9:2:18: 1 chat inserted into ChatRoom2
+2022-1-21 9:2:27: ERROR: Color change failed for username: 'line6' and color: 'red'
+2022-1-21 9:3:8: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 9:3:8: 1 chat inserted into ChatRoom1
+2022-1-21 9:3:37: ERROR: Color change failed for username: 'line6' and color: 'red'
+2022-1-21 9:4:53: Incrypto Server was started on http://localhost:5050 with pid 2806
+2022-1-21 9:4:55: Connecting to MongoDB...
+2022-1-21 9:4:56: Connected to MongoDB
+2022-1-21 9:4:56: ERROR: Color change failed for username: 'line6' and color: 'red'
+2022-1-21 9:6:1: Incrypto Server was started on http://localhost:5050 with pid 2877
+2022-1-21 9:6:3: Connecting to MongoDB...
+2022-1-21 9:6:4: Connected to MongoDB
+2022-1-21 9:6:4: Successful registration for username: 'line6'
+2022-1-21 9:6:11: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:6:11: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:6:59: Incrypto Server was started on http://localhost:5050 with pid 2972
+2022-1-21 9:7:1: Connecting to MongoDB...
+2022-1-21 9:7:2: Connected to MongoDB
+2022-1-21 9:7:2: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:7:2: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:8:5: Incrypto Server was started on http://localhost:5050 with pid 3060
+2022-1-21 9:8:6: Connecting to MongoDB...
+2022-1-21 9:8:7: Connected to MongoDB
+2022-1-21 9:8:7: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:8:7: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:8:52: Incrypto Server was started on http://localhost:5050 with pid 3137
+2022-1-21 9:8:54: Connecting to MongoDB...
+2022-1-21 9:8:54: Connected to MongoDB
+2022-1-21 9:9:7: Incrypto Server was started on http://localhost:5050 with pid 3184
+2022-1-21 9:9:8: Connecting to MongoDB...
+2022-1-21 9:9:9: Connected to MongoDB
+2022-1-21 9:9:9: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:9:9: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:10:41: Incrypto Server was started on http://localhost:5050 with pid 3284
+2022-1-21 9:10:42: Connecting to MongoDB...
+2022-1-21 9:10:43: Connected to MongoDB
+2022-1-21 9:10:43: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:10:43: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:11:18: Incrypto Server was started on http://localhost:5050 with pid 3349
+2022-1-21 9:11:20: Connecting to MongoDB...
+2022-1-21 9:11:21: Connected to MongoDB
+2022-1-21 9:11:21: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:11:21: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:11:49: Incrypto Server was started on http://localhost:5050 with pid 3402
+2022-1-21 9:11:51: Connecting to MongoDB...
+2022-1-21 9:11:52: Connected to MongoDB
+2022-1-21 9:11:52: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:11:52: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:12:37: Incrypto Server was started on http://localhost:5050 with pid 3455
+2022-1-21 9:12:39: Connecting to MongoDB...
+2022-1-21 9:12:40: Connected to MongoDB
+2022-1-21 9:12:40: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:12:40: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:13:7: Incrypto Server was started on http://localhost:5050 with pid 3508
+2022-1-21 9:13:9: Connecting to MongoDB...
+2022-1-21 9:13:9: Connected to MongoDB
+2022-1-21 9:13:10: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:13:10: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:13:26: Incrypto Server was started on http://localhost:5050 with pid 3566
+2022-1-21 9:13:27: Connecting to MongoDB...
+2022-1-21 9:13:28: Connected to MongoDB
+2022-1-21 9:13:28: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:13:28: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:16:24: Incrypto Server was started on http://localhost:5050 with pid 3800
+2022-1-21 9:16:25: Connecting to MongoDB...
+2022-1-21 9:16:26: Connected to MongoDB
+2022-1-21 9:16:26: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:16:26: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:17:4: Incrypto Server was started on http://localhost:5050 with pid 3864
+2022-1-21 9:17:6: Connecting to MongoDB...
+2022-1-21 9:17:7: Connected to MongoDB
+2022-1-21 9:17:7: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:17:7: Color change for username: 'line6' to color: 'red'
+2022-1-21 9:17:19: Color change for username: 'line6' to color: 'purple'
+2022-1-21 9:17:19: Color change for username: 'line6' to color: 'purple'
+2022-1-21 9:17:30: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 9:17:30: 1 chat inserted into ChatRoom1
+2022-1-21 9:18:17: Incrypto Server was started on http://localhost:5050 with pid 3989
+2022-1-21 9:19:23: Incrypto Server was started on http://localhost:5050 with pid 4066
+2022-1-21 9:19:25: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 9:19:25: Connecting to MongoDB...
+2022-1-21 9:19:25: Connected to MongoDB
+2022-1-21 9:19:25: 1 chat inserted into ChatRoom1
+2022-1-21 9:20:0: Incrypto Server was started on http://localhost:5050 with pid 4148
+2022-1-21 9:20:2: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 9:20:2: Connecting to MongoDB...
+2022-1-21 9:20:3: Connected to MongoDB
+2022-1-21 9:20:3: 1 chat inserted into ChatRoom1
+2022-1-21 9:21:8: Incrypto Server was started on http://localhost:5050 with pid 4213
+2022-1-21 9:21:10: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 9:21:10: Connecting to MongoDB...
+2022-1-21 9:21:10: Connected to MongoDB
+2022-1-21 9:21:10: 1 chat inserted into ChatRoom1
+2022-1-21 9:23:15: Incrypto Server was started on http://localhost:5050 with pid 4319
+2022-1-21 9:23:17: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 9:23:17: Connecting to MongoDB...
+2022-1-21 9:23:18: Connected to MongoDB
+2022-1-21 9:26:15: Incrypto Server was started on http://localhost:5050 with pid 4395
+2022-1-21 9:26:16: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 9:26:16: Connecting to MongoDB...
+2022-1-21 9:26:17: Connected to MongoDB
+2022-1-21 9:28:1: Incrypto Server was started on http://localhost:5050 with pid 4460
+2022-1-21 9:28:3: Username:'line6' sent 'hehe' with 'plain_text' encryption
+2022-1-21 9:28:3: Connecting to MongoDB...
+2022-1-21 9:28:4: Connected to MongoDB
+2022-1-21 9:28:15: Username:'line6' sent 'poopoo' with 'plain_text' encryption
+2022-1-21 9:28:41: Color change for username: 'line6' to color: 'purple'
+2022-1-21 9:28:41: Color change for username: 'line6' to color: 'purple'
+2022-1-21 9:29:40: Incrypto Server was started on http://localhost:5050 with pid 4608
+2022-1-21 9:29:43: Connecting to MongoDB...
+2022-1-21 9:29:43: Connected to MongoDB
+2022-1-21 9:29:43: Color change for username: 'line6' to color: 'purple'
+2022-1-21 9:29:43: Chat colors changed for username: 'line6' to color: 'purple'
+2022-1-21 9:30:24: Incrypto Server was started on http://localhost:5050 with pid 4673
+2022-1-21 9:30:26: Connecting to MongoDB...
+2022-1-21 9:30:26: Connected to MongoDB
+2022-1-21 9:30:26: Color change for username: 'line6' to color: 'purple'
+2022-1-21 9:30:26: Chat colors changed for username: 'line6' to color: 'purple'
+2022-1-21 9:30:34: Color change for username: 'line6' to color: 'pink'
+2022-1-21 9:30:34: Chat colors changed for username: 'line6' to color: 'pink'
+2022-1-21 9:31:31: Color change for username: 'line6' to color: 'pink'
+2022-1-21 9:31:31: Chat colors changed for username: 'line6' to color: 'pink'
+2022-1-21 9:32:10: Username:'line6' sent 'thisIsMyMessage' with 'plain_text' encryption
+2022-1-21 9:32:55: Color change for username: 'line6' to color: 'pink'
+2022-1-21 9:32:55: Chat colors changed for username: 'line6' to color: 'pink'
+2022-1-21 9:40:43: Incrypto Server was started on http://localhost:5050 with pid 658
+2022-1-21 9:40:50: Connecting to MongoDB...
+2022-1-21 9:40:51: Connected to MongoDB
+2022-1-21 9:40:51: Color change for username: 'line6' to color: 'pink'
+2022-1-21 9:40:51: Chat colors changed for username: 'line6' to color: 'pink'
+2022-1-21 9:43:27: Incrypto Server was started on http://localhost:5050 with pid 818
+2022-1-21 9:43:36: Username:'line6' sent 'thisIsMyMessage' with 'plain_text' encryption
+2022-1-21 9:43:36: Connecting to MongoDB...
+2022-1-21 9:43:37: Connected to MongoDB
+2022-1-21 9:44:13: Username:'line6' sent 'thisIsMyMessage' with 'plain_text' encryption
+2022-1-21 10:0:20: Login attempt made for username: 'line6' with an incorrect password
+2022-1-21 10:0:43: Registration attempt made for username: 'line6' who already exists
+2022-1-21 10:0:47: Successful registration for username: 'line69'
+2022-1-21 10:4:6: Login attempt made for username: 'line6' with an incorrect password
+2022-1-21 10:4:11: Successful login by username: 'line69'
+2022-1-21 10:5:7: Incrypto Server was started on http://localhost:5050 with pid 3240
+2022-1-21 10:5:24: Connecting to MongoDB...
+2022-1-21 10:5:25: Connected to MongoDB
+2022-1-21 10:5:25: Login attempt made for username: 'line6' with an incorrect password
+2022-1-21 10:5:31: Login attempt made for username: 'line6' with an incorrect password
+2022-1-21 10:6:29: Incrypto Server was started on http://localhost:5050 with pid 4093
+2022-1-21 10:6:31: Connecting to MongoDB...
+2022-1-21 10:6:32: Connected to MongoDB
+2022-1-21 10:6:32: Login attempt made for username: 'line6' with an incorrect password
+2022-1-21 10:6:47: Login attempt made for username: 'line6' with an incorrect password
+2022-1-21 10:6:54: Login attempt made for username: 'line6' with an incorrect password
+2022-1-21 10:7:49: Incrypto Server was started on http://localhost:5050 with pid 4960
+2022-1-21 10:8:1: Connecting to MongoDB...
+2022-1-21 10:8:2: Connected to MongoDB
+2022-1-21 10:8:2: Login attempt made for username: 'line6' with an incorrect password
+2022-1-21 10:9:12: Incrypto Server was started on http://localhost:5050 with pid 5788
+2022-1-21 10:9:27: Connecting to MongoDB...
+2022-1-21 10:9:28: Connected to MongoDB
+2022-1-21 10:9:28: Login attempt made for username: 'line6' with an incorrect password
+2022-1-21 10:9:32: Login attempt made for username: 'line6' with an incorrect password
+2022-1-21 10:10:3: Login attempt made for username: 'line6' with an incorrect password
+2022-1-21 10:10:33: Login attempt made for username: 'line6' with an incorrect password
+2022-1-21 10:10:41: Successful login by username: 'line69'
+2022-1-21 10:13:23: Incrypto Server was started on http://localhost:5050 with pid 9357
+2022-1-21 10:13:27: Connecting to MongoDB...
+2022-1-21 10:13:28: Connected to MongoDB
+2022-1-21 10:13:28: Successful login by username: 'line69'
+2022-1-21 10:14:7: Successful login by username: 'line69'
+2022-1-21 10:15:2: Successful login by username: 'line69'
+2022-1-21 10:17:27: Incrypto Server was started on http://localhost:5050 with pid 12490
+2022-1-21 10:17:28: Connecting to MongoDB...
+2022-1-21 10:17:29: Connected to MongoDB
+2022-1-21 10:17:29: Successful login by username: 'line69'
+2022-1-21 10:19:1: Incrypto Server was started on http://localhost:5050 with pid 13614
+2022-1-21 10:19:5: Connecting to MongoDB...
+2022-1-21 10:19:5: Connected to MongoDB
+2022-1-21 10:19:5: Successful login by username: 'line69'
+2022-1-21 10:21:12: Incrypto Server was started on http://localhost:5050 with pid 14050
+2022-1-21 10:21:14: Connecting to MongoDB...
+2022-1-21 10:21:15: Connected to MongoDB
+2022-1-21 10:23:8: Successful login by username: 'line69'
+2022-1-21 10:23:57: Incrypto Server was started on http://localhost:5050 with pid 15270
+2022-1-21 10:24:23: Incrypto Server was started on http://localhost:5050 with pid 15329
+2022-1-21 10:24:35: Connecting to MongoDB...
+2022-1-21 10:24:36: Connected to MongoDB
+2022-1-21 10:24:36: Successful login by username: 'line69'
+2022-1-21 10:25:48: Successful login by username: 'line69'
+2022-1-21 10:27:19: Incrypto Server was started on http://localhost:5050 with pid 18419
+2022-1-21 10:27:23: Connecting to MongoDB...
+2022-1-21 10:27:24: Connected to MongoDB
+2022-1-21 10:27:24: Successful login by username: 'line69'
+2022-1-21 10:27:46: Incrypto Server was started on http://localhost:5050 with pid 18835
+2022-1-21 10:27:57: Connecting to MongoDB...
+2022-1-21 10:27:58: Connected to MongoDB
+2022-1-21 10:27:58: Successful login by username: 'line69'
+2022-1-21 10:36:46: Incrypto Server was started on http://localhost:5050 with pid 20352
+2022-1-21 10:36:49: Connecting to MongoDB...
+2022-1-21 10:37:10: Incrypto Server was started on http://localhost:5050 with pid 20396
+2022-1-21 10:37:11: Connecting to MongoDB...
+2022-1-21 10:37:12: Connected to MongoDB
+2022-1-21 10:38:32: Incrypto Server was started on http://localhost:5050 with pid 20535
+2022-1-21 10:38:34: Connecting to MongoDB...
+2022-1-21 10:38:34: Connected to MongoDB
+2022-1-21 10:40:31: Successful login by username: 'line69'
+2022-1-21 10:43:25: Incrypto Server was started on http://localhost:5050 with pid 21803
+2022-1-21 10:43:38: Connecting to MongoDB...
+2022-1-21 10:43:39: Connected to MongoDB
+2022-1-21 10:43:39: Successful login by username: 'line69'
+2022-1-21 10:45:7: Successful login by username: 'line69'
+2022-1-21 10:45:41: Successful login by username: 'line69'
+2022-1-21 10:45:44: Username:'line69' sent '00680069' with 'Default_Encryption' encryption
+2022-1-21 10:45:48: Username:'line69' sent '00680069' with 'Default_Encryption' encryption
+2022-1-21 10:46:43: Incrypto Server was started on http://localhost:5050 with pid 25249
+2022-1-21 10:46:58: Connecting to MongoDB...
+2022-1-21 10:46:59: Connected to MongoDB
+2022-1-21 10:46:59: Successful login by username: 'line69'
+2022-1-21 10:47:3: Username:'line69' sent '00680069' with 'Default_Encryption' encryption
+2022-1-21 10:47:7: Username:'line69' sent '00680069' with 'Default_Encryption' encryption
+2022-1-21 10:49:46: Successful login by username: 'line69'
+2022-1-21 10:49:50: Username:'line69' sent '00680069' with 'Default_Encryption' encryption
+2022-1-21 10:49:56: Username:'line69' sent '00680069' with 'Default_Encryption' encryption
+2022-1-21 10:51:55: Successful login by username: 'line69'
+2022-1-21 10:51:58: Username:'line69' sent '00680069' with 'Default_Encryption' encryption
+2022-1-21 10:53:43: Successful login by username: 'line69'
+2022-1-21 10:53:47: Username:'line69' sent '00680069' with 'Default_Encryption' encryption
+2022-1-21 10:53:54: Username:'line69' sent '0066' with 'Default_Encryption' encryption
+2022-1-21 10:55:44: Successful login by username: 'line69'
+2022-1-21 10:55:47: Username:'line69' sent '00680069' with 'Default_Encryption' encryption
+2022-1-21 10:55:51: Username:'line69' sent '006800650079006800650079006800650079' with 'Default_Encryption' encryption
+2022-1-21 10:57:29: Successful login by username: 'line69'
+2022-1-21 10:57:32: Username:'line69' sent '00680069' with 'Default_Encryption' encryption
+2022-1-21 10:57:37: Username:'line69' sent '006800650079002c00200069007400200077006f0072006b00730021' with 'Default_Encryption' encryption
+2022-1-21 10:58:17: Incrypto Server was started on http://localhost:5050 with pid 32416
+2022-1-21 10:58:20: Connecting to MongoDB...
+2022-1-21 10:58:20: Username:'line69' sent '00680065006c006c006f0070' with 'Default_Encryption' encryption
+2022-1-21 10:58:21: Connected to MongoDB
+2022-1-21 10:58:30: Username:'line69' sent '0077006f0072006b0069006e00670021' with 'Default_Encryption' encryption
+2022-1-21 10:59:36: Successful login by username: 'line69'
+2022-1-21 10:59:41: Username:'line69' sent '00680065006c006c006f0021' with 'Default_Encryption' encryption
+2022-1-21 11:0:38: Successful login by username: 'line69'
+2022-1-21 11:0:46: Username:'line69' sent '006800650079002c00200069007400200077006f0072006b00730021' with 'Default_Encryption' encryption
+2022-1-21 11:8:49: Successful login by username: 'line69'
+2022-1-21 11:10:50: Successful login by username: 'line69'
+2022-1-21 11:10:53: Username:'line69' sent '00680069' with 'Default_Encryption' encryption
+2022-1-21 11:10:58: Username:'line69' sent '0079006f006f006f' with 'Default_Encryption' encryption
+2022-1-21 11:11:34: Successful registration for username: 'line60'
+2022-1-21 11:11:39: Username:'line60' sent '006800650079' with 'Default_Encryption' encryption
+2022-1-21 11:13:1: Username:'line69' sent '00680069' with 'Default_Encryption' encryption
+2022-1-21 11:13:14: Username:'line69' sent '0079006f' with 'Default_Encryption' encryption
+2022-1-21 11:13:18: Username:'line69' sent '006800650079' with 'Default_Encryption' encryption
+2022-1-21 11:13:27: Username:'line60' sent '00680069' with 'Default_Encryption' encryption
+2022-1-21 11:14:45: Username:'line60' sent '00680069' with 'Default_Encryption' encryption
+2022-1-21 11:15:1: Username:'line60' sent '006800650079' with 'Default_Encryption' encryption
+2022-1-21 11:15:56: Username:'line69' sent '00680069' with 'Default_Encryption' encryption
+2022-1-21 11:16:18: Username:'line69' sent '006800650079' with 'Default_Encryption' encryption
+2022-1-21 11:17:16: Incrypto Server was started on http://localhost:5050 with pid 7556
+2022-1-21 11:17:17: Connecting to MongoDB...
+2022-1-21 11:17:18: Connected to MongoDB
+2022-1-21 11:17:35: Successful login by username: 'line60'
+2022-1-21 11:17:42: Successful login by username: 'line69'
+2022-1-21 11:17:52: Username:'line69' sent '00680065006c006c006f' with 'Default_Encryption' encryption
+2022-1-21 11:18:54: Username:'line69' sent '00680069' with 'Default_Encryption' encryption
+2022-1-21 11:20:39: Incrypto Server was started on http://localhost:5050 with pid 9852
+2022-1-21 11:20:40: Connecting to MongoDB...
+2022-1-21 11:20:41: Connected to MongoDB
+2022-1-21 11:21:2: Incrypto Server was started on http://localhost:5050 with pid 9905
+2022-1-21 11:21:2: Connecting to MongoDB...
+2022-1-21 11:21:3: Connected to MongoDB
+2022-1-21 11:21:45: Incrypto Server was started on http://localhost:5050 with pid 9976
+2022-1-21 11:21:46: Connecting to MongoDB...
+2022-1-21 11:21:46: Connecting to MongoDB...
+2022-1-21 11:21:47: Connected to MongoDB
+2022-1-21 11:21:47: Connected to MongoDB
+2022-1-21 11:21:57: Username:'line69' sent '006d0061007900620065003f' with 'Default_Encryption' encryption
+2022-1-21 11:22:5: Username:'line69' sent '00680069' with 'Default_Encryption' encryption
+2022-1-21 11:25:48: Username:'line69' sent '006800650079' with 'Default_Encryption' encryption
+2022-1-21 11:26:9: Username:'line69' sent '007700680061007400270073002000750070003f' with 'Default_Encryption' encryption
+2022-1-21 11:30:36: Successful login by username: 'line69'
+2022-1-21 11:30:54: Successful login by username: 'line60'
+2022-1-21 11:30:58: Username:'line60' sent '006800650079' with 'Default_Encryption' encryption
+2022-1-21 11:31:36: Successful login by username: 'line60'
+2022-1-21 11:32:56: Incrypto Server was started on http://localhost:5050 with pid 13637
+2022-1-21 11:32:57: Connecting to MongoDB...
+2022-1-21 11:32:58: Connected to MongoDB
+2022-1-21 11:33:8: Successful login by username: 'line60'
+2022-1-21 11:33:47: Successful login by username: 'line60'
+2022-1-21 11:34:55: Successful login by username: 'line60'
+2022-1-21 11:37:2: Successful login by username: 'line60'
+2022-1-21 11:37:26: Login attempt made for username: 'line6' with an incorrect password
+2022-1-21 11:37:33: Successful login by username: 'line69'
+2022-1-21 11:38:13: Successful login by username: 'line69'
+2022-1-21 11:38:30: Successful login by username: 'line60'
+2022-1-21 11:38:34: Username:'line60' sent '006800650079' with 'Default_Encryption' encryption
+2022-1-21 11:38:38: Username:'line60' sent '0061' with 'Default_Encryption' encryption
+2022-1-21 11:38:41: Username:'line60' sent '0061' with 'Default_Encryption' encryption
+2022-1-21 11:38:41: Username:'line60' sent '0061' with 'Default_Encryption' encryption
+2022-1-21 11:39:6: Successful registration for username: 'line61'
+2022-1-21 11:39:11: Username:'line61' sent '007700680061007400270073002000750070003f' with 'Default_Encryption' encryption
+2022-1-21 11:42:57: Successful login by username: 'line61'
+2022-1-21 11:43:2: Username:'line61' sent '006800650079' with 'Default_Encryption' encryption
+2022-1-21 11:43:8: Username:'line61' sent '0066' with 'Default_Encryption' encryption
+2022-1-21 11:43:31: Successful login by username: 'line61'
+2022-1-21 11:43:34: Username:'line61' sent '0061007300640066' with 'Default_Encryption' encryption
+2022-1-21 11:43:59: Successful login by username: 'line60'
+2022-1-21 11:44:18: Username:'line60' sent '0061007700650073006f006d0065' with 'Default_Encryption' encryption
+2022-1-21 11:46:52: Successful login by username: 'line69'
+2022-1-21 11:46:57: Username:'line60' sent '00680069' with 'Default_Encryption' encryption
+2022-1-21 11:48:48: Successful login by username: 'line69'
+2022-1-21 11:48:52: Username:'line61' sent '006800650079' with 'Default_Encryption' encryption
+2022-1-21 11:50:37: Successful login by username: 'line69'
+2022-1-21 11:50:48: Username:'line69' sent '00680065006c006c006f' with 'Default_Encryption' encryption
+2022-1-21 11:54:38: Successful login by username: 'line69'
+2022-1-21 11:54:45: Username:'line69' sent '006800650079' with 'Default_Encryption' encryption
+2022-1-21 11:56:18: Successful login by username: 'line69'
+2022-1-21 11:56:22: Username:'line69' sent '006800650079' with 'Default_Encryption' encryption
+2022-1-21 12:1:6: Incrypto Server was started on http://localhost:5050 with pid 32582
+2022-1-21 12:1:34: Username:'line6' sent 'thisIsMyMessage' with 'plain_text' encryption
+2022-1-21 12:1:34: Connecting to MongoDB...
+2022-1-21 12:1:35: Connected to MongoDB
+2022-1-21 12:4:2: Incrypto Server was started on http://localhost:5050 with pid 32732
+2022-1-21 12:4:9: Connecting to MongoDB...
+2022-1-21 12:4:9: Connected to MongoDB
+2022-1-21 12:5:27: Incrypto Server was started on http://localhost:5050 with pid 358
+2022-1-21 12:5:29: Username:'line6' sent 'thisIsMyMessage' with 'plain_text' encryption
+2022-1-21 12:5:29: Connecting to MongoDB...
+2022-1-21 12:5:29: Connected to MongoDB
+2022-1-21 12:5:57: Username:'line6' sent 'thisIsMyMessage' with 'plain_text' encryption
+2022-1-21 12:6:37: Incrypto Server was started on http://localhost:5050 with pid 426
+2022-1-21 12:6:39: Connecting to MongoDB...
+2022-1-21 12:6:39: Connected to MongoDB
+2022-1-21 12:7:30: Incrypto Server was started on http://localhost:5050 with pid 524
+2022-1-21 12:7:32: Connecting to MongoDB...
+2022-1-21 12:7:32: Connected to MongoDB
+2022-1-21 12:8:18: Incrypto Server was started on http://localhost:5050 with pid 657
+2022-1-21 12:8:38: Connecting to MongoDB...
+2022-1-21 12:8:39: Connected to MongoDB
+2022-1-21 12:8:39: Successful login by username: 'line69'
+2022-1-21 12:8:42: Username:'line69' sent '006800650079' with 'Default_Encryption' encryption
+2022-1-21 12:9:20: Successful login by username: 'line69'
+2022-1-21 12:9:24: Username:'line69' sent '007700680061007400270073002000750070003f' with 'Default_Encryption' encryption
+2022-1-21 12:10:0: Successful login by username: 'line61'
+2022-1-21 12:10:4: Username:'line61' sent '006800650079' with 'Default_Encryption' encryption
+2022-1-21 12:10:14: Login attempt made for username: 'line62' with an incorrect password
+2022-1-21 12:10:20: Successful login by username: 'line60'
+2022-1-21 12:10:25: Username:'line60' sent '00680065007900200067007500790073' with 'Default_Encryption' encryption
+2022-1-21 12:11:31: Successful login by username: 'line60'
+2022-1-21 12:11:35: Username:'line69' sent '006800650079' with 'Default_Encryption' encryption

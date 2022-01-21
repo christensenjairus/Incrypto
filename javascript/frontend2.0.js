@@ -2,35 +2,32 @@
 SCRIPT FOR CONTROLLING CHAT CLIENT AND INDEX.HTML
 */
 
-import {getNewMessages, sendMessage} from "./chat_http.mjs"
-const { ipcMain, ipcRenderer } = require('electron');
+import {getNewMessages, getAllMessages, sendMessage} from "./chat_http.mjs"
+const { ipcRenderer } = require('electron');
 const Store = require('electron-store');
-var http = require('http');
 const store = new Store();
 const DOMPurify = require('dompurify');
-const axios = require('axios');
 
 const serverName = store.get("serverName", ""); // default to "" if no valid input
 
 const DEBUG = true; // turn this on & use it with 'if(DEBUG)' to display more console.log info
 var displayAll = true;
-ipcRenderer.invoke('getSeeAllMessages').then((result) => { 
+await ipcRenderer.invoke('getSeeAllMessages').then((result) => { 
     displayAll = result;
 });
 
 var myName;
-ipcRenderer.invoke('getName').then((result) => { 
+await ipcRenderer.invoke('getName').then((result) => { 
     myName = result;
 });
 var myColor;
-ipcRenderer.invoke('getColor').then((result) => { 
+await ipcRenderer.invoke('getColor').then((result) => { 
     myColor = result;
 });
-var myKey = store.get(myName + "_key", "");
-var chatRoom = [];
+var sessionID = await store.get(myName + "_key", "");
+console.log("SessionID: " + sessionID)
 
-let pingIntervalID;
-let historyIntervalID;
+var chatRoom = [];
 
 let EncryptionFunction = store.get("encryptionType", Encryption_Types[0]);  // TODO: switch this back to default Encryption
 //default encryption type is first in file
@@ -93,20 +90,9 @@ $(function() { // this syntax means it's a function that will be run once once d
     //     if (DEBUG) console.log("connection made")
     //     if (myName != "") {
     
-    getNewMessages("", serverName).then(response => {
-        // console.log(response.data.body)
-        let messages = JSON.parse(response.data.body)
-        let newJSON = [];
-        for (var i = 0; i < messages.data.length; ++i) {
-            // chatRoom.push(messages.data[i])
-            // console.log("received message from server: " + messages.data[i])
-            newJSON.push(messages.data[i])
-        }
-        
-        appendChat(newJSON)
-        mystatus.text(myName).css('color', myColor);
-        input.focus();
-    })
+    
+    
+    
     //         // get history of chat
     //         let message = {"type":"historyRequest", "user":myName, "color":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
     //         send(connection, JSON.stringify(message));
@@ -174,20 +160,48 @@ $(function() { // this syntax means it's a function that will be run once once d
     //     }
     // };
     
+    async function refreshChat(timeOfLastFetch, chatRoomName, isStarting) {
+        getNewMessages(timeOfLastFetch, chatRoomName, serverName).then(response => {
+            store.set("timeOfLastFetch_" + sessionID, (new Date()).getTime());
+            var messages = response.data;
+            let newJSON = [];
+            for (var i = 0; i < messages.length; ++i) {
+                newJSON.push(messages[i])
+                if (!isStarting && Decrypt(messages[i].author, messages[i].encryption) != myName) {
+                    showNotification(Decrypt(messages[i].author, messages[i].encryption), Decrypt(messages[i].text, messages[i].encryption));
+                }
+            }
+            appendChat(newJSON)
+            mystatus.text(myName).css('color', myColor);
+            input.focus();
+        })
+    }
+    refreshChat("", "ChatRoom1", true)
+    // refresh every 5 seconds
+    setInterval(function() {
+        refreshChat(store.get("timeOfLastFetch_" + sessionID, ""), "ChatRoom1", false)
+    }, 5000)
     
-    function appendChat(newJSON) { // this was done in an attempt to speed up onmessage handler
+    function appendChat(newJSON) {
         let dtOfLastMessage = "";
-        if (chatRoom.length != 0) chatRoom[chatRoom.length - 1].time;
-
+        if (chatRoom.length != 0) dtOfLastMessage = chatRoom[chatRoom.length - 1].time;
+        
         for (var i=0; i < newJSON.length; i++) {
             addMessage(newJSON[i].author, newJSON[i].text, newJSON[i].color, newJSON[i].time, dtOfLastMessage, newJSON[i].encryption, newJSON[i].guid); 
             dtOfLastMessage = newJSON[i].time;
         }
-        chatRoom.push(newJSON);
+        
+        var beforeAdding = chatRoom.length;
+        if (chatRoom.length > 1) chatRoom.concat(newJSON);
+        else chatRoom = newJSON;
+        newJSON = [];
+
+        
+        
         var div = $('#chatbox');
-            div.animate({
-                scrollTop: div[0].scrollHeight
-            }, 100);
+        div.animate({
+            scrollTop: div[0].scrollHeight
+        }, 100);
     }
     
     /*
@@ -254,21 +268,17 @@ $(function() { // this syntax means it's a function that will be run once once d
             msg = Encrypt(msg);
             if (msg == "") return; // if encryption fails
             
-            var tmp = Encrypt(myName);
-            sendMessage(myName, tmp, msg, myColor, EncryptionFunction, myKey, serverName).then(response => {
-                if (response == false) {
-                    return;
-                }
-                else {
-                    let messages = JSON.parse(response.data.body)
-                    let newJSON = [];
-                    for (var i = 0; i < messages.data.length; ++i) {
-                        newJSON.push(messages.data[i])
-                    }
-                    appendChat(newJSON)
+            sendMessage(myName, Encrypt(myName), msg, myColor, EncryptionFunction, sessionID, "ChatRoom1", serverName).then(response => {
+                console.log(response.data)
+                if (response.data == 'Recieved') {
+                    refreshChat(store.get("timeOfLastFetch_" + sessionID, ""), "ChatRoom1", false)
                     savedInputText = "";
                     document.getElementById('input').value = "";
                     ipcRenderer.invoke('setBadgeCnt', 0);
+                    return;
+                }
+                else {
+                   alert("There was an issue sending your message");
                 }
             })
         }
@@ -317,6 +327,8 @@ $(function() { // this syntax means it's a function that will be run once once d
     
     
     
+    
+    
     document.getElementById('status').addEventListener('click', () => {
         var newColor = getRandomColor(); // generate random color
         myColor = newColor
@@ -339,7 +351,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         // if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
     })
     
-
+    
     // add NAVBAR functionality
     document.getElementById('logoutButton').addEventListener('click', () => {
         logout();
@@ -394,35 +406,14 @@ function showNotification(author, text) {
     const notification = {
         title: author,
         body: text,
-        icon: __dirname + "/../icons/hacker-25899.png"
+        // icon: __dirname + "/../icons/hacker-25899.png"
+        icon: "../icons/hacker-25899.png"
     }
     new Notification(NOTIFICATION_TITLE, notification).onclick = () => {
         document.getElementById('input').focus();
     };
-    ipcRenderer.invoke('incBadgeCnt', 1).then((result => {
-        // update badge count
-    }))
+    ipcRenderer.invoke('incBadgeCnt', 1);
 }
-
-// function send(connection, message) {
-//     try {
-//         connection.send(message);
-//         // console.log(message);
-//         input.removeAttr('disabled')
-//         if (document.getElementById('input').value === "Can\'t communicate with the WebSocket server.") {
-//             document.getElementById('input').value = savedInputText;
-//         }
-//         input.focus();
-//         mystatus.text(myName).css('color', myColor);
-//     } catch(e) { // will execute if connection.send fails (which means that connection is not set up yet)
-//         // change DOM here because of failure
-//         if (document.getElementById('input').value != "Can\'t communicate with the WebSocket server.") {
-//             savedInputText = document.getElementById('input').value
-//         }
-//         document.getElementById('input').value = ("Can\'t communicate with the WebSocket server.")
-//         input.attr('disabled', 'disabled')
-//     }
-// }
 
 function Encrypt(textin) {
     let toReturn = "";

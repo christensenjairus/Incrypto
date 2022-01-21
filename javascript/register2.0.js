@@ -1,6 +1,6 @@
 // CONTAINS DOM MANIPULATION FOR REGISTER PAGE
 
-import {register} from './register_http.mjs';
+import {register} from './chat_http.mjs';
 const { ipcRenderer } = require('electron');
 const Store = require('electron-store');
 const store = new Store(); // initalize Store
@@ -26,7 +26,7 @@ registerButton.addEventListener('click', () => {
 });
 
 // ALLOW <ENTER> TO BE THE SAME AS CLICKING SUBMIT
-var username = document.getElementById("username");
+username = document.getElementById("username");
 username.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
         event.preventDefault();
