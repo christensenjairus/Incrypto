@@ -32,7 +32,8 @@
       "electronPackagerConfig": {
         "packageManager": "npm",
         "ignore": [
-          "out"
+          "out",
+          "dist"
         ]
       },
       "electronWinstallerConfig": {
@@ -105,12 +106,12 @@
     "mac": {
       "category": "Messaging",
       "icon": "./icons/hacker-25899.icns",
-      "files":["!out/*"]
+      "files":["!out/*", "!dist/*"]
     },
     "linux": {
       "category": "Messaging",
       "icon": "./icons/hacker-25899.png",
-      "files":["!out/*"]
+      "files":["!out/*", "!dist/*"]
     }
   }
 }
