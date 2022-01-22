@@ -69,13 +69,15 @@ $(function() { // this syntax means it's a function that will be run once once d
             input.focus();
             scroll();
         })
+        // setTimeout(refreshChat(store.get("timeOfLastFetch_" + sessionID, ""), chatRoomName, false), 3000)
     }
-    refreshChat("", chatRoomName, true)
-    // refresh every 5 seconds
+    // setTimeout(refreshChat(store.get("timeOfLastFetch_" + sessionID, ""), chatRoomName, false), 3000)
+    refreshChat("", chatRoomName, true) // populate the chat initially
+    // refresh every 3 seconds
     setInterval(function() {
         refreshChat(store.get("timeOfLastFetch_" + sessionID, ""), chatRoomName, false)
         scroll();
-    }, 5000)
+    }, 3000)
     
     function appendChat(newJSON) {
         let dtOfLastMessage = "";
@@ -96,11 +98,13 @@ $(function() { // this syntax means it's a function that will be run once once d
         div.animate({
             scrollTop: div[0].scrollHeight
         }, 100);
+        document.getElementById('input').focus();
     }
     
     function jump() {
         var div = $('#chatbox');
         div.scrollTop = div.scrollHeight;
+        document.getElementById('input').focus();
     }
     
     /*
@@ -167,7 +171,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             msg = Encrypt(msg);
             if (msg == "") return; // if encryption fails
             
-            sendMessage(myName, Encrypt(myName), msg, myColor, EncryptionFunction, sessionID, chatRoomName, serverName).then(async response => {
+            await sendMessage(myName, Encrypt(myName), msg, myColor, EncryptionFunction, sessionID, chatRoomName, serverName).then(async response => {
                 if (response.data == 'Recieved') {
                     await refreshChat(store.get("timeOfLastFetch_" + sessionID, ""), chatRoomName, false)
                     scroll();
@@ -180,6 +184,7 @@ $(function() { // this syntax means it's a function that will be run once once d
                     alert("There was an issue sending your message");
                 }
             })
+            document.getElementById('input').focus();
         }
     });
     
@@ -190,7 +195,12 @@ $(function() { // this syntax means it's a function that will be run once once d
         // console.log("Color is now " + myColor)
         mystatus.text(myName).css('color', myColor);
         ipcRenderer.invoke('setColor', myColor);
+        document.getElementById('input').focus();
         var result = http.changeColor(myName, myColor, serverName);
+    });
+    content.addEventListener('click', async () => {
+        document.getElementById('input').focus();
+    });
     
     // add NAVBAR functionality
     document.getElementById('logoutButton').addEventListener('click', () => {
@@ -220,6 +230,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     });
     
 });
+
 
 // _________________ Helper Functions ________________________________
 
