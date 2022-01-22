@@ -34,6 +34,8 @@ You'll need Node.js and NPM in order to run the app. Git is optional (for clonin
 # Now, update Node and NPM to the latest stable version globally
         sudo npm install -g n
         sudo n stable
+# You could also do 
+	npm install -g npm@latest
 # Now, close this shell. This is important because the current shell will remember the old location of npm, which we don't want.
 ```
 
@@ -62,14 +64,11 @@ Each operating system (Linux, Windows, MacOS) can compile binaries for their own
 
 **Move or delete the `out` and `dist` directories before compilation, or else your packages will be much larger than they need to be**
 * RPMs (Linux), DEBs (Linux), and EXEs (Windows) will need Electron-Forge installed globally
-
-    `npm i -g electron-forge`
-   * On Windows, you may need to enable scripts to be run in order for this to work
-
-        `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force`
+	* `npm i -g electron-forge`
+* On Windows, you may need to enable scripts to be run in order for this to work
+	* `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force`
 * DMGs (MacOS), AppImages (Linux), and Snaps (Linux) can be created with Electron-Builder
-
-    `npm i -g electron-builder`
+	* `npm i -g electron-builder`
 
 More details and instructions on compilation are given below
 
@@ -264,7 +263,11 @@ Upon receiving a message, it will sort through what type of message it is and ac
 * Long messages without spaces will overflow from sides of screen instead of wrapping
 * MacOS `npm start` displays text strangely
 * Linux AppImage and Snap icon needs to be set
-* Snap can't display any messages from an alert()
-* Make webserver use WSS instead of WS protocol --> OR change protocol completely to use HTTP protocol, which could be way more secure and reliable.
 * Implement keys and key validation
 * BUG: Windows requires that you click outside the chat at times
+* https://phoenixnap.com/kb/update-node-js-version
+* Edit this file to reflect changes in the app thus far
+	* Creating a MongoDB, env file
+	* Endpoints on the server
+	* Changes in json communication
+	* Polling the server for new messages
