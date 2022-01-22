@@ -1,8 +1,10 @@
 // CONTAINS DOM MANIPULATION FOR LOGIN PAGE
 
-import {login} from '../javascript/chat_http.js';
+// import {login} from './chat_http.js';
+const chat_http = require('../javascript/chat_http.js')
 const { ipcRenderer } = require('electron');
 const Store = require('electron-store')
+// import Store from 'electron-store'
 const store = new Store(); // initalize Store
 var attempt = 3; // Variable to count number of attempts.
 
@@ -24,7 +26,7 @@ loginButton.addEventListener('click', () => {
   ipcRenderer.invoke('setName', username);
   var password = document.getElementById("password").value;
   var serverName = document.getElementById("serverName").value;
-  login(username, password, serverName);
+  chat_http.login(username, password, serverName);
 });
 
 // ALLOW <ENTER> TO BE THE SAME AS CLICKING SUBMIT

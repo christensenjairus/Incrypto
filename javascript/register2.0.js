@@ -1,8 +1,8 @@
 // CONTAINS DOM MANIPULATION FOR REGISTER PAGE
 
-import {register} from '../javascript/chat_http.js';
+const chat_http = require('./chat_http.js');
 const { ipcRenderer } = require('electron');
-const Store = require('electron-store');
+const Store = require('electron-store')
 const store = new Store(); // initalize Store
 var attempt = 3; // Variable to count number of attempts.
 
@@ -22,7 +22,7 @@ registerButton.addEventListener('click', () => {
     var password = document.getElementById("password").value;
     var password2 = document.getElementById("password2").value;
     var serverName = document.getElementById("serverName").value;
-    register(username, password, password2, serverName);
+    chat_http.register(username, password, password2, serverName);
 });
 
 // ALLOW <ENTER> TO BE THE SAME AS CLICKING SUBMIT

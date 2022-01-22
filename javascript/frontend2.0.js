@@ -2,8 +2,11 @@
 SCRIPT FOR CONTROLLING CHAT CLIENT AND INDEX.HTML
 */
 
-import {getNewMessages, getAllMessages, sendMessage, changeColor} from "./chat_http.js"
-const { ipcRenderer } = require('electron');
+// import {getNewMessages, getAllMessages, sendMessage, changeColor} from "./chat_http.js"
+const http_logic = require('../javascript/chat_http.js')
+// import * as encryption from "./Encryption_DEV.js"
+// const encryption = require('../javascript/Encryption_DEV.js')
+// const { ipcRenderer } = require('electron');
 const Store = require('electron-store');
 const store = new Store();
 const DOMPurify = require('dompurify');
@@ -12,31 +15,33 @@ const serverName = store.get("serverName", ""); // default to "" if no valid inp
 
 const DEBUG = true; // turn this on & use it with 'if(DEBUG)' to display more console.log info
 var displayAll = true;
-await ipcRenderer.invoke('getSeeAllMessages').then((result) => { 
-    displayAll = result;
-});
-
 var myName;
-await ipcRenderer.invoke('getName').then((result) => { 
-    myName = result;
-});
 var myColor;
-await ipcRenderer.invoke('getColor').then((result) => { 
-    myColor = result;
-});
-var sessionID = await store.get(myName + "_key", "");
-console.log("SessionID: " + sessionID)
-
 var chatRoom = [];
 var chatRoomName = "ChatRoom1"
+var EncryptionFunction;
+var sessionID;
 
-let EncryptionFunction = store.get("encryptionType", Encryption_Types[0]);  // TODO: switch this back to default Encryption
-//default encryption type is first in file
-ipcRenderer.invoke('getEncryptionType').then((result) => {
-    EncryptionFunction = result;
-})
-
-console.log("encryption type is " + EncryptionFunction)
+async function prepareChat() {
+    await ipcRenderer.invoke('getSeeAllMessages').then((result) => { 
+        displayAll = result;
+    });
+    await ipcRenderer.invoke('getName').then((result) => { 
+        myName = result;
+    });
+    await ipcRenderer.invoke('getColor').then((result) => { 
+        myColor = result;
+    });
+    sessionID = await store.get(myName + "_key", "");
+    console.log("SessionID: " + sessionID)
+    EncryptionFunction = await store.get("encryptionType", Encryption_Types[0]);  // TODO: switch this back to default Encryption
+    //default encryption type is first in file
+    await ipcRenderer.invoke('getEncryptionType').then((result) => {
+        EncryptionFunction = result;
+    })
+    console.log("encryption type is " + EncryptionFunction)
+}
+prepareChat();
 
 var content = document.getElementById("chatbox");
 var input = document.getElementById("input");
@@ -57,112 +62,8 @@ $(function() { // this syntax means it's a function that will be run once once d
     input = $('#input');
     mystatus = $('#status');
     
-    // async function getPing() {
-    //     try {
-    //         const response = await axios.get('http://' + serverName + '/ping', {
-    //             // params: {
-    //             //     ID: 12345
-    //             // }  
-    //             type: "ping"  
-    //         });
-    //       console.log(response);
-    //     } catch (error) {
-    //       console.error(error);
-    //     }
-    // }
-    // getPing();
-    
-    // if user is running mozilla then use it's built-in WebSocket
-    // window.WebSocket = window.WebSocket || window.MozWebSocket;
-    // if browser doesn't support WebSocket, just show some notification and exit
-    // if (!window.WebSocket) {
-    //     content.html($('<p>', { text: 'Sorry, but your browser doesn’t support WebSocket.' }));
-    //     input.hide();
-    //     $('span').hide();
-    //     return;
-    // }
-    // open connection
-    // var connection = new WebSocket('ws://' + serverIPandPortNum);
-    
-    // /*
-    // * What to do when connection is first made
-    // */
-    // connection.onopen = function () {
-    //     if (DEBUG) console.log("connection made")
-    //     if (myName != "") {
-    
-    
-    
-    
-    //         // get history of chat
-    //         let message = {"type":"historyRequest", "user":myName, "color":myColor, "encryption":"plain_text", "key":"none", "time": (new Date()).getTime()}
-    //         send(connection, JSON.stringify(message));
-    //         if (DEBUG) console.log("Message sent: \n" + JSON.stringify(message));
-    //         // end of getting chat history
-    //         input.prop("disabled", false);
-    //         input.focus();
-    //     }
-    //     else {
-    //         input.hide();
-    //         mystatus.text('Error occurred. Username unknown. Please log out and log back in.');
-    //     }
-    //     content.innerhtml += `<p>Welcome to the Incrypto Chat! Type in the text box below to begin chatting!</p>`;
-    // };
-    
-    // /*
-    // * What to do when the socket receives a message
-    // */
-    // connection.onmessage = function (message) {
-    //     try {
-    //         var json = JSON.parse(message.data);
-    //     } catch (e) {
-    //         console.log('Invalid JSON: ', message.data);
-    //         return;
-    //     }
-    //     if (json.type == "pong") { // do nothing
-    //         pongCount = pongCount + 1;
-    //         return;
-    //     }
-    //     if (json.type === 'history') { // entire message history
-    //         populateChat(message, json);
-    //     } else if (json.type === 'message') { // it's a single message
-    //         if (DEBUG) console.log("Message received: \n" + message.data);
-    //         // let the user write another message
-    //         input.prop("disabled", false)
-    //         addMessage(json.data.author, json.data.text, json.data.color, json.data.time, "", json.data.encryption);
-    //         // if (DEBUG) console.log("should be able to type - message received")
-    //         input.focus();
-    //         var div = $('#chatbox');
-    //         div.animate({
-    //             scrollTop: div[0].scrollHeight
-    //         }, 100);
-    //         // if (json.data.author != myName) {
-    //         //     try {
-    //         //         json.data.text = eval(json.data.encryption + '_REVERSE("' + json.data.text + '")');
-    //         //     } catch (e) {
-    //         //         console.log("Don't have decryption algorithm for " + json.data.encryption + " in message sent from " + json.data.author);
-    //         //         return; // don't get notifications for messages that are gibberish
-    //         //     }
-    //         if (Encrypt(myName) != json.data.author) {
-    //             showNotification(Decrypt(json.data.author, json.data.encryption), Decrypt(json.data.text, json.data.encryption));
-    //         }
-    //     } else if (json.type == "logout") {
-    //         clearInterval(pingIntervalID);
-    //         clearInterval(historyIntervalID);
-    //         connection.close();
-    //         // window.stop();
-    //         alert("You've logged in somewhere else. You'll be logged out here.")
-    //         ipcRenderer.invoke('forceLogout').then(() => { // this is a jenky solution to the problem - the login handler isn't working when called here and we don't know why
-    //         });
-    //         // logout();
-    //         return;
-    //     } else {
-    //         console.log('Unexpected Json Value: ', json);
-    //     }
-    // };
-    
     async function refreshChat(timeOfLastFetch, chatRoomName, isStarting) {
-        getNewMessages(timeOfLastFetch, chatRoomName, serverName).then(async response => {
+        http_logic.getNewMessages(timeOfLastFetch, chatRoomName, serverName).then(async response => {
             store.set("timeOfLastFetch_" + sessionID, (new Date()).getTime());
             var messages = response.data;
             let newJSON = [];
@@ -277,7 +178,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             msg = Encrypt(msg);
             if (msg == "") return; // if encryption fails
             
-            sendMessage(myName, Encrypt(myName), msg, myColor, EncryptionFunction, sessionID, chatRoomName, serverName).then(async response => {
+            http_logic.sendMessage(myName, Encrypt(myName), msg, myColor, EncryptionFunction, sessionID, chatRoomName, serverName).then(async response => {
                 console.log(response.data)
                 if (response.data == 'Recieved') {
                     await refreshChat(store.get("timeOfLastFetch_" + sessionID, ""), chatRoomName, false)
@@ -301,7 +202,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         // console.log("Color is now " + myColor)
         mystatus.text(myName).css('color', myColor);
         ipcRenderer.invoke('setColor', myColor);
-        var result = changeColor(myName, myColor, serverName);
+        var result = http.changeColor(myName, myColor, serverName);
 
         // if (result != false) {
         //     // await store.set(myName + "_Color", myColor);

@@ -80,7 +80,7 @@ app.on('activate', function() {
 function createWindow(width, height) {
     // Create the browser window.
     if (fs.existsSync(process.execPath + '.png')) { // to make sure AppImages can get the right ico file
-        console.log("AppImage detected")
+        // console.log("AppImage detected")
         mainWindow = new BrowserWindow({
             webPreferences: {
                 preload: path.join(__dirname, '../javascript/preload.js'),
@@ -100,7 +100,7 @@ function createWindow(width, height) {
         }) 
     }
     else {
-        console.log("not an AppImage. Can grab picture file at " + basepath + '/../icons/hacker-25899.png')
+        // console.log("not an AppImage. Can grab picture file at " + basepath + '/../icons/hacker-25899.png')
         mainWindow = new BrowserWindow({
             webPreferences: {
                 preload: path.join(__dirname, '../javascript/preload.js'),
@@ -474,14 +474,14 @@ ipcMain.handle('getEncryptionType', (event) => {
 })
 
 ipcMain.handle('getColor', (event) => {
-    console.log("giving color: "+myColor)
+    // console.log("giving color: "+myColor)
     return myColor;
 })
 
 ipcMain.handle('setColor', (event, color) => {
     // myName = name;
     myColor = color;
-    console.log("color saved in main.js file: " + color)
+    // console.log("color saved in main.js file: " + color)
     return true;
 })
 

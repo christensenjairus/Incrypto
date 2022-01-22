@@ -1,14 +1,17 @@
 
 
 const { default: axios } = require('axios');
-const Store = require('electron-store')
+// import axios from 'axios'
+const Store = require('electron-store');
+const { send } = require('express/lib/response');
+// import Store from 'electron-store'
 const store = new Store(); // initalize Store
 
 function hashCode(password){
     return password.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);              
 }
 
-export function login(username, password, serverName) {
+function login(username, password, serverName) {
     if (serverName === "") {
         alert("Please enter a valid server name");
         return false;
@@ -46,7 +49,7 @@ export function login(username, password, serverName) {
     }
 }
 
-export function register(username, password, password2, serverName) {
+function register(username, password, password2, serverName) {
     if (password != password2) {
         alert("Passwords do not match")
         return false;
@@ -88,7 +91,7 @@ export function register(username, password, password2, serverName) {
     }
 }
 
-export function getNewMessages(timeOfLastFetch, chatRoomName, serverName) {
+function getNewMessages(timeOfLastFetch, chatRoomName, serverName) {
     try {
         return axios.post('http://' + serverName + "/api/message/new", {
             timeOfLastFetch: timeOfLastFetch,
@@ -100,7 +103,7 @@ export function getNewMessages(timeOfLastFetch, chatRoomName, serverName) {
     }
 }
 
-export function getAllMessages(chatRoomName, serverName) {
+function getAllMessages(chatRoomName, serverName) {
     try {
         return axios.post('http://' + serverName + "/api/message/all", {
             chatRoomName: chatRoomName
@@ -111,7 +114,7 @@ export function getAllMessages(chatRoomName, serverName) {
     }
 }
 
-export function sendMessage(username, encryptedUsername, msg, color, encryption, key, chatRoomName, serverName) {
+function sendMessage(username, encryptedUsername, msg, color, encryption, key, chatRoomName, serverName) {
     try {
         return axios.post('http://' + serverName + "/api/message", {
             username: username,
@@ -129,7 +132,7 @@ export function sendMessage(username, encryptedUsername, msg, color, encryption,
     }
 }
 
-export async function changeColor(username, color, serverName) {
+async function changeColor(username, color, serverName) {
     try {
         return axios.post('http://' + serverName + "/api/color", {
             username: username,
@@ -140,3 +143,10 @@ export async function changeColor(username, color, serverName) {
         return false;
     }
 }
+
+exports.login = login
+exports.register = register
+exports.getAllMessages = getAllMessages
+exports.getNewMessages = getNewMessages
+exports.sendMessage = sendMessage
+exports.changeColor = changeColor

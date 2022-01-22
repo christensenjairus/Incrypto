@@ -9,3 +9,7 @@
 // selectively enable features needed in the rendering
 // process.
 
+entry: [
+    'babel-polyfill',
+    './src/index'
+]
