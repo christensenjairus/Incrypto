@@ -47,8 +47,6 @@ function logout() {
 
 $(function() { // this syntax means it's a function that will be run once once document.ready is true
     "use strict";
-    // for better performance - to avoid searching in DOM
-    // content = $('#content');
     content = document.getElementById("chatbox");
     input = $('#input');
     mystatus = $('#status');
@@ -92,14 +90,14 @@ $(function() { // this syntax means it's a function that will be run once once d
         else chatRoom = newJSON;
         newJSON = [];
     }
-
+    
     function scroll() {
         var div = $('#chatbox');
         div.animate({
             scrollTop: div[0].scrollHeight
         }, 100);
     }
-
+    
     function jump() {
         var div = $('#chatbox');
         div.scrollTop = div.scrollHeight;
@@ -170,7 +168,6 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (msg == "") return; // if encryption fails
             
             sendMessage(myName, Encrypt(myName), msg, myColor, EncryptionFunction, sessionID, chatRoomName, serverName).then(async response => {
-                console.log(response.data)
                 if (response.data == 'Recieved') {
                     await refreshChat(store.get("timeOfLastFetch_" + sessionID, ""), chatRoomName, false)
                     scroll();
@@ -180,7 +177,7 @@ $(function() { // this syntax means it's a function that will be run once once d
                     return;
                 }
                 else {
-                   alert("There was an issue sending your message");
+                    alert("There was an issue sending your message");
                 }
             })
         }
@@ -194,21 +191,6 @@ $(function() { // this syntax means it's a function that will be run once once d
         mystatus.text(myName).css('color', myColor);
         ipcRenderer.invoke('setColor', myColor);
         var result = http.changeColor(myName, myColor, serverName);
-
-        // if (result != false) {
-        //     // await store.set(myName + "_Color", myColor);
-        //     // await ipcRenderer.invoke('setColor', myColor);
-        //     // mystatus.css('color', myColor)
-        //     content.innerHTML = "";
-        //     chatRoom = [];
-        //     // await refreshChat("", chatRoomName, true);
-        //     jump();
-        // }
-        // else {
-        //     alert("There's been an issue processing your color change request.")
-        // }
-    })
-    
     
     // add NAVBAR functionality
     document.getElementById('logoutButton').addEventListener('click', () => {
@@ -253,10 +235,6 @@ function getRandomColor() {
 function changeE_Type(EncryptionType) {
     ipcRenderer.invoke('changeMessageE_Type', EncryptionType);
 }
-
-// function setRandomColor() {
-//     $("#colorpad").css("background-color", getRandomColor());
-// }
 
 function showNotification(author, text) {
     const NOTIFICATION_TITLE = author

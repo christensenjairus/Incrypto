@@ -70,6 +70,15 @@ async function changeChatColor(chunk) {
 		user.color = chunk.color;
 		if (await updateUser(user)) {
 			logEvent("User color change for username: '" + chunk.username + "' to color: '" + chunk.color + "'");
+			// var result = await changeColorOnAllChats(chunk)
+			// if (result != false) {
+			// 	logEvent("Chat colors changed for username: '" + chunk.username + "' to color: '" + chunk.color + "'");
+			// 	return true;
+			// }
+			// else {
+			// 	logEvent("ERROR: Failed chat colors change for username: '" + chunk.username + "' to color: '" + chunk.color + "'");
+			// 	return false;
+			// }
 			return true;
 		}
 	}

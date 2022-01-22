@@ -30,7 +30,10 @@
         ]
       },
       "electronPackagerConfig": {
-        "packageManager": "npm"
+        "packageManager": "npm",
+        "ignore": [
+          "out"
+        ]
       },
       "electronWinstallerConfig": {
         "name": "Incrypto",
@@ -56,10 +59,7 @@
       "windowsStoreConfig": {
         "packageName": "",
         "name": "Incrypto"
-      }, 
-      "ignore": [
-        "out"
-      ]
+      }
     }
   },
   "dependencies": {
@@ -104,11 +104,13 @@
     "appId": "Incrypto",
     "mac": {
       "category": "Messaging",
-      "icon": "./icons/hacker-25899.icns"
+      "icon": "./icons/hacker-25899.icns",
+      "files":["!out/*"]
     },
     "linux": {
       "category": "Messaging",
-      "icon": "./icons/hacker-25899.png"
+      "icon": "./icons/hacker-25899.png",
+      "files":["!out/*"]
     }
   }
 }
