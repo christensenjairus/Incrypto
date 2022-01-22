@@ -1,11 +1,8 @@
-
-
 const { default: axios } = require('axios');
-// import axios from 'axios'
 const Store = require('electron-store');
-const { send } = require('express/lib/response');
-// import Store from 'electron-store'
-const store = new Store(); // initalize Store
+const store = new Store(); // initalizes Store for ALL the LOGIN, REGISTER, and FRONTEND Pages
+const { ipcRenderer } = require('electron');
+const DOMPurify = require('dompurify');
 
 function hashCode(password){
     return password.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);              
@@ -143,10 +140,3 @@ async function changeColor(username, color, serverName) {
         return false;
     }
 }
-
-exports.login = login
-exports.register = register
-exports.getAllMessages = getAllMessages
-exports.getNewMessages = getNewMessages
-exports.sendMessage = sendMessage
-exports.changeColor = changeColor

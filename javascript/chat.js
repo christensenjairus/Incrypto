@@ -2,18 +2,8 @@
 SCRIPT FOR CONTROLLING CHAT CLIENT AND INDEX.HTML
 */
 
-// import {getNewMessages, getAllMessages, sendMessage, changeColor} from "./chat_http.js"
-const http_logic = require('../javascript/chat_http.js')
-// import * as encryption from "./Encryption_DEV.js"
-// const encryption = require('../javascript/Encryption_DEV.js')
-// const { ipcRenderer } = require('electron');
-const Store = require('electron-store');
-const store = new Store();
-const DOMPurify = require('dompurify');
-
-const serverName = store.get("serverName", ""); // default to "" if no valid input
-
 const DEBUG = true; // turn this on & use it with 'if(DEBUG)' to display more console.log info
+var serverName;
 var displayAll = true;
 var myName;
 var myColor;
@@ -23,6 +13,7 @@ var EncryptionFunction;
 var sessionID;
 
 async function prepareChat() {
+    serverName = await store.get("serverName", ""); // default to "" if no valid input
     await ipcRenderer.invoke('getSeeAllMessages').then((result) => { 
         displayAll = result;
     });
@@ -63,7 +54,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     mystatus = $('#status');
     
     async function refreshChat(timeOfLastFetch, chatRoomName, isStarting) {
-        http_logic.getNewMessages(timeOfLastFetch, chatRoomName, serverName).then(async response => {
+        getNewMessages(timeOfLastFetch, chatRoomName, serverName).then(async response => {
             store.set("timeOfLastFetch_" + sessionID, (new Date()).getTime());
             var messages = response.data;
             let newJSON = [];
@@ -178,7 +169,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             msg = Encrypt(msg);
             if (msg == "") return; // if encryption fails
             
-            http_logic.sendMessage(myName, Encrypt(myName), msg, myColor, EncryptionFunction, sessionID, chatRoomName, serverName).then(async response => {
+            sendMessage(myName, Encrypt(myName), msg, myColor, EncryptionFunction, sessionID, chatRoomName, serverName).then(async response => {
                 console.log(response.data)
                 if (response.data == 'Recieved') {
                     await refreshChat(store.get("timeOfLastFetch_" + sessionID, ""), chatRoomName, false)

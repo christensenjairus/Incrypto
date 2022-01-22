@@ -1,8 +1,4 @@
-const Store = require('electron-store');
-const store = new Store(); // initalize Store
 var fs = require('fs');
-const { toArray, result } = require('lodash');
-const { exit } = require('process');
 const DEBUG = true;
 
 function ping() {
@@ -74,15 +70,6 @@ async function changeChatColor(chunk) {
 		user.color = chunk.color;
 		if (await updateUser(user)) {
 			logEvent("User color change for username: '" + chunk.username + "' to color: '" + chunk.color + "'");
-			// var result = await changeColorOnAllChats(chunk)
-			// if (result != false) {
-			// 	logEvent("Chat colors changed for username: '" + chunk.username + "' to color: '" + chunk.color + "'");
-			// 	return true;
-			// }
-			// else {
-			// 	logEvent("ERROR: Failed chat colors change for username: '" + chunk.username + "' to color: '" + chunk.color + "'");
-			// 	return false;
-			// }
 			return true;
 		}
 	}
@@ -188,17 +175,6 @@ async function updateUser(chunk) {
 	_db = await getDbConnection();
 	return await _db.collection("Users").findOneAndReplace({username: chunk.username}, chunk)
 }
-
-// async function changeColorOnAllChats(chunk) {
-// 	_db = await getDbConnection();
-// 	var cursor = await _db.collection(chunk.chatRoomName).find({username: chunk.username});
-// 	while (await cursor.hasNext()) {
-// 		const chat = await cursor.next();
-// 		chat.color = chunk.color
-// 		await _db.collection(chunk.chatRoomName).findOneAndReplace({_id: chat._id}, chat)
-// 	}
-// 	return result;
-// }
 
 exports.getDbConnection = getDbConnection;
 exports.closeConnection = closeConnection;

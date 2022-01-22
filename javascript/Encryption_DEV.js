@@ -69,13 +69,3 @@ function Binary_REVERSE(textin) {
     }
     return binaryAgent(textin);
 }
-
-// module.exports = {
-//     Encryption_Types,
-//     Default_Encryption,
-//     Default_Encryption_REVERSE,
-//     Plain_Text,
-//     Plain_Text_REVERSE,
-//     Binary,
-//     Binary_REVERSE
-// }
