@@ -87,8 +87,9 @@ exists(directoryToRunFrom + '/.env', (e) => {
 		var server = app.listen(port, function () {
 			// var host = server.address().address
 			var port = server.address().port
-			
-			logic.logEvent(`Incrypto Server was started on http://${host}:${port} with pid ${pid}`)
+			var ip = require("ip");
+			// logic.logEvent( "IP to world is: " + ip.address() );
+			logic.logEvent(`Incrypto Server was started on http://${ip.address()}:${port} with pid ${pid}`)
 		})
 		
 	} else { // create the .env file

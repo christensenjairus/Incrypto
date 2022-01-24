@@ -52,8 +52,9 @@ $(function() { // this syntax means it's a function that will be run once once d
     mystatus = $('#status');
     
     async function refreshChat(timeOfLastFetch, chatRoomName, isStarting) {
+        var time = (new Date()).getTime();
         getNewMessages(timeOfLastFetch, chatRoomName, serverName).then(async response => {
-            store.set("timeOfLastFetch_" + sessionID, (new Date()).getTime());
+            store.set("timeOfLastFetch_" + sessionID, time); // use time from right before we asked last time
             var messages = response.data;
             let newJSON = [];
             for (var i = 0; i < messages.length; ++i) {
