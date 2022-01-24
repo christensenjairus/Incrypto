@@ -31,7 +31,7 @@ const { exists, writeFile } = require('fs');
 exists(directoryToRunFrom + '/.env', (e) => {
 	
 	if (e && process.env.CONN_STRING != "<enter mongo connection string here>") { // if .env exists and doesn't have the default CONN_STRING
-
+		
 		// CREATE SERVER ENDPOINTS
 		
 		// GET REQUESTS
@@ -88,8 +88,13 @@ exists(directoryToRunFrom + '/.env', (e) => {
 			// var host = server.address().address
 			var port = server.address().port
 			var ip = require("ip");
-			// logic.logEvent( "IP to world is: " + ip.address() );
-			logic.logEvent(`Incrypto Server was started on http://${ip.address()}:${port} with pid ${pid}`)
+			var http = require('http');
+			http.get({'host': 'api.ipify.org', 'port': 80, 'path': '/'}, function(resp) {
+				resp.on('data', function(ip) {
+					logic.logEvent("Incrypto_Server public IP address is: " + ip);
+				});
+			});
+			logic.logEvent(`Incrypto_Server was started on http://${ip.address()}:${port} with pid ${pid}`)
 		})
 		
 	} else { // create the .env file
