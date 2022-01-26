@@ -32,27 +32,36 @@
         ]
       },
       "electronPackagerConfig": {
-        "packageManager": "npm",
+        "packageManager": "npm"
+        
+      },
+      "electronWinstallerConfig": {
+        "name": "Incrypto",
+        "icon": "./icons/hacker-25899.ico",
+        "setupExe": "Incrypto_Setup-2.0.exe",
         "ignore": [
           "out",
           "dist"
         ]
       },
-      "electronWinstallerConfig": {
-        "name": "Incrypto",
-        "icon": "./icons/hacker-25899.ico",
-        "setupExe": "Incrypto_Setup.exe"
-      },
       "electronInstallerDebian": {
         "icon": "./icons/hacker-25899.png",
         "categories": [
           "Messaging"
+        ],
+        "ignore": [
+          "out",
+          "dist"
         ]
       },
       "electronInstallerRedhat": {
         "icon": "./icons/hacker-25899.png",
         "categories": [
           "Messaging"
+        ],
+        "ignore": [
+          "out",
+          "dist"
         ]
       },
       "github_repository": {
