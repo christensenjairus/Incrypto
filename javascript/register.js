@@ -3,8 +3,11 @@
 var attempt = 3; // Variable to count number of attempts.
 
 $(function() { // run this as soon as the document loads
-    if (document.getElementById("serverName") != null) {
+    if (store.get("serverName", "") !== "") {
         document.getElementById("serverName").value = store.get("serverName", "");
+    }
+    else {
+        document.getElementById("serverName").value = "incrypto.christensencloud.us"
     }
 });
 
