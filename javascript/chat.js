@@ -2,7 +2,8 @@
 SCRIPT FOR CONTROLLING CHAT CLIENT AND INDEX.HTML
 */
 
-const fs = require('fs')
+const fs = require('fs');
+const { domainToUnicode } = require('url');
 const DEBUG = true; // turn this on & use it with 'if(DEBUG)' to display more console.log info
 var serverName;
 var displayAll = true;
@@ -110,7 +111,10 @@ $(function() { // this syntax means it's a function that will be run once once d
                     
             
             await appendChat(newJSON)
-            if (myColor) mystatus.text(myName).css('color', myColor);
+            if (myColor) {
+                mystatus.text(myName).css('color', myColor);
+                document.getElementById('color').value = myColor;
+            }
             else mystatus.text(myName).css('color', "#0000FF");
             input.focus();
             scroll();
@@ -236,22 +240,42 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (difference > 20000) {
                 content.innerHTML += `<div class="text-center"><span class="between">` + time.toLocaleString() + `</span></div>`;
             }
-            if (author == myName) {
-                content.innerHTML += `<div class="d-flex align-items-center text-right justify-content-end" id="` + guid + `">
-                <div class="pr-2"> <span class="name">Me ` + peopleWhoCanUnencrypt + `</span>
-                <p class="msg bubbleright" style="background-color:` + color + `; color:white">` + message + `</p>
-                </div>
-                <div><img src="../icons/icons8-hacker-64.png" width="30" class="img1" /></div>
-                </div>`
-            } else {
-                content.innerHTML += `<!-- Sender Message-->
-                <div class="d-flex align-items-center" id="` + guid + `">
-                <div class="text-left pr-1"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /></div>
-                <div class="pr-2 pl-1"> <span class="name">` + author + `</span>
-                <p class="msg bubbleleft" style="background-color:` + color + `; color:white">` + message + `</p>
-                </div>
-                </div>`;
-            };
+            if (lightOrDark(color) == "dark") {
+                if (author == myName) {
+                    content.innerHTML += `<div class="d-flex align-items-center text-right justify-content-end" id="` + guid + `">
+                    <div class="pr-2"> <span class="name">Me ` + peopleWhoCanUnencrypt + `</span>
+                    <p class="msg bubbleright" style="background-color:` + color + `; color:white">` + message + `</p>
+                    </div>
+                    <div><img src="../icons/icons8-hacker-64.png" width="30" class="img1" /></div>
+                    </div>`
+                } else {
+                    content.innerHTML += `<!-- Sender Message-->
+                    <div class="d-flex align-items-center" id="` + guid + `">
+                    <div class="text-left pr-1"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /></div>
+                    <div class="pr-2 pl-1"> <span class="name">` + author + `</span>
+                    <p class="msg bubbleleft" style="background-color:` + color + `; color:white">` + message + `</p>
+                    </div>
+                    </div>`;
+                };
+            }
+            else {
+                if (author == myName) {
+                    content.innerHTML += `<div class="d-flex align-items-center text-right justify-content-end" id="` + guid + `">
+                    <div class="pr-2"> <span class="name">Me ` + peopleWhoCanUnencrypt + `</span>
+                    <p class="msg bubbleright" style="background-color:` + color + `; color:black">` + message + `</p>
+                    </div>
+                    <div><img src="../icons/icons8-hacker-64.png" width="30" class="img1" /></div>
+                    </div>`
+                } else {
+                    content.innerHTML += `<!-- Sender Message-->
+                    <div class="d-flex align-items-center" id="` + guid + `">
+                    <div class="text-left pr-1"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /></div>
+                    <div class="pr-2 pl-1"> <span class="name">` + author + `</span>
+                    <p class="msg bubbleleft" style="background-color:` + color + `; color:black">` + message + `</p>
+                    </div>
+                    </div>`;
+                };
+            }
             dtOfLastMessage = time;
             // console.log("time updated with message: " + message)
         }
@@ -308,7 +332,21 @@ $(function() { // this syntax means it's a function that will be run once once d
         }
     });
     
-    
+    var colorPicker = document.getElementById('color')
+    colorPicker.addEventListener("input", watchColorPicker, false);
+    // colorPicker.addEventListener("change", watchColorPicker, false);
+
+    function watchColorPicker(event) {
+    // document.querySelectorAll("p").forEach(function(p) {
+    //     p.style.color = event.target.value;
+    // });
+        myColor = event.target.value;
+        mystatus.text(myName).css('color', myColor);
+        ipcRenderer.invoke('setColor', myColor);
+        document.getElementById('input').focus();
+        var result = changeColor(myName, myColor, serverName);
+    }
+
     document.getElementById('status').addEventListener('click', async () => {
         // console.log("Color was " + myColor)
         myColor = getRandomColor(); // generate random color
@@ -317,6 +355,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         ipcRenderer.invoke('setColor', myColor);
         document.getElementById('input').focus();
         var result = changeColor(myName, myColor, serverName);
+        document.getElementById('color').value = myColor
     });
     content.addEventListener('click', async () => {
         document.getElementById('input').focus();
@@ -373,6 +412,41 @@ function createGuid() {
         return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p ;  
     }  
     return _p8() + _p8(true) + _p8(true) + _p8();  
+}
+
+
+function lightOrDark(color) {
+    // Variables for red, green, blue values
+    var r, g, b, hsp;
+    // Check the format of the color, HEX or RGB?
+    if (color.match(/^rgb/)) {
+        // If RGB --> store the red, green, blue values in separate variables
+        color = color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+        r = color[1];
+        g = color[2];
+        b = color[3];
+    } 
+    else {
+        // If hex --> Convert it to RGB: http://gist.github.com/983661
+        color = +("0x" + color.slice(1).replace( 
+        color.length < 5 && /./g, '$&$&'));
+        r = color >> 16;
+        g = color >> 8 & 255;
+        b = color & 255;
+    }
+    // HSP (Highly Sensitive Poo) equation from http://alienryderflex.com/hsp.html
+    hsp = Math.sqrt(
+    0.299 * (r * r) +
+    0.587 * (g * g) +
+    0.114 * (b * b)
+    );
+    // Using the HSP value, determine whether the color is light or dark
+    if (hsp>127.5) {
+        return 'light';
+    } 
+    else {
+        return 'dark';
+    }
 }
 
 // _________________ Helper Functions ________________________________
