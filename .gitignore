@@ -7,3 +7,4 @@ dist
 my_packages
 .env
 server.log
+keys

@@ -33,7 +33,6 @@
       },
       "electronPackagerConfig": {
         "packageManager": "npm"
-        
       },
       "electronWinstallerConfig": {
         "name": "Incrypto",
@@ -80,12 +79,15 @@
     "bootstrap-icons": "^1.7.1",
     "cookie-parser": "^1.4.6",
     "create-desktop-shortcuts": "^1.6.0",
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.1.1",
     "dompurify": "^2.3.3",
     "dotenv": "^14.2.0",
     "electron-compile": "^6.4.4",
     "electron-reload": "^2.0.0-alpha.1",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.0.1",
+    "encrypt-rsa": "^1.2.1",
     "express": "^4.17.2",
     "fs": "^0.0.1-security",
     "mongodb": "^4.3.1",

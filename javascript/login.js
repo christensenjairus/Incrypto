@@ -25,6 +25,9 @@ loginButton.addEventListener('click', () => {
   var serverName = document.getElementById("serverName").value;
   login(username, password, serverName);
 });
+loginButton.onclick = function(event) {
+  document.getElementById('body').innerHTML = ' <div class="loader" id="loader"></div> ' // add loading bar
+}
 
 // ALLOW <ENTER> TO BE THE SAME AS CLICKING SUBMIT
 var password = document.getElementById("password");

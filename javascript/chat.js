@@ -2,6 +2,7 @@
 SCRIPT FOR CONTROLLING CHAT CLIENT AND INDEX.HTML
 */
 
+const fs = require('fs')
 const DEBUG = true; // turn this on & use it with 'if(DEBUG)' to display more console.log info
 var serverName;
 var displayAll = true;
@@ -10,35 +11,13 @@ var myColor;
 var chatRoom = [];
 var chatRoomName = "ChatRoom1"
 var EncryptionFunction;
-var sessionID;
-
-async function prepareChat() {
-    serverName = await store.get("serverName", ""); // default to "" if no valid input
-    await ipcRenderer.invoke('getSeeAllMessages').then((result) => { 
-        displayAll = result;
-    });
-    await ipcRenderer.invoke('getName').then((result) => { 
-        myName = result;
-    });
-    await ipcRenderer.invoke('getColor').then((result) => { 
-        myColor = result;
-    });
-    sessionID = await store.get(myName + "_key", "");
-    console.log("SessionID: " + sessionID)
-    EncryptionFunction = await store.get("encryptionType", Encryption_Types[0]);  // TODO: switch this back to default Encryption
-    //default encryption type is first in file
-    await ipcRenderer.invoke('getEncryptionType').then((result) => {
-        EncryptionFunction = result;
-    })
-    console.log("encryption type is " + EncryptionFunction)
-}
-prepareChat();
-
+var sessionID = "";
+var myPrivateKey = "";
+var userArray = [];
 var content = document.getElementById("chatbox");
 var input = document.getElementById("input");
 var mystatus = document.getElementById("status");
 
-// var textEntry = $('textEntry');
 let savedInputText = "";
 
 function logout() {
@@ -51,41 +30,148 @@ $(function() { // this syntax means it's a function that will be run once once d
     input = $('#input');
     mystatus = $('#status');
     
-    async function refreshChat(timeOfLastFetch, chatRoomName, isStarting) {
-        var time = (new Date()).getTime();
-        getNewMessages(timeOfLastFetch, chatRoomName, serverName).then(async response => {
-            store.set("timeOfLastFetch_" + sessionID, time); // use time from right before we asked last time
-            var messages = response.data;
-            let newJSON = [];
-            for (var i = 0; i < messages.length; ++i) {
-                newJSON.push(messages[i])
-                if (!isStarting && Decrypt(messages[i].author, messages[i].encryption) != myName) {
-                    showNotification(Decrypt(messages[i].author, messages[i].encryption), Decrypt(messages[i].text, messages[i].encryption));
-                }
-                // if (Decrypt(messages[i].author, messages[i].encryption) == myName) myColor = messages[i].color;
+    // -------------------------------------- USERS -----------------------------------------------------------
+    
+    async function refreshUsers(chatRoomName) {
+        getAllUsers(myName, chatRoomName, serverName, sessionID).then(async response => {
+            if (response.data.error == "incorrectSessionID") {
+                alert("You've logged in somewhere else. You will be logged out here.")
+                ipcRenderer.invoke('logout');
+                return;
             }
+            var users = response.data;
+            for (var i = 0; i < users.length; ++i) {
+                if (document.getElementById(users[i].username) == null && myName != users[i].username) { // if this user just joined or is unknown to us
+                    document.getElementById("peoplebox").innerHTML += `<div style="background-color:red; color:white" onclick="toggleEncryptionForUser('`+ users[i].username+`')" id="` + users[i].username + `"><img src="../icons/icons8-hacker-64.png" width="30" class="img1" />     ` + users[i].username +`</div>`
+                    userArray.push(users[i]);
+                    userArray.find(user => user.username == users[i].username).encryptForUser = false;
+                    // console.log("adding "+ users[i].username + " to people array")
+                }
+                else if (userArray.find(user => user.username == myName) == null) { // if I'm not found on list, add me
+                    userArray.push(users[i]);
+                    userArray.find(user => user.username == myName).encryptForUser = true;
+                }
+                if (users[i].pubKey != null) { // check everyones public key every time
+                    // console.log("checking " + users[i].username + " public key")
+                    if (fs.existsSync('./keys/PublicKey_' + users[i].username)) {
+                        // console.log("public key exists")
+                            var pubkey = fs.readFileSync('./keys/PublicKey_' + users[i].username)
+                            if (pubkey != users[i].pubKey) { // file exists but is not correct
+                                fs.writeFileSync('./keys/PublicKey_' + users[i].username, users[i].pubKey)
+                                // console.log("is not correct")
+                            }
+                            else {
+                                // console.log("is correct")
+                            }
+                    }
+                    else {
+                            // create the file
+                            fs.writeFileSync('./keys/PublicKey_' + users[i].username, users[i].pubKey)
+                            // console.log("public key did not exist, create it")
+                    }
+                }
+            }
+            // console.log("Users Array:")
+            // console.log(userArray)
+        })
+    }
+    
+    setInterval(function() {
+        refreshUsers(store.get(chatRoomName))
+    }, 10000)
+    
+    // ---------------------------------------- CHATS -------------------------------------------------------
+    
+    async function refreshChat(timeOfLastMessage, chatRoomName, isStarting) {
+        // var time = (new Date()).getTime();
+        getNewMessages(myName, timeOfLastMessage, chatRoomName, serverName, sessionID).then(async response => {
+            if (response.data.error == "incorrectSessionID") {
+                alert("You've logged in somewhere else. You will be logged out here.")
+                ipcRenderer.invoke('logout');
+                return;
+            }
+            console.log("RESPONSE: " + response.data)
+            var messages = response.data;
+            if (messages.length > 0) store.set("timeOfLastMessage_" + sessionID, messages[messages.length - 1].time); // use time from right before we asked last time
+            let newJSON = [];
+                for (var i = 0; i < messages.length; ++i) {
+                    // if (document.getElementById(messages[i].guid) == null) { // only if not already added! (sometimes two messages come through)
+                        newJSON.push(messages[i])
+                        // console.log(messages[i])
+                            if (!isStarting && messages[i].username != myName) {
+                                if (messages[i].text.find(recipient => recipient.recipient == myName) == null && displayAll == true) { // show a notification if the user is looking at all the messages despite some being encrypted
+                                    showNotification(messages[i].username, Custom_AES_REVERSE(messages[i].text[0].text));
+                                }
+                                else {
+                                    showNotification(messages[i].username, Custom_AES_REVERSE(messages[i].text.find(recipient => recipient.recipient == myName).text));
+                                }
+                            }
+                        
+                }
+                    // }
+                    // if (Decrypt(messages[i].author, messages[i].encryption) == myName) myColor = messages[i].color;
+                    
+            
             await appendChat(newJSON)
             if (myColor) mystatus.text(myName).css('color', myColor);
             else mystatus.text(myName).css('color', "#0000FF");
             input.focus();
             scroll();
         })
-        // setTimeout(refreshChat(store.get("timeOfLastFetch_" + sessionID, ""), chatRoomName, false), 3000)
+        // setTimeout(refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, false), 3000)
     }
-    // setTimeout(refreshChat(store.get("timeOfLastFetch_" + sessionID, ""), chatRoomName, false), 3000)
-    refreshChat("", chatRoomName, true) // populate the chat initially
+    // setTimeout(refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, false), 3000)
     // refresh every 3 seconds
     setInterval(function() {
-        refreshChat(store.get("timeOfLastFetch_" + sessionID, ""), chatRoomName, false)
+        refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, false)
         scroll();
     }, 3000)
+    
+    async function prepareChat() {
+        serverName = await store.get("serverName", ""); // default to "" if no valid input
+        await ipcRenderer.invoke('getSeeAllMessages').then((result) => { 
+            displayAll = result;
+        });
+        await ipcRenderer.invoke('getName').then((result) => { 
+            myName = result;
+        });
+        await ipcRenderer.invoke('getColor').then((result) => { 
+            myColor = result;
+        });
+        await ipcRenderer.invoke('getSessionID').then((result) => {
+            sessionID = result;
+        })
+        // console.log("SessionID: " + sessionID)
+        // EncryptionFunction = await store.get("encryptionType", Encryption_Types[0]);  // TODO: switch this back to default Encryption
+        //default encryption type is first in file
+        // await ipcRenderer.invoke('getEncryptionType').then((result) => {
+        //     EncryptionFunction = result;
+        // })
+        try {
+            myPrivateKey = fs.readFileSync('./keys/PrivateKey_' + myName);
+        }
+        catch (e) {
+            // do nothing, will do this later
+            // alert("getting new key pair")
+            myPrivateKey = await sendGetKeys(myName, serverName, sessionID); // doesn't need to happen every time!
+        }
+        // console.log("encryption type is " + EncryptionFunction)
+        refreshUsers(chatRoomName) // populate the people initially
+        refreshChat("", chatRoomName, true) // populate the chat initially
+    }
+    prepareChat();
     
     function appendChat(newJSON) {
         let dtOfLastMessage = "";
         if (chatRoom.length != 0) dtOfLastMessage = chatRoom[chatRoom.length - 1].time;
         
         for (var i=0; i < newJSON.length; i++) {
-            addMessage(newJSON[i].author, newJSON[i].text, newJSON[i].color, newJSON[i].time, dtOfLastMessage, newJSON[i].encryption, newJSON[i].guid); 
+            if (newJSON[i].text.find(message => message.recipient == myName) != null) {
+                addMessage(newJSON[i].username, newJSON[i].text.find(message => message.recipient == myName).text, newJSON[i].color, newJSON[i].time, dtOfLastMessage, newJSON[i].guid, newJSON[i]); 
+            }
+            else {
+                addMessage(newJSON[i].username, newJSON[i].text[0].text, newJSON[i].color, newJSON[i].time, dtOfLastMessage, newJSON[i].guid, newJSON[i]); // just take the first encrypted part and send it
+            }
             dtOfLastMessage = newJSON[i].time;
         }
         
@@ -111,10 +197,25 @@ $(function() { // this syntax means it's a function that will be run once once d
     /*
     * Add message to the chat window
     */
-    function addMessage(author, message, color, dt, dtOfLastMessage, encryptionType, guid) {
-        
-        let UnencryptedMessage = Decrypt(message, encryptionType);
-        author = Decrypt(author, encryptionType);
+    function addMessage(author, message, color, dt, dtOfLastMessage, guid, entireMessage) {
+        let UnencryptedMessage;
+        // console.log("Encrypted Message FROM " + author + ": " + message)
+        UnencryptedMessage = Custom_AES_REVERSE(message);
+        // if (message == UnencryptedMessage) return;
+        // console.log("Unencrypted Message: " + UnencryptedMessage)
+        // author = Custom_AES_REVERSE(author, encryptionType);
+
+        var peopleWhoCanUnencrypt = "(Visible to";
+        entireMessage.text.forEach(element => {
+            if (element.recipient != myName) {
+                peopleWhoCanUnencrypt += " " + element.recipient + ","
+            }
+        });
+        if (peopleWhoCanUnencrypt != "(Visible to") {
+            peopleWhoCanUnencrypt = peopleWhoCanUnencrypt.substring(0, peopleWhoCanUnencrypt.length - 1)
+            peopleWhoCanUnencrypt += ")"
+        }
+        else peopleWhoCanUnencrypt = "";
         
         let purifiedMessage = DOMPurify.sanitize(UnencryptedMessage);
         if (purifiedMessage === "") return;
@@ -130,8 +231,8 @@ $(function() { // this syntax means it's a function that will be run once once d
             }
             if (author == myName) {
                 content.innerHTML += `<div class="d-flex align-items-center text-right justify-content-end" id="` + guid + `">
-                <div class="pr-2"> <span class="name">Me</span>
-                <p class="msg" style="background-color:` + color + `; color:white">` + message + `</p>
+                <div class="pr-2"> <span class="name">Me ` + peopleWhoCanUnencrypt + `</span>
+                <p class="msg bubbleright" style="background-color:` + color + `; color:white">` + message + `</p>
                 </div>
                 <div><img src="../icons/icons8-hacker-64.png" width="30" class="img1" /></div>
                 </div>`
@@ -140,7 +241,7 @@ $(function() { // this syntax means it's a function that will be run once once d
                 <div class="d-flex align-items-center" id="` + guid + `">
                 <div class="text-left pr-1"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /></div>
                 <div class="pr-2 pl-1"> <span class="name">` + author + `</span>
-                <p class="msg" style="background-color:` + color + `; color:white">` + message + `</p>
+                <p class="msg bubbleleft" style="background-color:` + color + `; color:white">` + message + `</p>
                 </div>
                 </div>`;
             };
@@ -169,12 +270,30 @@ $(function() { // this syntax means it's a function that will be run once once d
             let tmp1 = DOMPurify.sanitize(msg); // remove cross site scripting possibilities
             if (tmp1 !== msg) alert("To protect against cross site scripting, we will remove what we view as dangerous text from your message.")
             msg = tmp1;
-            msg = Encrypt(msg);
-            if (msg == "") return; // if encryption fails
-            
-            await sendMessage(myName, Encrypt(myName), msg, myColor, EncryptionFunction, sessionID, chatRoomName, serverName).then(async response => {
+            // msg = Encrypt(msg);
+            // if (msg == "") return; // if encryption fails
+            // var guid = createGuid();
+            // userArray.forEach(async user => {
+            //     if (user.encryptForUser == true) {
+            //         console.log("Encrypting message for: " + user.username)
+            //         await sendMessage(myName, Custom_AES(myName, user.username), user.username, /*Custom_AES(msg, user.username)*/ msg, guid, myColor, EncryptionFunction, chatRoomName, serverName, sessionID).then(async response => {
+            //             if (response.data == 'Recieved') {
+            //                 await refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, false)
+            //                 scroll();
+            //                 savedInputText = "";
+            //                 document.getElementById('input').value = "";
+            //                 ipcRenderer.invoke('setBadgeCnt', 0);
+            //                 return;
+            //             }
+            //             else {
+            //                 alert("There was an issue sending your message");
+            //             }
+            //         })
+            //     }   
+            // })
+            await sendMessage(myName, msg, myColor, chatRoomName, serverName, sessionID).then(async response => {
                 if (response.data == 'Recieved') {
-                    await refreshChat(store.get("timeOfLastFetch_" + sessionID, ""), chatRoomName, false)
+                    await refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, false)
                     scroll();
                     savedInputText = "";
                     document.getElementById('input').value = "";
@@ -185,6 +304,7 @@ $(function() { // this syntax means it's a function that will be run once once d
                     alert("There was an issue sending your message");
                 }
             })
+            
             document.getElementById('input').focus();
         }
     });
@@ -197,7 +317,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         mystatus.text(myName).css('color', myColor);
         ipcRenderer.invoke('setColor', myColor);
         document.getElementById('input').focus();
-        var result = http.changeColor(myName, myColor, serverName);
+        var result = changeColor(myName, myColor, serverName);
     });
     content.addEventListener('click', async () => {
         document.getElementById('input').focus();
@@ -209,14 +329,14 @@ $(function() { // this syntax means it's a function that will be run once once d
     })
     
     var dropdown = document.getElementById('dropdown');
-    for (let i = 0; i < Encryption_Types.length; ++i) {
-        dropdown.innerHTML += '<a class="dropdown-item" href="#" id="encryption_type_' + i + '")>' + Encryption_Types[i] + '</a>'
-    }
-    for (let i = 0; i < Encryption_Types.length; ++i) {
-        document.getElementById("encryption_type_" + i).addEventListener('click', () => {
-            changeE_Type(Encryption_Types[i]);
-        })
-    }
+    // for (let i = 0; i < Encryption_Types.length; ++i) {
+    //     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="encryption_type_' + i + '")>' + Encryption_Types[i] + '</a>'
+    // }
+    // for (let i = 0; i < Encryption_Types.length; ++i) {
+    //     document.getElementById("encryption_type_" + i).addEventListener('click', () => {
+    //         changeE_Type(Encryption_Types[i]);
+    //     })
+    // }
     
     dropdown = document.getElementById('dropdownOptions');
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayAllMessages">All messages</a>'
@@ -232,6 +352,27 @@ $(function() { // this syntax means it's a function that will be run once once d
     
 });
 
+function toggleEncryptionForUser(id){
+    // console.log("toggling user "+ id)
+    if (userArray.find(user => user.username == id).encryptForUser == false) {
+        document.getElementById(id).style.backgroundColor = "green"
+        // store.set("encryptForUser_" + id, true)
+        userArray.find(user => user.username == id).encryptForUser = true;
+    }
+    else {
+        document.getElementById(id).style.backgroundColor = "red"
+        // store.set("encryptForUser_" + id, false)
+        userArray.find(user => user.username == id).encryptForUser = false;
+    }
+}
+
+function createGuid() {  
+    function _p8(s) {  
+        var p = (Math.random().toString(16)+"000000000").substr(2,8);  
+        return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p ;  
+    }  
+    return _p8() + _p8(true) + _p8(true) + _p8();  
+}
 
 // _________________ Helper Functions ________________________________
 
@@ -262,10 +403,10 @@ function showNotification(author, text) {
     ipcRenderer.invoke('incBadgeCnt', 1);
 }
 
-function Encrypt(textin) {
+function Encrypt(textin, username) {
     let toReturn = "";
     try {
-        toReturn = eval(EncryptionFunction + '("' + textin + '")');
+        toReturn = eval(EncryptionFunction + '("' + textin + '", "' + username + '")');
     } catch(e) {
         alert("There's an issue with the selected encryption algorithm: " + e);
         // return textin;
@@ -295,3 +436,32 @@ function Decrypt(textin, encryptionType) {
     }
     return toReturn;
 }
+
+const NodeRSA = require('encrypt-rsa').default;
+const nodeRSA = new NodeRSA();
+
+function Custom_AES(textin, username) {
+    try {
+        return nodeRSA.encryptStringWithRsaPublicKey({ 
+            text: textin, 
+            keyPath: './keys/PublicKey_' + username 
+        });
+    }
+    catch (e) {
+        return "";
+    }
+}
+
+function Custom_AES_REVERSE(textin) {
+    try {
+        // console.log("Decrypting with key from " + myName)
+        return nodeRSA.decryptStringWithRsaPrivateKey({ 
+            text: textin, 
+            keyPath: './keys/PrivateKey_' + myName
+        });
+    } catch (e) {
+        // console.log(e)
+        return textin;
+    }
+}
+

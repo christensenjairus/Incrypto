@@ -23,6 +23,9 @@ registerButton.addEventListener('click', () => {
     var serverName = document.getElementById("serverName").value;
     register(username, password, password2, serverName);
 });
+registerButton.onclick = function(event) {
+    document.getElementById('body').innerHTML = ' <div class="loader" id="loader"></div> ' // add loading bar
+}
 
 // ALLOW <ENTER> TO BE THE SAME AS CLICKING SUBMIT
 username = document.getElementById("username");

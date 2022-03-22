@@ -55,6 +55,10 @@ exists(directoryToRunFrom + '/.env', (e) => {
 		})
 		
 		app.post('/api/message', async function(req, res) {
+			if (! await logic.verifySessionID(req.body)) {
+				res.send('{"error":"incorrectSessionID"}');
+				return;
+			}
 			var result = await logic.receiveChatMessage(req.body)
 			if (result != false) {
 				res.send("Recieved");
@@ -65,14 +69,65 @@ exists(directoryToRunFrom + '/.env', (e) => {
 		})
 		
 		app.post('/api/message/all', async function (req, res) {
-			res.send(await logic.sendAllMessages(req.body))
+			// console.log("getting all messages")
+			if (! await logic.verifySessionID(req.body)) {
+				res.send('{"error":"incorrectSessionID"}');
+				return;
+			}
+			res.send(await logic.sendAllMessages(req.body));
 		})
 		
 		app.post('/api/message/new', async function(req, res) {
+			// console.log("getting new messages")
+			if (! await logic.verifySessionID(req.body)) {
+				res.send('{"error":"incorrectSessionID"}');
+				return;
+			}
 			res.send(await logic.sendNewMessages(req.body));
+		})
+
+		app.post('/api/users/all', async function (req, res) {
+			// console.log("getting all users")
+			if (! await logic.verifySessionID(req.body)) {
+				res.send('{"error":"incorrectSessionID"}');
+				return;
+			}
+			res.send(await logic.sendAllUsers(req.body));
+		})
+
+		app.post('/api/keys/negociate', async function (req, res) {
+			// console.log("doing diffieHellman")
+			if (! await logic.verifySessionID(req.body)) {
+				res.send('{"error":"incorrectSessionID"}');
+				return;
+			}
+			res.send(await logic.negociate(req.body));
+		})
+
+		app.post('/api/keys/diffieHellman', async function (req, res) {
+			// console.log("doing diffieHellman")
+			if (! await logic.verifySessionID(req.body)) {
+				res.send('{"error":"incorrectSessionID"}');
+				return;
+			}
+			res.send(await logic.diffieHellman(req.body));
+		})
+
+		app.post('/api/keys/getKeys', async function (req, res) {
+			// console.log("getting public/private keys")
+			if (! await logic.verifySessionID(req.body)) {
+				res.send('{"error":"incorrectSessionID"}');
+				return;
+			}
+			res.send(await logic.giveKeys(req.body)); 
 		})
 		
 		app.post('/api/color', async function(req, res) {
+			// console.log("changing color")
+			if (! await logic.verifySessionID(req.body)) {
+				res.send('{"error":"incorrectSessionID"}');
+				return;
+			}
 			var result = await logic.changeChatColor(req.body)
 			if (result != false) {
 				res.send("Recieved");

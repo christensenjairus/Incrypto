@@ -40,7 +40,8 @@ if (!((process.execPath).includes("node_modules/electron-prebuilt-compile/node_m
     }
 }
 
-const url = require('url')
+const url = require('url');
+const { isTypeParameterDeclaration } = require('typescript');
 app.setAppUserModelId("Incrypto");
 
 let codeEditor = store.get("codeEditor", "code"); // VS Code is the default
@@ -93,8 +94,8 @@ function createWindow(width, height) {
             hasShadow: true,
             width: width,
             height: height,
-            minWidth: 320,
-            minHeight: 600,
+            minWidth: 600,
+            minHeight: 400,
             icon: process.execPath + '.png', // for AppImage
             title: "Incrypto"
         }) 
@@ -113,8 +114,8 @@ function createWindow(width, height) {
             hasShadow: true,
             width: width,
             height: height,
-            minWidth: 320,
-            minHeight: 600,
+            minWidth: 600,
+            minHeight: 400,
             icon: basepath + '/../icons/hacker-25899.png', // works in linux with a png! / windows with a png as well!
             title: "Incrypto"
         }) 
@@ -444,6 +445,11 @@ ipcMain.handle('logout', (event) => {
     // mainWindow.loadURL('file://' + __dirname + '/html/login.html')
 })
 
+ipcMain.handle('toregister', (event) => {
+    // const result = await doSomeWork(someArgument)
+    switchToRegistrationPage();
+})
+
 ipcMain.handle('forceLogout', (event) => {
     app.relaunch();
     app.exit();
@@ -463,10 +469,22 @@ ipcMain.handle('setName', (event, name) => {
 })
 
 let EncryptionType = store.get("encryptionType", "Default_Encryption");
+let sessionID = store.get(myName + "_sessionID", "")
 
 ipcMain.handle('setEncryptionType', (event, name) => {
     EncryptionType = name;
     return true;
+})
+
+ipcMain.handle('setSessionID', (event, name) => {
+    console.log("sessionID set to " + name)
+    sessionID = name;
+    return true;
+})
+
+ipcMain.handle('getSessionID', (event) => {
+    console.log("sessionID grabbed")
+    return sessionID;
 })
 
 ipcMain.handle('getEncryptionType', (event) => {
