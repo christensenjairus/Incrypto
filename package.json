@@ -1,7 +1,7 @@
 {
   "name": "Incrypto",
   "productName": "Incrypto",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Encrypted Messaging App",
   "engines": {
     "node": ">=15.0"
@@ -37,7 +37,7 @@
       "electronWinstallerConfig": {
         "name": "Incrypto",
         "icon": "./icons/hacker-25899.ico",
-        "setupExe": "Incrypto_Setup-2.0.exe",
+        "setupExe": "Incrypto_Setup-3.0.exe",
         "ignore": [
           "out",
           "dist"
@@ -114,7 +114,7 @@
     "eslint-plugin-react": "^7.27.1"
   },
   "build": {
-    "asar": false,
+    "asar": true,
     "appId": "Incrypto",
     "mac": {
       "category": "Messaging",

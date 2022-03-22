@@ -195,7 +195,6 @@ function getAllUsers(username, chatRoomName, serverName, sessionID) {
 // sendMessage(myName, msg, myColor, chatRoomName, serverName, sessionID)
 function sendMessage(username, msg, color, chatRoomName, serverName, sessionID) {
     var message = [];
-    // var recipient = { recipient: "", text: ""};
     var guid = createGuid();
     userArray.forEach(async user => {
         if (user.encryptForUser == true) {
@@ -314,16 +313,20 @@ async function sendGetKeys(username, serverName, sessionID) {
     await negociate(username, serverName, sessionID).then(response => {
         store.set("mod_" + username, response.data.mod);
         store.set("base_" + username, response.data.base);
-        console.log("new parameters negociated")
+        document.getElementById('status').text = "Parameters Negociated";
+        // console.log("new parameters negociated")
     })
-    console.log("Negociation complete")
+    // console.log("Negociation complete")
     var mod = store.get("mod_" + username, "");
     var base = store.get("base_" + username, "");
+    document.getElementById('status').text = "Generating Diffie Hellman Data";
     let myPrivatePrime = generatePrime();
     store.set("privatePrime_" + username, myPrivatePrime);
     sendDiffieHellman(username, base, myPrivatePrime, mod, serverName, sessionID);
+    document.getElementById('status').text = "Getting Keys from Server";
 
     return await getKeys(username, serverName, sessionID).then(async response => {
+        document.getElementById('status').text = "Keys Recieved";
         // console.log(response.data)
         const crypto = require('crypto')
         const cryptojs = require('crypto-js')

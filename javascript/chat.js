@@ -17,6 +17,7 @@ var userArray = [];
 var content = document.getElementById("chatbox");
 var input = document.getElementById("input");
 var mystatus = document.getElementById("status");
+fs.mkdirSync('./keys', { recursive: true })
 
 let savedInputText = "";
 
@@ -76,10 +77,6 @@ $(function() { // this syntax means it's a function that will be run once once d
         })
     }
     
-    setInterval(function() {
-        refreshUsers(store.get(chatRoomName))
-    }, 10000)
-    
     // ---------------------------------------- CHATS -------------------------------------------------------
     
     async function refreshChat(timeOfLastMessage, chatRoomName, isStarting) {
@@ -90,7 +87,7 @@ $(function() { // this syntax means it's a function that will be run once once d
                 ipcRenderer.invoke('logout');
                 return;
             }
-            console.log("RESPONSE: " + response.data)
+            // console.log("RESPONSE: " + response.data)
             var messages = response.data;
             if (messages.length > 0) store.set("timeOfLastMessage_" + sessionID, messages[messages.length - 1].time); // use time from right before we asked last time
             let newJSON = [];
@@ -121,11 +118,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         // setTimeout(refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, false), 3000)
     }
     // setTimeout(refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, false), 3000)
-    // refresh every 3 seconds
-    setInterval(function() {
-        refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, false)
-        scroll();
-    }, 3000)
+    
     
     async function prepareChat() {
         serverName = await store.get("serverName", ""); // default to "" if no valid input
@@ -155,22 +148,33 @@ $(function() { // this syntax means it's a function that will be run once once d
             // alert("getting new key pair")
             myPrivateKey = await sendGetKeys(myName, serverName, sessionID); // doesn't need to happen every time!
         }
-        // console.log("encryption type is " + EncryptionFunction)
+        
+        // initialize chat & users
         refreshUsers(chatRoomName) // populate the people initially
         refreshChat("", chatRoomName, true) // populate the chat initially
+
+        // refresh users every 10 seconds
+        setInterval(function() {
+            refreshUsers(store.get(chatRoomName))
+        }, 10000)
+
+        // refresh every 3 seconds
+        setInterval(function() {
+            refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, false)
+            scroll();
+        }, 3000)
     }
     prepareChat();
     
     function appendChat(newJSON) {
-        let dtOfLastMessage = "";
         if (chatRoom.length != 0) dtOfLastMessage = chatRoom[chatRoom.length - 1].time;
         
         for (var i=0; i < newJSON.length; i++) {
             if (newJSON[i].text.find(message => message.recipient == myName) != null) {
-                addMessage(newJSON[i].username, newJSON[i].text.find(message => message.recipient == myName).text, newJSON[i].color, newJSON[i].time, dtOfLastMessage, newJSON[i].guid, newJSON[i]); 
+                addMessage(newJSON[i].username, newJSON[i].text.find(message => message.recipient == myName).text, newJSON[i].color, newJSON[i].time, newJSON[i].guid, newJSON[i]); 
             }
             else {
-                addMessage(newJSON[i].username, newJSON[i].text[0].text, newJSON[i].color, newJSON[i].time, dtOfLastMessage, newJSON[i].guid, newJSON[i]); // just take the first encrypted part and send it
+                addMessage(newJSON[i].username, newJSON[i].text[0].text, newJSON[i].color, newJSON[i].time, newJSON[i].guid, newJSON[i]); // just take the first encrypted part and send it
             }
             dtOfLastMessage = newJSON[i].time;
         }
@@ -193,11 +197,14 @@ $(function() { // this syntax means it's a function that will be run once once d
         div.scrollTop = div.scrollHeight;
         document.getElementById('input').focus();
     }
+
+    var dtOfLastMessage = "";
     
     /*
     * Add message to the chat window
     */
-    function addMessage(author, message, color, dt, dtOfLastMessage, guid, entireMessage) {
+    function addMessage(author, message, color, dt, guid, entireMessage) {
+        if (document.getElementById(guid) != null) return; // this message is already in the chat
         let UnencryptedMessage;
         // console.log("Encrypted Message FROM " + author + ": " + message)
         UnencryptedMessage = Custom_AES_REVERSE(message);
@@ -257,6 +264,15 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (!msg) {
                 return;
             }
+
+            var timesToEncrypt = 0;
+            userArray.forEach(person => {
+                if (person.encryptForUser == true) timesToEncrypt++;
+            })
+            if (timesToEncrypt == 1) {
+                alert("Select any red name on the left column before sending.")
+                return;
+            }
             
             // protect against xss and bad characters
             let characterInString = false;
@@ -269,28 +285,9 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (!characterInString) return; // the message is only spaces
             let tmp1 = DOMPurify.sanitize(msg); // remove cross site scripting possibilities
             if (tmp1 !== msg) alert("To protect against cross site scripting, we will remove what we view as dangerous text from your message.")
-            msg = tmp1;
-            // msg = Encrypt(msg);
-            // if (msg == "") return; // if encryption fails
-            // var guid = createGuid();
-            // userArray.forEach(async user => {
-            //     if (user.encryptForUser == true) {
-            //         console.log("Encrypting message for: " + user.username)
-            //         await sendMessage(myName, Custom_AES(myName, user.username), user.username, /*Custom_AES(msg, user.username)*/ msg, guid, myColor, EncryptionFunction, chatRoomName, serverName, sessionID).then(async response => {
-            //             if (response.data == 'Recieved') {
-            //                 await refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, false)
-            //                 scroll();
-            //                 savedInputText = "";
-            //                 document.getElementById('input').value = "";
-            //                 ipcRenderer.invoke('setBadgeCnt', 0);
-            //                 return;
-            //             }
-            //             else {
-            //                 alert("There was an issue sending your message");
-            //             }
-            //         })
-            //     }   
-            // })
+            // msg = tmp1;
+            tmp1 = msg;
+            
             await sendMessage(myName, msg, myColor, chatRoomName, serverName, sessionID).then(async response => {
                 if (response.data == 'Recieved') {
                     await refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, false)
@@ -358,11 +355,13 @@ function toggleEncryptionForUser(id){
         document.getElementById(id).style.backgroundColor = "green"
         // store.set("encryptForUser_" + id, true)
         userArray.find(user => user.username == id).encryptForUser = true;
+        input.focus();
     }
     else {
         document.getElementById(id).style.backgroundColor = "red"
         // store.set("encryptForUser_" + id, false)
         userArray.find(user => user.username == id).encryptForUser = false;
+        input.focus();
     }
 }
 

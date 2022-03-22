@@ -192,6 +192,19 @@ function createWindow(width, height) {
                             store.clear();
                             switchToLoginPage();
                         }},
+                    {label: "Get New Keys",
+                        click() {
+                            var path = "./keys/PrivateKey_" + myName;
+                            var path2 = "./keys/PublicKey_" + myName;
+                            try {
+                                fs.unlinkSync(path);
+                                fs.unlinkSync(path2)
+                                console.log("Files removed:", path + ", " + path2);
+                                switchToLoginPage();
+                            } catch (err) {
+                                console.error(err);
+                            }
+                        }},
                     {label: "Quit",
                         click() {
                             app.quit();}}
@@ -209,10 +222,10 @@ function createWindow(width, height) {
                 },{
                 label: 'View',
                 submenu: [
-                    { label: 'Theme',
-                        click() {
-                            // Enter Theme switcher here @Blake
-                        }},
+                    // { label: 'Theme',
+                    //     click() {
+                    //         // Enter Theme switcher here @Blake
+                    //     }},
                     { role: 'reload'},
                     { role: 'toggledevtools'},
                     { type: 'separator'},
@@ -228,64 +241,64 @@ function createWindow(width, height) {
                     {role: 'minimize'},
                     {role: 'close'}
                 ]
-                },{
-                    label: 'Encryption',
-                    submenu: [
-                        {label: 'Change code editor',
-                            submenu: [
-                                {label: "VS Code (default)",
-                                    click() {
-                                        codeEditor = "code"
-                                        store.set("codeEditor", "code");
-                                    }},
-                                {label: "Visual Studio",
-                                    click() {
-                                        codeEditor = "visualstudio"
-                                        store.set("codeEditor", "visualstudio");
-                                    }},
-                                {label: "Atom Editor",
-                                    click() {
-                                        codeEditor = "atom"
-                                        store.set("codeEditor", "atom");
-                                    }},
-                                {label: "Sublime Text",
-                                    click() {
-                                        codeEditor = "sublime"
-                                        store.set("codeEditor", "sublime");
-                                    }},
-                                {label: "Web Storm",
-                                    click() {
-                                        codeEditor = "webstorm"
-                                        store.set("codeEditor", "webstorm");
-                                    }},
-                                {label: "Php Storm",
-                                    click() {
-                                        codeEditor = "phpstorm"
-                                        store.set("codeEditor", "phpstorm");
-                                    }},
-                                {label: "Idea 14 CE",
-                                    click() {
-                                        codeEditor = "idea14ce"
-                                        store.set("codeEditor", "idea14ce");
-                                    }},
-                                {label: "Vim (MacOS only)",
-                                    click() {
-                                        codeEditor = "vim"
-                                        store.set("codeEditor", "vim");
-                                    }},
-                                {label: "Emacs (MacOS only)",
-                                    click() {
-                                        codeEditor = "emacs"
-                                        store.set("codeEditor", "emacs");
-                                    }}
-                                    
-                            ]
-                        },
-                        {label: 'Enter Algorithm (for use before compilation)',
-                            click() {
-                                openEncryptionFileForEditing();
-                            },
-                        },
+                },
+                // {
+                //     label: 'Encryption',
+                //     submenu: [
+                //         {label: 'Change code editor',
+                //             submenu: [
+                //                 {label: "VS Code (default)",
+                //                     click() {
+                //                         codeEditor = "code"
+                //                         store.set("codeEditor", "code");
+                //                     }},
+                //                 {label: "Visual Studio",
+                //                     click() {
+                //                         codeEditor = "visualstudio"
+                //                         store.set("codeEditor", "visualstudio");
+                //                     }},
+                //                 {label: "Atom Editor",
+                //                     click() {
+                //                         codeEditor = "atom"
+                //                         store.set("codeEditor", "atom");
+                //                     }},
+                //                 {label: "Sublime Text",
+                //                     click() {
+                //                         codeEditor = "sublime"
+                //                         store.set("codeEditor", "sublime");
+                //                     }},
+                //                 {label: "Web Storm",
+                //                     click() {
+                //                         codeEditor = "webstorm"
+                //                         store.set("codeEditor", "webstorm");
+                //                     }},
+                //                 {label: "Php Storm",
+                //                     click() {
+                //                         codeEditor = "phpstorm"
+                //                         store.set("codeEditor", "phpstorm");
+                //                     }},
+                //                 {label: "Idea 14 CE",
+                //                     click() {
+                //                         codeEditor = "idea14ce"
+                //                         store.set("codeEditor", "idea14ce");
+                //                     }},
+                //                 {label: "Vim (MacOS only)",
+                //                     click() {
+                //                         codeEditor = "vim"
+                //                         store.set("codeEditor", "vim");
+                //                     }},
+                //                 {label: "Emacs (MacOS only)",
+                //                     click() {
+                //                         codeEditor = "emacs"
+                //                         store.set("codeEditor", "emacs");
+                //                     }}
+                //             ]
+                //         },
+                        // {label: 'Enter Algorithm (for use before compilation)',
+                        //     click() {
+                        //         openEncryptionFileForEditing();
+                        //     },
+                        // },
                         // {label: 'Change your message encryption',
                         //     submenu: [
                         //         {label: "Default Encryption", click() {changeMessageEncryptionType("defaultEncryption")}},
@@ -293,9 +306,9 @@ function createWindow(width, height) {
                         //         {label: "Binary", click() {changeMessageEncryptionType("binary")}},
                         //     ]
                         // }
-
-                    ]
-                },{
+                    // ]
+                // },
+                {
                     role: 'help',
                     submenu: [
                         {label: 'Learn More',
@@ -477,13 +490,13 @@ ipcMain.handle('setEncryptionType', (event, name) => {
 })
 
 ipcMain.handle('setSessionID', (event, name) => {
-    console.log("sessionID set to " + name)
+    // console.log("sessionID set to " + name)
     sessionID = name;
     return true;
 })
 
 ipcMain.handle('getSessionID', (event) => {
-    console.log("sessionID grabbed")
+    // console.log("sessionID grabbed")
     return sessionID;
 })
 
