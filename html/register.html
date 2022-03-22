@@ -20,6 +20,7 @@
                     <label>Server name or IP address</label>
                     <input type="text" name="serverName" id="serverName" value=""/>
                     <input type="button" value="Register" id="submit"/>
+                    <input type="button" value="Already have an Account? Login" onclick="ipcRenderer.invoke('logout')"/>
                 </form>
             </div>
         </div>

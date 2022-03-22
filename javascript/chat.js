@@ -252,6 +252,8 @@ $(function() { // this syntax means it's a function that will be run once once d
                 </div>
                 </div>`;
             };
+            dtOfLastMessage = time;
+            // console.log("time updated with message: " + message)
         }
     }
     
