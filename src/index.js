@@ -192,19 +192,19 @@ function createWindow(width, height) {
                             store.clear();
                             switchToLoginPage();
                         }},
-                    {label: "Get New Keys",
-                        click() {
-                            var path = "./keys/PrivateKey_" + myName;
-                            var path2 = "./keys/PublicKey_" + myName;
-                            try {
-                                fs.unlinkSync(path);
-                                fs.unlinkSync(path2)
-                                console.log("Files removed:", path + ", " + path2);
-                                switchToLoginPage();
-                            } catch (err) {
-                                console.error(err);
-                            }
-                        }},
+                    // {label: "Get New Keys",
+                    //     click() {
+                    //         var path = "./keys/PrivateKey_" + myName;
+                    //         var path2 = "./keys/PublicKey_" + myName;
+                    //         try {
+                    //             fs.unlinkSync(path);
+                    //             fs.unlinkSync(path2)
+                    //             console.log("Files removed:", path + ", " + path2);
+                    //             switchToLoginPage();
+                    //         } catch (err) {
+                    //             console.error(err);
+                    //         }
+                    //     }},
                     {label: "Quit",
                         click() {
                             app.quit();}}
@@ -483,6 +483,7 @@ ipcMain.handle('setName', (event, name) => {
 
 let EncryptionType = store.get("encryptionType", "Default_Encryption");
 let sessionID = store.get(myName + "_sessionID", "")
+let serverName = store.get("serverName");
 
 ipcMain.handle('setEncryptionType', (event, name) => {
     EncryptionType = name;
@@ -498,6 +499,17 @@ ipcMain.handle('setSessionID', (event, name) => {
 ipcMain.handle('getSessionID', (event) => {
     // console.log("sessionID grabbed")
     return sessionID;
+})
+
+ipcMain.handle('getServerName', (event) => {
+    console.log("serverName grabbed")
+    return serverName;
+})
+
+ipcMain.handle('setServerName', (event, name) => {
+    console.log("serverName set to " + name)
+    serverName = name;
+    return true;
 })
 
 ipcMain.handle('getEncryptionType', (event) => {

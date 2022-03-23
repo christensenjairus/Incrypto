@@ -344,7 +344,7 @@ async function saveLoginDataToMongo(username, sessionID) {
 	var newvalues = { $set: { sessionID:sessionID } };
 	return await _db.collection("Users").updateOne(myquery, newvalues, function(err, res) {
 		if (err) throw err;
-		logEvent("User document updated with mod, base, server key, and sessionID for " + username);
+		logEvent("User document updated with sessionID for " + username);
 		// db.close();
 	});
 	// return data;

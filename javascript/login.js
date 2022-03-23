@@ -21,8 +21,9 @@ const loginButton = document.getElementById('submit');
 loginButton.addEventListener('click', () => {
   username = document.getElementById("username").value;
   ipcRenderer.invoke('setName', username);
-  var password = document.getElementById("password").value;
   var serverName = document.getElementById("serverName").value;
+  ipcRenderer.invoke('setServerName', serverName);
+  var password = document.getElementById("password").value;
   login(username, password, serverName);
 });
 loginButton.onclick = function(event) {

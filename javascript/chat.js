@@ -3,6 +3,7 @@ SCRIPT FOR CONTROLLING CHAT CLIENT AND INDEX.HTML
 */
 
 const fs = require('fs');
+const { MongoGridFSChunkError } = require('mongodb');
 const DEBUG = true; // turn this on & use it with 'if(DEBUG)' to display more console.log info
 var serverName;
 var displayAll = true;
@@ -63,19 +64,19 @@ $(function() { // this syntax means it's a function that will be run once once d
                     // console.log("checking " + users[i].username + " public key")
                     if (fs.existsSync('./keys/PublicKey_' + users[i].username)) {
                         // console.log("public key exists")
-                            var pubkey = fs.readFileSync('./keys/PublicKey_' + users[i].username)
-                            if (pubkey != users[i].pubKey) { // file exists but is not correct
-                                fs.writeFileSync('./keys/PublicKey_' + users[i].username, users[i].pubKey)
-                                // console.log("is not correct")
-                            }
-                            else {
-                                // console.log("is correct")
-                            }
+                        var pubkey = fs.readFileSync('./keys/PublicKey_' + users[i].username)
+                        if (pubkey != users[i].pubKey) { // file exists but is not correct
+                            fs.writeFileSync('./keys/PublicKey_' + users[i].username, users[i].pubKey)
+                            // console.log("is not correct")
+                        }
+                        else {
+                            // console.log("is correct")
+                        }
                     }
                     else {
-                            // create the file
-                            fs.writeFileSync('./keys/PublicKey_' + users[i].username, users[i].pubKey)
-                            // console.log("public key did not exist, create it")
+                        // create the file
+                        fs.writeFileSync('./keys/PublicKey_' + users[i].username, users[i].pubKey)
+                        // console.log("public key did not exist, create it")
                     }
                 }
             }
@@ -101,23 +102,21 @@ $(function() { // this syntax means it's a function that will be run once once d
             var messages = response.data;
             if (messages.length > 0) store.set("timeOfLastMessage_" + sessionID, messages[messages.length - 1].time); // use time from right before we asked last time
             let newJSON = [];
-                for (var i = 0; i < messages.length; ++i) {
-                    // if (document.getElementById(messages[i].guid) == null) { // only if not already added! (sometimes two messages come through)
-                        newJSON.push(messages[i])
-                        // console.log(messages[i])
-                            if (!isStarting && messages[i].username != myName) {
-                                if (messages[i].text.find(recipient => recipient.recipient == myName) == null && displayAll == true) { // show a notification if the user is looking at all the messages despite some being encrypted
-                                    showNotification(messages[i].username, Custom_AES_REVERSE(messages[i].text[0].text));
-                                }
-                                else {
-                                    showNotification(messages[i].username, Custom_AES_REVERSE(messages[i].text.find(recipient => recipient.recipient == myName).text));
-                                }
-                            }
-                        
+            for (var i = 0; i < messages.length; ++i) {
+                // if (document.getElementById(messages[i].guid) == null) { // only if not already added! (sometimes two messages come through)
+                newJSON.push(messages[i])
+                if (!isStarting && messages[i].username != myName) {
+                    if (messages[i].text.find(recipient => recipient.recipient == myName) == null && displayAll == true) { // show a notification if the user is looking at all the messages despite some being encrypted
+                        showNotification(messages[i].username, Custom_AES_REVERSE(messages[i].text[0].text));
+                    }
+                    else {
+                        showNotification(messages[i].username, Custom_AES_REVERSE(messages[i].text.find(recipient => recipient.recipient == myName).text));
+                    }
                 }
-                    // }
-                    // if (Decrypt(messages[i].author, messages[i].encryption) == myName) myColor = messages[i].color;
-                    
+                
+            }
+            // }
+            // if (Decrypt(messages[i].author, messages[i].encryption) == myName) myColor = messages[i].color;
             
             await appendChat(newJSON)
             if (myColor) {
@@ -144,7 +143,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             })
         })
     }
-
+    
     function toggleActiveForUser (username) {
         let element;
         if ((element = document.getElementById(username+"_dot")) != null && element.style != null) {
@@ -163,7 +162,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     }
     
     async function prepareChat() {
-        serverName = await store.get("serverName", ""); // default to "" if no valid input
+        // serverName = await store.get("serverName", ""); // default to "" if no valid input
         await ipcRenderer.invoke('getSeeAllMessages').then((result) => { 
             displayAll = result;
         });
@@ -179,6 +178,9 @@ $(function() { // this syntax means it's a function that will be run once once d
         await ipcRenderer.invoke('getSessionID').then((result) => {
             sessionID = result;
         })
+        await ipcRenderer.invoke('getServerName'). then((result) => {
+            serverName = result;
+        })
         // console.log("SessionID: " + sessionID)
         // EncryptionFunction = await store.get("encryptionType", Encryption_Types[0]);  // TODO: switch this back to default Encryption
         //default encryption type is first in file
@@ -191,23 +193,22 @@ $(function() { // this syntax means it's a function that will be run once once d
         catch (e) {
             // do nothing, will do this later
             // alert("getting new key pair")
-            myPrivateKey = await sendGetKeys(myName, serverName, sessionID); // doesn't need to happen every time!
+            console.log("Running this because no shared key is noticed on boot.\nserverName is: " + serverName)
+            myPrivateKey = await getMyKeysFromServer(myName, serverName, sessionID); // doesn't need to happen every time!
             // NOT SURE WHERE THE CODE BELOW SHOULD GO.
             // path = require('path').join('./','/PrivateKey_',myName)
-            // if (!fs.existsSync(path)) {
-            //     alert("Your private key does not exist on this instance of Incrypto, so you won't be able to read past messages send to you. Others will still be able to read what you sent them.\n\nCreate new keys with File > Get New Keys.")
-            // }
+            alert("If this is a new computer, you'll need to make a new key to read your messages. This is done to protect the users private key. However, Others will still be able to read what you sent them since their public keys have not changed.\n\nCreate new keys with Options > Get New Keys.")
         }
         
         // initialize chat & users
         refreshUsers(chatRoomName) // populate the people initially
         refreshChat("", chatRoomName, true) // populate the chat initially
-
+        
         // refresh users every 10 seconds
         setInterval(function() {
             refreshUsers(store.get(chatRoomName))
         }, 10000)
-
+        
         // refresh every 3 seconds
         setInterval(function() {
             refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, false)
@@ -247,7 +248,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         div.scrollTop = div.scrollHeight;
         document.getElementById('input').focus();
     }
-
+    
     var dtOfLastMessage = "";
     
     /*
@@ -261,7 +262,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         // if (message == UnencryptedMessage) return;
         // console.log("Unencrypted Message: " + UnencryptedMessage)
         // author = Custom_AES_REVERSE(author, encryptionType);
-
+        
         var peopleWhoCanUnencrypt = "(Visible to";
         entireMessage.text.forEach(element => {
             if (element.recipient != myName) {
@@ -273,9 +274,28 @@ $(function() { // this syntax means it's a function that will be run once once d
             peopleWhoCanUnencrypt += ")"
         }
         else peopleWhoCanUnencrypt = "";
+
         
         let purifiedMessage = DOMPurify.sanitize(UnencryptedMessage);
+        // let purifiedMessage = UnencryptedMessage;
+        // console.log("before purification")
+        // let remainderOfMessage = UnencryptedMessage;
+        // let purifiedMessage = "";
+        // while (remainderOfMessage.length != 0) {
+        //     try {
+        //         remainderOfMessage = remainderOfMessage.substr(0, 216);
+        //         purifiedMessage += DOM.sanitize(remainderOfMessage);
+        //     } catch (e) {
+        //         purifiedMessage += DOMPurify.sanitize(remainderOfMessage);
+        //         remainderOfMessage = "";
+        //     }
+        // }
+        // // chunkedMessage.forEach(chunk => {
+        // //     purifiedMessage += sanitizeHTML(chunk)
+        // // })
+        // // let purifiedMessage = sanitizeHTML(UnencryptedMessage);
         if (purifiedMessage === "") return;
+        // console.log("after purification");
         // console.log("author is " + Decrypt(author, encryptionType));
         // console.log("encryption type is " + encryptionType)
         const time = new Date(dt);
@@ -336,7 +356,11 @@ $(function() { // this syntax means it's a function that will be run once once d
             if (!msg) {
                 return;
             }
-
+            if (msg.length > 214) {
+                alert("You have entered more than our 215 character limit")
+                return;
+            }
+            
             var timesToEncrypt = 0;
             userArray.forEach(person => {
                 if (person.encryptForUser == true) timesToEncrypt++;
@@ -376,23 +400,32 @@ $(function() { // this syntax means it's a function that will be run once once d
             
             document.getElementById('input').focus();
         }
+        else {
+            var count = $(this).val().length;
+            console.log("count is: " + count)
+            var remaining = 213 - count;
+            if(remaining <= 0) {
+                // document.getElementById('charcount_text').innerHTML = '4000 character limit reached.' ;
+                document.getElementById('input').value = document.getElementById('input').value.substring(0, 213);
+            } 
+        }
     });
     
     var colorPicker = document.getElementById('color')
     colorPicker.addEventListener("input", watchColorPicker, false);
     // colorPicker.addEventListener("change", watchColorPicker, false);
-
+    
     function watchColorPicker(event) {
-    // document.querySelectorAll("p").forEach(function(p) {
-    //     p.style.color = event.target.value;
-    // });
+        // document.querySelectorAll("p").forEach(function(p) {
+        //     p.style.color = event.target.value;
+        // });
         myColor = event.target.value;
         mystatus.text(myName).css('color', myColor);
         ipcRenderer.invoke('setColor', myColor);
         document.getElementById('input').focus();
         var result = changeColor(myName, myColor, serverName, sessionID);
     }
-
+    
     document.getElementById('status').addEventListener('click', async () => {
         // console.log("Color was " + myColor)
         myColor = getRandomColor(); // generate random color
@@ -425,6 +458,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     dropdown = document.getElementById('dropdownOptions');
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayAllMessages">All messages</a>'
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayOnlyUnencryptedMessages">Only readable messages</a>'
+    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="remakeSharedKey">Get New Keys</a>'
     document.getElementById("displayAllMessages").addEventListener('click', () => {
         ipcRenderer.invoke('setSeeAllMessages', true);
         ipcRenderer.invoke('login');
@@ -433,7 +467,21 @@ $(function() { // this syntax means it's a function that will be run once once d
         ipcRenderer.invoke('setSeeAllMessages', false);
         ipcRenderer.invoke('login')
     });
-    
+    document.getElementById('remakeSharedKey').addEventListener('click', async () => {
+        var path = "./keys/PrivateKey_" + myName;
+        var path2 = "./keys/PublicKey_" + myName;
+        try {
+            fs.unlinkSync(path);
+            fs.unlinkSync(path2)
+            console.log("Files removed:", path + ", " + path2);
+        } catch (err) {
+            console.log(err);
+        }
+        console.log("Remaking key at button\nserverName is: " + serverName)
+        await remakeSharedKey(myName, serverName, sessionID);
+        
+        ipcRenderer.invoke('login')
+    })
 });
 
 function toggleEncryptionForUser(id){
@@ -460,6 +508,11 @@ function createGuid() {
     return _p8() + _p8(true) + _p8(true) + _p8();  
 }
 
+var sanitizeHTML = function (str) {
+	return str.replace(/[^\w. ]/gi, function (c) {
+		return '&#' + c.charCodeAt(0) + ';';
+	});
+};
 
 function lightOrDark(color) {
     // Variables for red, green, blue values
@@ -475,114 +528,125 @@ function lightOrDark(color) {
     else {
         // If hex --> Convert it to RGB: http://gist.github.com/983661
         color = +("0x" + color.slice(1).replace( 
-        color.length < 5 && /./g, '$&$&'));
-        r = color >> 16;
-        g = color >> 8 & 255;
-        b = color & 255;
-    }
-    // HSP (Highly Sensitive Poo) equation from http://alienryderflex.com/hsp.html
-    hsp = Math.sqrt(
-    0.299 * (r * r) +
-    0.587 * (g * g) +
-    0.114 * (b * b)
-    );
-    // Using the HSP value, determine whether the color is light or dark
-    if (hsp>127.5) {
-        return 'light';
-    } 
-    else {
-        return 'dark';
-    }
-}
+            color.length < 5 && /./g, '$&$&'));
+            r = color >> 16;
+            g = color >> 8 & 255;
+            b = color & 255;
+        }
+        // HSP (Highly Sensitive Poo) equation from http://alienryderflex.com/hsp.html
+        hsp = Math.sqrt(
+            0.299 * (r * r) +
+            0.587 * (g * g) +
+            0.114 * (b * b)
+            );
+            // Using the HSP value, determine whether the color is light or dark
+            if (hsp>127.5) {
+                return 'light';
+            } 
+            else {
+                return 'dark';
+            }
+        }
+        
+        async function remakeSharedKey(myName, serverName, sessionID) {
+            console.log("remaking keys with server")
+            myPrivateKey = await sendGetKeys(myName, serverName, sessionID, true); // doesn't need to happen every time!
+        }
 
-// _________________ Helper Functions ________________________________
-
-function getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
-
-function changeE_Type(EncryptionType) {
-    ipcRenderer.invoke('changeMessageE_Type', EncryptionType);
-}
-
-function showNotification(author, text) {
-    const NOTIFICATION_TITLE = author
-    const notification = {
-        title: author,
-        body: text,
-        // icon: __dirname + "/../icons/hacker-25899.png"
-        icon: "../icons/hacker-25899.png"
-    }
-    new Notification(NOTIFICATION_TITLE, notification).onclick = () => {
-        document.getElementById('input').focus();
-    };
-    ipcRenderer.invoke('incBadgeCnt', 1);
-}
-
-function Encrypt(textin, username) {
-    let toReturn = "";
-    try {
-        toReturn = eval(EncryptionFunction + '("' + textin + '", "' + username + '")');
-    } catch(e) {
-        alert("There's an issue with the selected encryption algorithm: " + e);
-        // return textin;
-        return "";
-    }
-    return toReturn;
-}
-
-function EncryptOther(textin, encryptionType) {
-    let toReturn = "";
-    try {
-        toReturn = eval(encryptionType + '("' + textin + '")');
-    } catch(e) {
-        return textin;
-    }
-    return toReturn;
-}
-
-function Decrypt(textin, encryptionType) {
-    let toReturn = "";
-    try {
-        toReturn = eval(encryptionType + '_REVERSE("' + textin + '")');
-        // alert("success: toReturn=" + toReturn);
-    } catch(e) {
-        // alert("error in decryption: " + e);
-        return textin;
-    }
-    return toReturn;
-}
-
-const NodeRSA = require('encrypt-rsa').default;
-const nodeRSA = new NodeRSA();
-
-function Custom_AES(textin, username) {
-    try {
-        return nodeRSA.encryptStringWithRsaPublicKey({ 
-            text: textin, 
-            keyPath: './keys/PublicKey_' + username 
-        });
-    }
-    catch (e) {
-        return "";
-    }
-}
-
-function Custom_AES_REVERSE(textin) {
-    try {
-        // console.log("Decrypting with key from " + myName)
-        return nodeRSA.decryptStringWithRsaPrivateKey({ 
-            text: textin, 
-            keyPath: './keys/PrivateKey_' + myName
-        });
-    } catch (e) {
-        // console.log(e)
-        return textin;
-    }
-}
-
+        async function getMyKeysFromServer(myName, serverName, sessionID) {
+            console.log("getting new keys from server")
+            myPrivateKey = await sendGetKeys(myName, serverName, sessionID, false);
+        }
+        
+        // _________________ Helper Functions ________________________________
+        
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+        
+        function changeE_Type(EncryptionType) {
+            ipcRenderer.invoke('changeMessageE_Type', EncryptionType);
+        }
+        
+        function showNotification(author, text) {
+            const NOTIFICATION_TITLE = author
+            const notification = {
+                title: author,
+                body: text,
+                // icon: __dirname + "/../icons/hacker-25899.png"
+                icon: "../icons/hacker-25899.png"
+            }
+            new Notification(NOTIFICATION_TITLE, notification).onclick = () => {
+                document.getElementById('input').focus();
+            };
+            ipcRenderer.invoke('incBadgeCnt', 1);
+        }
+        
+        function Encrypt(textin, username) {
+            let toReturn = "";
+            try {
+                toReturn = eval(EncryptionFunction + '("' + textin + '", "' + username + '")');
+            } catch(e) {
+                alert("There's an issue with the selected encryption algorithm: " + e);
+                // return textin;
+                return "";
+            }
+            return toReturn;
+        }
+        
+        function EncryptOther(textin, encryptionType) {
+            let toReturn = "";
+            try {
+                toReturn = eval(encryptionType + '("' + textin + '")');
+            } catch(e) {
+                return textin;
+            }
+            return toReturn;
+        }
+        
+        function Decrypt(textin, encryptionType) {
+            let toReturn = "";
+            try {
+                toReturn = eval(encryptionType + '_REVERSE("' + textin + '")');
+                // alert("success: toReturn=" + toReturn);
+            } catch(e) {
+                // alert("error in decryption: " + e);
+                return textin;
+            }
+            return toReturn;
+        }
+        
+        const NodeRSA = require('encrypt-rsa').default;
+        const nodeRSA = new NodeRSA();
+        
+        function Custom_AES(textin, username) {
+            try {
+                return nodeRSA.encryptStringWithRsaPublicKey({ 
+                    text: textin, 
+                    keyPath: './keys/PublicKey_' + username 
+                });
+            }
+            catch (e) {
+                return "";
+            }
+        }
+        
+        function Custom_AES_REVERSE(textin) {
+            try {
+                // console.log("Decrypting with key from " + myName)
+                return nodeRSA.decryptStringWithRsaPrivateKey({ 
+                    text: textin, 
+                    keyPath: './keys/PrivateKey_' + myName
+                });
+            } catch (e) {
+                // console.log(e)
+                return textin;
+            }
+        }
+        
+        

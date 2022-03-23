@@ -309,20 +309,26 @@ function powerMod(base, exponent, modulus) {
     return result;
 }
 
-async function sendGetKeys(username, serverName, sessionID) {
-    await negociate(username, serverName, sessionID).then(response => {
+async function sendGetKeys(username, serverName, sessionID, remakeSharedKeyBoolean) {
+    // console.log("serverName is: " + serverName)
+    if (remakeSharedKeyBoolean == true) {
+        var mod = "";
+        var base = "";
+        var response = await negociate(username, serverName, sessionID)
+        console.log(response.data)
         store.set("mod_" + username, response.data.mod);
+        mod = response.data.mod
         store.set("base_" + username, response.data.base);
+        base = response.data.base;
         document.getElementById('status').text = "Parameters Negociated";
-        // console.log("new parameters negociated")
-    })
-    // console.log("Negociation complete")
-    var mod = store.get("mod_" + username, "");
-    var base = store.get("base_" + username, "");
-    document.getElementById('status').text = "Generating Diffie Hellman Data";
-    let myPrivatePrime = generatePrime();
-    store.set("privatePrime_" + username, myPrivatePrime);
-    sendDiffieHellman(username, base, myPrivatePrime, mod, serverName, sessionID);
+        console.log("new parameters negociated")
+        // console.log("Negociation complete")
+        document.getElementById('status').text = "Generating Diffie Hellman Data";
+        let myPrivatePrime = generatePrime();
+        store.set("privatePrime_" + username, myPrivatePrime);
+        sendDiffieHellman(username, base, myPrivatePrime, mod, serverName, sessionID);
+    }
+    
     document.getElementById('status').text = "Getting Keys from Server";
 
     return await getKeys(username, serverName, sessionID).then(async response => {
