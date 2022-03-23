@@ -438,9 +438,9 @@ function addMessage(author, message, color, dt, guid, entireMessage) {
     // console.log("author is " + Decrypt(author, encryptionType));
     // console.log("encryption type is " + encryptionType)
     const time = new Date(dt);
-    console.log("New Time is: " + dt);
+    // console.log("New Time is: " + dt);
     const lastTime = new Date(dtOfLastMessage);
-    console.log("Old Time is: " + dtOfLastMessage);
+    // console.log("Old Time is: " + dtOfLastMessage);
     let difference = time - lastTime;
     if ((UnencryptedMessage !== message) || displayAll === true) { // either we've decypted the message, or displayAll is toggled
         message = purifiedMessage;
