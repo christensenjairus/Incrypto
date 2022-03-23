@@ -437,7 +437,7 @@ $(function() { // this syntax means it's a function that will be run once once d
 });
 
 function toggleEncryptionForUser(id){
-    console.log("toggling user "+ id)
+    // console.log("toggling user "+ id)
     if (userArray.find(user => user.username == id).encryptForUser == false) {
         document.getElementById(id).style.backgroundColor = green;
         // store.set("encryptForUser_" + id, true)
