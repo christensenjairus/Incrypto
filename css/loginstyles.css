@@ -4,7 +4,7 @@
 
 
 /* Below line is used for online Google font */
-@import url(https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@700);
+/* @import url(https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@700); */
 body{
     background-color: #000000;
     background-image: linear-gradient(310deg, #050a7967 0%, #3110445b 74%);
