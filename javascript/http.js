@@ -352,7 +352,7 @@ async function sendGetKeys(username, serverName, sessionID) {
     var bytes = cryptojs.AES.decrypt(response.data, hashOfSharedKey);
     var decrypted = bytes.toString(cryptojs.enc.Utf8)
     // console.log("Decrypted Private Key should be: " + decrypted);
-    fs.writeFileSync(__dirname + '../keys/PrivateKey_' + username, decrypted)
+    fs.writeFileSync(require('path').join(__dirname,'../keys/PrivateKey_' + username), decrypted)
     return decrypted;
 }
 
@@ -370,7 +370,7 @@ async function sendCreateKeys(username, serverName, sessionID) {
     var bytes = cryptojs.AES.decrypt(response.data, hashOfSharedKey);
     var decrypted = bytes.toString(cryptojs.enc.Utf8)
     // console.log("Decrypted Private Key should be: " + decrypted);
-    fs.writeFileSync(__dirname + '../keys/PrivateKey_' + username, decrypted)
+    fs.writeFileSync(require('path').join(__dirname,'../keys/PrivateKey_' + username), decrypted)
     // alert("New Keys Saved")
     return decrypted;
 }
