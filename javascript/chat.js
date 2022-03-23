@@ -69,7 +69,7 @@ $(function() { // this syntax means it's a function that will be run once once d
                         // console.log("public key exists")
                         var pubkey = fs.readFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username))
                         if (pubkey != users[i].pubKey) { // file exists but is not correct
-                            fs.writeFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username, users[i].pubKey))
+                            fs.writeFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username), users[i].pubKey)
                             // console.log("is not correct")
                         }
                         else {
@@ -78,7 +78,7 @@ $(function() { // this syntax means it's a function that will be run once once d
                     }
                     else {
                         // create the file
-                        fs.writeFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username, users[i].pubKey))
+                        fs.writeFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username), users[i].pubKey)
                         // console.log("public key did not exist, create it")
                     }
                 }
