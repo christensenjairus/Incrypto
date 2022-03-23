@@ -2,6 +2,7 @@
 SCRIPT FOR CONTROLLING CHAT CLIENT AND INDEX.HTML
 */
 
+const { response } = require('express');
 const fs = require('fs');
 const { domainToUnicode } = require('url');
 const DEBUG = true; // turn this on & use it with 'if(DEBUG)' to display more console.log info
@@ -18,6 +19,10 @@ var userArray = [];
 var content = document.getElementById("chatbox");
 var input = document.getElementById("input");
 var mystatus = document.getElementById("status");
+var active = "#00e33d";
+var notActive = "#f70505";
+var red = "#6b0700";
+var green = "#015400";
 fs.mkdirSync('./keys', { recursive: true })
 
 let savedInputText = "";
@@ -44,9 +49,10 @@ $(function() { // this syntax means it's a function that will be run once once d
             var users = response.data;
             for (var i = 0; i < users.length; ++i) {
                 if (document.getElementById(users[i].username) == null && myName != users[i].username) { // if this user just joined or is unknown to us
-                    document.getElementById("peoplebox").innerHTML += `<div style="background-color:#6b0700; color:white" onclick="toggleEncryptionForUser('`+ users[i].username+`')" id="` + users[i].username + `"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" />     ` + users[i].username +`</div>`
+                    document.getElementById("peoplebox").innerHTML += `<div style="background-color:#6b0700; color:white" onclick="toggleEncryptionForUser('`+ users[i].username+`')" id="` + users[i].username + `"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" />` + users[i].username +`        <span class="dot" id="`+users[i].username + `_dot"></span></div>`
                     userArray.push(users[i]);
                     userArray.find(user => user.username == users[i].username).encryptForUser = false;
+                    userArray.find(user => user.username == users[i].username).active = false;
                     // console.log("adding "+ users[i].username + " to people array")
                 }
                 else if (userArray.find(user => user.username == myName) == null) { // if I'm not found on list, add me
@@ -76,6 +82,9 @@ $(function() { // this syntax means it's a function that will be run once once d
             // console.log("Users Array:")
             // console.log(userArray)
         })
+        refreshActiveUsers();
+        console.log("User Array: ")
+        console.log(userArray)
     }
     
     // ---------------------------------------- CHATS -------------------------------------------------------
@@ -119,10 +128,39 @@ $(function() { // this syntax means it's a function that will be run once once d
             input.focus();
             scroll();
         })
-        // setTimeout(refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, false), 3000)
     }
-    // setTimeout(refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, false), 3000)
     
+    async function refreshActiveUsers() {
+        getActiveUsers(myName, serverName, sessionID).then(response => {
+            var activeUsers = response.data
+            // console.log(activeUsers);
+            activeUsers.forEach(activeUser => {
+                if ((userArray.find(user => user.username == activeUser.username) != null) && (activeUser.username != myName)) {
+                    if (activeUser.active != userArray.find(user => user.username == activeUser.username).active) {
+                        // console.log(activeUser.username + "Toggling active for " + activeUser.username)
+                        toggleActiveForUser(activeUser.username)
+                    }
+                }
+            })
+        })
+    }
+
+    function toggleActiveForUser (username) {
+        let element;
+        if ((element = document.getElementById(username+"_dot")) != null && element.style != null) {
+            if (element.style.backgroundColor != notActive) {
+                element.style.backgroundColor = active;
+                // console.log("making " + username + " active")
+            }
+            else {
+                element.style.backgroundColor = notActive;
+                // console.log("making " + username + " not active")
+            }
+        }
+        else {
+            // console.log("dot not found")
+        }
+    }
     
     async function prepareChat() {
         serverName = await store.get("serverName", ""); // default to "" if no valid input
@@ -391,15 +429,15 @@ $(function() { // this syntax means it's a function that will be run once once d
 });
 
 function toggleEncryptionForUser(id){
-    // console.log("toggling user "+ id)
+    console.log("toggling user "+ id)
     if (userArray.find(user => user.username == id).encryptForUser == false) {
-        document.getElementById(id).style.backgroundColor = "#6b0700"
+        document.getElementById(id).style.backgroundColor = green;
         // store.set("encryptForUser_" + id, true)
         userArray.find(user => user.username == id).encryptForUser = true;
         input.focus();
     }
     else {
-        document.getElementById(id).style.backgroundColor = "#015400"
+        document.getElementById(id).style.backgroundColor = red;
         // store.set("encryptForUser_" + id, false)
         userArray.find(user => user.username == id).encryptForUser = false;
         input.focus();

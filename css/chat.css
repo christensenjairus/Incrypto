@@ -284,3 +284,15 @@ webview {
     border: none;
     font-size: medium;
 }
+
+.dot {
+    height: 10px;
+    width: 10px;
+    background-color: #f70505; /* corresponds to notActive variable */
+    /* position: absolute; */
+    /* left: 50px; */
+    /* color: blue; */
+    /* float:right; */
+    border-radius: 50%;
+    display: inline-block;
+}

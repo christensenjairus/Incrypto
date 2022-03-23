@@ -1,9 +1,26 @@
-const { enc } = require('crypto-js');
 var fs = require('fs');
 var crypto = require('crypto').generateKey
-const { syncBuiltinESMExports } = require('module');
-const { endianness } = require('os');
 const DEBUG = true;
+
+var activeUsers = [];
+
+function checkIn (username) {
+	if (activeUsers.find(activeUser => activeUser.username == username) != null) {
+		if (activeUsers.find(activeUser => activeUser.username == username).active == false) logEvent(username + " is active")
+		activeUsers.find(activeUser => activeUser.username == username).active = true;
+		activeUsers.find(activeUser => activeUser.username == username).timeLastSeen = (new Date).getTime();
+	}
+}
+
+setInterval(() => {
+	let timeNow = (new Date).getTime();
+	activeUsers.forEach(activeUser => {
+		if (activeUser.active == true && activeUser.timeLastSeen + 7000 < timeNow) {
+			activeUser.active = false;
+			logEvent(activeUser.username + " is no longer active")
+		}
+	})
+}, 3000)
 
 function ping() {
 	return { type:'Pong', result: "success" };
@@ -17,6 +34,7 @@ async function negociate(chunk) {
 	let serverPrime = generatePrime();
 	await createKeys(chunk.username)
 	await saveNegociateDataToMongo(chunk.username, mod, base, serverPrime);
+	checkIn(chunk.username);
 	await new Promise(r => setTimeout(r, 1000)); // will sleep for 1 second - shouldn't use this, but I can't get saveLoginDataToMongo() to return before this function returns
 	// console.log("Saved Data to Mongo")
 	return { mod: mod, base:base }
@@ -31,6 +49,7 @@ async function login(chunk) {
 			if (updateUser(user)) {
 				logEvent("Successful login by username: '" + chunk.username + "'")
 				await saveLoginDataToMongo(chunk.username, sessionID);
+				checkIn(chunk.username);
 				return { type:'AuthResponse', color:user.color, result: "success", sessionID:sessionID };
 			}
 			else {
@@ -50,6 +69,7 @@ async function register(chunk) {
 	if (await createUser(chunk)) {
 		logEvent("Successful registration for username: '" + chunk.username + "'")
 		await saveLoginDataToMongo(chunk.username, sessionID);
+		checkIn(chunk.username);
 		return { type:'AuthResponse', color:"#0000FF", result: "success", sessionID:sessionID };
 	}
 	else {
@@ -63,6 +83,7 @@ async function receiveChatMessage(chunk) {
 	// if (DEBUG) logEvent("Username:'" + chunk.username + "' sent '" + chunk.message + "' with '" + chunk.encryption + "' encryption")
 	// else logEvent("Message recieved from username: '" + chunk.username + "'");
 	logEvent("Message recieved from username: '" + chunk.username + "'");
+	checkIn(chunk.username);
 	var obj = {
 		time: chunk.time,
 		// text: replaceEscapeCharacters(chunk.msg),
@@ -75,18 +96,22 @@ async function receiveChatMessage(chunk) {
 }
 
 async function sendAllMessages(chunk) {
+	checkIn(chunk.username);
 	return getAllMessagesFromMongo(chunk.chatRoomName);
 }
 
 async function sendAllUsers(chunk) {
+	checkIn(chunk.username);
 	return getAllUsersFromMongo(chunk.chatRoomName);
 }
 
 async function sendNewMessages(chunk) {
+	checkIn(chunk.username);
 	return getNewMessagesFromMongo(chunk.timeOfLastMessage, chunk.chatRoomName);
 }
 
 async function diffieHellman(chunk) {
+	checkIn(chunk.username);
 	var user = await getUser(chunk);
 	// console.log(JSON.stringify(user));
 	// console.log("Chunk username is: " + chunk.username)
@@ -109,6 +134,7 @@ async function diffieHellman(chunk) {
 }
 
 async function changeChatColor(chunk) {
+	checkIn(chunk.username);
 	// change User 
 	var user = await getUser(chunk);
 	if (user != null) {
@@ -209,6 +235,7 @@ async function verifySessionID(chunk) {
 }
 
 async function giveKeys(chunk) {
+	checkIn(chunk.username);
 	try {
 		// Including generateKeyPair from crypto module
 		// const { generateKeyPair } = require('crypto');
@@ -262,6 +289,23 @@ async function createKeys(username) {
 	const nodeRSA = new NodeRSA();
 	const { privateKey, publicKey } = nodeRSA.createPrivateAndPublicKeys()
 	await saveKeysToMongo(username, publicKey, privateKey)
+}
+
+async function sendActiveUsers(chunk) {
+	checkIn(chunk.username);
+	if (activeUsers.length == 0) {
+		var data = await getAllUsersFromMongo("");
+			// console.log(data)
+			data.forEach(user => {
+				var activeUser = {username:"", active:false, timeLastSeen:(new Date).getTime()};
+				activeUser.username = user.username;
+				activeUser.active = false;
+				activeUser.timeLastSeen = (new Date).getTime();
+				activeUsers.push(activeUser);
+				delete(activeUser);
+			})
+	}
+	return activeUsers;
 }
 
 // MONGO DATABASE FUNCTIONS --------------------------------------------------------- 
@@ -395,6 +439,10 @@ async function updateUser(chunk) {
 	return await _db.collection("Users").findOneAndReplace({username: chunk.username}, chunk)
 }
 
+// other functions
+
+// exports
+
 exports.getDbConnection = getDbConnection;
 exports.closeConnection = closeConnection;
 exports.login = login;
@@ -410,3 +458,4 @@ exports.diffieHellman = diffieHellman;
 exports.verifySessionID = verifySessionID;
 exports.giveKeys = giveKeys;
 exports.negociate = negociate;
+exports.sendActiveUsers = sendActiveUsers;

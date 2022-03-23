@@ -340,3 +340,15 @@ async function sendGetKeys(username, serverName, sessionID) {
         return decrypted;
     })
 }
+
+async function getActiveUsers(username, serverName, sessionID) {
+    try {
+        return axios.post('http://' + serverName + "/api/users/active", {
+        username: username,
+        sessionID: sessionID
+    })
+    } catch (e) {
+        console.error(error);
+        return false;
+    }
+}

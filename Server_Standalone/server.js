@@ -95,6 +95,14 @@ exists(directoryToRunFrom + '/.env', (e) => {
 			res.send(await logic.sendAllUsers(req.body));
 		})
 
+		app.post('/api/users/active', async function (req,res) {
+			if (! await logic.verifySessionID(req.body)) {
+				res.send('{"error":"incorrectSessionID"}');
+				return;
+			}
+			res.send(await logic.sendActiveUsers(req.body))
+		})
+
 		app.post('/api/keys/negociate', async function (req, res) {
 			// console.log("doing diffieHellman")
 			if (! await logic.verifySessionID(req.body)) {
