@@ -145,11 +145,11 @@ function createWindow(width, height) {
         let { width, height } = mainWindow.getBounds();
         
         // Now that we have them, save them using the `set` method.
-        if (width < 320) {
-            width = 320;
+        if (width < 1000) {
+            width = 1000;
         }
-        if (height < 600) {
-            height = 600;
+        if (height < 800) {
+            height = 800;
         }
         store.set('windowWidth', width);
         store.set('windowHeight', height);
