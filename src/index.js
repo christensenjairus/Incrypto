@@ -190,7 +190,7 @@ function createWindow(width, height) {
                     {label: "Clear All Local Data",
                         click() {
                             store.clear();
-                            fs.rmdir('./keys', { recursive: true }, (err) => {
+                            fs.rmdir(__dirname + '/keys', { recursive: true }, (err) => {
                                 if (err) {
                                     throw err;
                                 }
@@ -510,12 +510,12 @@ ipcMain.handle('getSessionID', (event) => {
 })
 
 ipcMain.handle('getServerName', (event) => {
-    console.log("serverName grabbed")
+    // console.log("serverName grabbed")
     return serverName;
 })
 
 ipcMain.handle('setServerName', (event, name) => {
-    console.log("serverName set to " + name)
+    // console.log("serverName set to " + name)
     serverName = name;
     return true;
 })

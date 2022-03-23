@@ -23,7 +23,8 @@ var notActive = "#f70505";
 var red = "#6b0700";
 var green = "#015400";
 var dtOfLastMessage = "";
-var path = require('path').join(process.cwd(),'keys')
+// var path = require('path').join(process.cwd(),'keys')
+var path = require('path').join(__dirname,'../keys')
 // alert(path)
 fs.mkdirSync(path, { recursive: true })
 
@@ -64,11 +65,11 @@ $(function() { // this syntax means it's a function that will be run once once d
                 }
                 if (users[i].pubKey != null) { // check everyones public key every time
                     // console.log("checking " + users[i].username + " public key")
-                    if (fs.existsSync('./keys/PublicKey_' + users[i].username)) {
+                    if (fs.existsSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username))) {
                         // console.log("public key exists")
-                        var pubkey = fs.readFileSync('./keys/PublicKey_' + users[i].username)
+                        var pubkey = fs.readFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username))
                         if (pubkey != users[i].pubKey) { // file exists but is not correct
-                            fs.writeFileSync('./keys/PublicKey_' + users[i].username, users[i].pubKey)
+                            fs.writeFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username, users[i].pubKey))
                             // console.log("is not correct")
                         }
                         else {
@@ -77,7 +78,7 @@ $(function() { // this syntax means it's a function that will be run once once d
                     }
                     else {
                         // create the file
-                        fs.writeFileSync('./keys/PublicKey_' + users[i].username, users[i].pubKey)
+                        fs.writeFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username, users[i].pubKey))
                         // console.log("public key did not exist, create it")
                     }
                 }
@@ -199,7 +200,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         //     EncryptionFunction = result;
         // })
         try {
-            myPrivateKey = fs.readFileSync('./keys/PrivateKey_' + myName);
+            myPrivateKey = fs.readFileSync(require('path').join(__dirname,'../keys/PrivateKey_' + myName));
         }
         catch (e) {
             // do nothing, will do this later
@@ -384,8 +385,8 @@ $(function() { // this syntax means it's a function that will be run once once d
         ipcRenderer.invoke('login')
     });
     document.getElementById('remakeKeys').addEventListener('click', async () => {
-        var path = "./keys/PrivateKey_" + myName;
-        var path2 = "./keys/PublicKey_" + myName;
+        var path = require('path').join(__dirname,'../keys/PrivateKey_' + myName);
+        var path2 = require('path').join(__dirname,'../keys/PublicKey_' + myName);
         try {
             fs.unlinkSync(path);
             fs.unlinkSync(path2)
@@ -580,7 +581,7 @@ function lightOrDark(color) {
                 title: author,
                 body: text,
                 // icon: __dirname + "/../icons/hacker-25899.png"
-                icon: "../icons/hacker-25899.png"
+                icon: require('path').join(__dirname,'../icons/hacker-25899.png')
             }
             new Notification(NOTIFICATION_TITLE, notification).onclick = () => {
                 document.getElementById('input').focus();
@@ -595,7 +596,7 @@ function lightOrDark(color) {
             try {
                 return nodeRSA.encryptStringWithRsaPublicKey({ 
                     text: textin, 
-                    keyPath: './keys/PublicKey_' + username 
+                    keyPath: require('path').join(__dirname,'../keys/PublicKey_' + username)
                 });
             }
             catch (e) {
@@ -608,7 +609,7 @@ function lightOrDark(color) {
                 // console.log("Decrypting with key from " + myName)
                 return nodeRSA.decryptStringWithRsaPrivateKey({ 
                     text: textin, 
-                    keyPath: './keys/PrivateKey_' + myName
+                    keyPath: require('path').join(__dirname,'../keys/PrivateKey_' + myName)
                 });
             } catch (e) {
                 // console.log(e)
