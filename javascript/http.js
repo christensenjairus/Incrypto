@@ -199,13 +199,13 @@ function sendMessage(username, msg, color, chatRoomName, serverName, sessionID) 
     userArray.forEach(async user => {
         if (user.encryptForUser == true) {
             var recipient = { recipient: "", text: ""};
-            console.log("Encrypting message for: " + user.username)
+            // console.log("Encrypting message for: " + user.username)
             recipient.recipient = user.username
             recipient.text = Custom_AES(msg, user.username);
             message.push(recipient) // encrypt message with their public key
         }   
     })
-    console.log(message)
+    // console.log(message)
     try {
         return axios.post('http://' + serverName + "/api/message", {
             username: username,

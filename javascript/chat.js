@@ -175,10 +175,10 @@ $(function() { // this syntax means it's a function that will be run once once d
         
         for (var i=0; i < newJSON.length; i++) {
             if (newJSON[i].text.find(message => message.recipient == myName) != null) {
-                addMessage(newJSON[i].username, newJSON[i].text.find(message => message.recipient == myName).text, newJSON[i].color, newJSON[i].time, newJSON[i].guid, newJSON[i]); 
+                addMessage(newJSON[i].username, newJSON[i].text.find(message => message.recipient == myName).text, newJSON[i].color, newJSON[i].time, newJSON[i].guid, newJSON[i], dtOfLastMessage); 
             }
             else {
-                addMessage(newJSON[i].username, newJSON[i].text[0].text, newJSON[i].color, newJSON[i].time, newJSON[i].guid, newJSON[i]); // just take the first encrypted part and send it
+                addMessage(newJSON[i].username, newJSON[i].text[0].text, newJSON[i].color, newJSON[i].time, newJSON[i].guid, newJSON[i], dtOfLastMessage); // just take the first encrypted part and send it
             }
             dtOfLastMessage = newJSON[i].time;
         }
@@ -207,7 +207,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     /*
     * Add message to the chat window
     */
-    function addMessage(author, message, color, dt, guid, entireMessage) {
+    function addMessage(author, message, color, dt, guid, entireMessage, dtOfLastMessage) {
         if (document.getElementById(guid) != null) return; // this message is already in the chat
         let UnencryptedMessage;
         // console.log("Encrypted Message FROM " + author + ": " + message)

@@ -114,7 +114,7 @@
     "eslint-plugin-react": "^7.27.1"
   },
   "build": {
-    "asar": true,
+    "asar": false,
     "appId": "Incrypto",
     "mac": {
       "category": "Messaging",
