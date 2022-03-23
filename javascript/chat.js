@@ -204,7 +204,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         }
         catch (e) {
             // do nothing, will do this later
-            // alert("getting new key pair")
+            // alert("Getting your private key from Server")
             console.log("Running this because no shared key is noticed on boot.\nserverName is: " + serverName)
             myPrivateKey = await sendGetKeys(myName, serverName, sessionID);
             // NOT SURE WHERE THE CODE BELOW SHOULD GO.

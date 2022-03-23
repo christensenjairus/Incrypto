@@ -190,7 +190,7 @@ function createWindow(width, height) {
                     {label: "Clear All Local Data",
                         click() {
                             store.clear();
-                            fs.rmdir(__dirname + '/keys', { recursive: true }, (err) => {
+                            fs.rmdir(require('path').join(__dirname, '../keys'), { recursive: true }, (err) => {
                                 if (err) {
                                     throw err;
                                 }
