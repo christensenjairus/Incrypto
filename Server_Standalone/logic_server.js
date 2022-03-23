@@ -16,7 +16,6 @@ function checkIn (username) {
 		activeUser.active = true;
 		activeUser.timeLastSeen = (new Date).getTime();
 		activeUsers.push(activeUser);
-		delete(activeUser);
 	}
 }
 
@@ -296,7 +295,6 @@ async function sendActiveUsers(chunk) {
 				activeUser.active = false;
 				activeUser.timeLastSeen = (new Date).getTime();
 				activeUsers.push(activeUser);
-				delete(activeUser);
 			})
 	}
 	return activeUsers;
