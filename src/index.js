@@ -94,8 +94,8 @@ function createWindow(width, height) {
             hasShadow: true,
             width: width,
             height: height,
-            minWidth: 600,
-            minHeight: 400,
+            minWidth: 1000,
+            minHeight: 800,
             icon: process.execPath + '.png', // for AppImage
             title: "Incrypto"
         }) 
@@ -114,8 +114,8 @@ function createWindow(width, height) {
             hasShadow: true,
             width: width,
             height: height,
-            minWidth: 600,
-            minHeight: 400,
+            minWidth: 1000,
+            minHeight: 800,
             icon: basepath + '/../icons/hacker-25899.png', // works in linux with a png! / windows with a png as well!
             title: "Incrypto"
         }) 
@@ -190,7 +190,15 @@ function createWindow(width, height) {
                     {label: "Clear All Local Data",
                         click() {
                             store.clear();
-                            switchToLoginPage();
+                            fs.rmdir('./keys', { recursive: true }, (err) => {
+                                if (err) {
+                                    throw err;
+                                }
+                                else {
+                                    console.log(`Keys were deleted!`);
+                                    switchToLoginPage();
+                                }
+                            });
                         }},
                     // {label: "Get New Keys",
                     //     click() {

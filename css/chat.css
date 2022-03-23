@@ -67,6 +67,8 @@ body {
 #peoplebox {
     height: 93vh;
     overflow-y: scroll;
+    min-width: 200px;
+    z-index: 2;
 }
 
 .right {
@@ -131,7 +133,7 @@ p {
     /* flex-direction: row;
     display: flex;
     flex-grow: 1; */
-    z-index: 6;
+    z-index: 0;
 }
 
 .form-control {
@@ -197,6 +199,7 @@ p {
     /* display: flex; */
     /* position: absolute; */
     /* bottom: 0; */
+    z-index: 6;
 }
 #input { 
     border-radius:2px; 
@@ -213,6 +216,7 @@ p {
     /* text-align: center; */
     background-color: black;  
     color: white;
+    /* z-index: 3; */
 }
 #status { 
     width: fit-content;
