@@ -44,8 +44,9 @@ $(function() { // this syntax means it's a function that will be run once once d
     async function refreshUsers(chatRoomName) {
         getAllUsers(myName, chatRoomName, serverName, sessionID).then(async response => {
             if (response.data.error == "incorrectSessionID") {
-                alert("You've logged in somewhere else. You will be logged out here.")
-                ipcRenderer.invoke('logout');
+                // alert("You've logged in somewhere else. You will be logged out here.")
+                // ipcRenderer.invoke('logout');
+                // ^ removed so that you dont get two logout messages
                 return;
             }
             var users = response.data;
@@ -198,7 +199,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             myPrivateKey = await getMyKeysFromServer(myName, serverName, sessionID); // doesn't need to happen every time!
             // NOT SURE WHERE THE CODE BELOW SHOULD GO.
             // path = require('path').join('./','/PrivateKey_',myName)
-            alert("If this is a new computer, you'll need to make a new key to read your messages. This is done to protect the users private key. However, Others will still be able to read what you sent them since their public keys have not changed.\n\nCreate new keys with Options > Get New Keys.")
+            alert("If this is a new computer for your user, you'll need to make a new key to read new messages. Your past messages will remain unreadable to you. Others will still be able to read past messages since their public keys have not changed.\n\nCreate new keys with Options > Get New Keys.")
         }
         
         // initialize chat & users
