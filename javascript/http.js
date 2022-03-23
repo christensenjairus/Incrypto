@@ -54,7 +54,7 @@ function login(username, password, serverName) {
         //     alert(e)
         // }
     }, error => {
-        alert("Could not connect to provided server\nError: " + error);
+        alert("Could not connect to provided server\n" + error);
         ipcRenderer.invoke('logout');
     })
 } catch (error) {

@@ -22,6 +22,7 @@ var active = "#00e33d";
 var notActive = "#f70505";
 var red = "#6b0700";
 var green = "#015400";
+var dtOfLastMessage = "";
 var path = require('path').join(process.cwd(),'keys')
 // alert(path)
 fs.mkdirSync(path, { recursive: true })
@@ -218,14 +219,13 @@ $(function() { // this syntax means it's a function that will be run once once d
     prepareChat();
     
     function appendChat(newJSON) {
-        if (chatRoom.length != 0) dtOfLastMessage = chatRoom[chatRoom.length - 1].time;
         
         for (var i=0; i < newJSON.length; i++) {
             if (newJSON[i].text.find(message => message.recipient == myName) != null) {
-                addMessage(newJSON[i].username, newJSON[i].text.find(message => message.recipient == myName).text, newJSON[i].color, newJSON[i].time, newJSON[i].guid, newJSON[i], dtOfLastMessage); 
+                addMessage(newJSON[i].username, newJSON[i].text.find(message => message.recipient == myName).text, newJSON[i].color, newJSON[i].time, newJSON[i].guid, newJSON[i]); 
             }
             else {
-                addMessage(newJSON[i].username, newJSON[i].text[0].text, newJSON[i].color, newJSON[i].time, newJSON[i].guid, newJSON[i], dtOfLastMessage); // just take the first encrypted part and send it
+                addMessage(newJSON[i].username, newJSON[i].text[0].text, newJSON[i].color, newJSON[i].time, newJSON[i].guid, newJSON[i]); // just take the first encrypted part and send it
             }
             dtOfLastMessage = newJSON[i].time;
         }
@@ -249,103 +249,9 @@ $(function() { // this syntax means it's a function that will be run once once d
         document.getElementById('input').focus();
     }
     
-    var dtOfLastMessage = "";
     
-    /*
-    * Add message to the chat window
-    */
-    function addMessage(author, message, color, dt, guid, entireMessage, dtOfLastMessage) {
-        if (document.getElementById(guid) != null) return; // this message is already in the chat
-        let UnencryptedMessage;
-        // console.log("Encrypted Message FROM " + author + ": " + message)
-        UnencryptedMessage = Custom_AES_REVERSE(message);
-        // if (message == UnencryptedMessage) return;
-        // console.log("Unencrypted Message: " + UnencryptedMessage)
-        // author = Custom_AES_REVERSE(author, encryptionType);
-        
-        var peopleWhoCanUnencrypt = "(Visible to";
-        entireMessage.text.forEach(element => {
-            if (element.recipient != myName) {
-                peopleWhoCanUnencrypt += " " + element.recipient + ","
-            }
-        });
-        if (peopleWhoCanUnencrypt != "(Visible to") {
-            peopleWhoCanUnencrypt = peopleWhoCanUnencrypt.substring(0, peopleWhoCanUnencrypt.length - 1)
-            peopleWhoCanUnencrypt += ")"
-        }
-        else peopleWhoCanUnencrypt = "";
-
-        
-        let purifiedMessage = DOMPurify.sanitize(UnencryptedMessage);
-        // let purifiedMessage = UnencryptedMessage;
-        // console.log("before purification")
-        // let remainderOfMessage = UnencryptedMessage;
-        // let purifiedMessage = "";
-        // while (remainderOfMessage.length != 0) {
-        //     try {
-        //         remainderOfMessage = remainderOfMessage.substr(0, 216);
-        //         purifiedMessage += DOM.sanitize(remainderOfMessage);
-        //     } catch (e) {
-        //         purifiedMessage += DOMPurify.sanitize(remainderOfMessage);
-        //         remainderOfMessage = "";
-        //     }
-        // }
-        // // chunkedMessage.forEach(chunk => {
-        // //     purifiedMessage += sanitizeHTML(chunk)
-        // // })
-        // // let purifiedMessage = sanitizeHTML(UnencryptedMessage);
-        if (purifiedMessage === "") return;
-        // console.log("after purification");
-        // console.log("author is " + Decrypt(author, encryptionType));
-        // console.log("encryption type is " + encryptionType)
-        const time = new Date(dt);
-        const lastTime = new Date(dtOfLastMessage);
-        let difference = time - lastTime;
-        if ((UnencryptedMessage !== message) || displayAll === true) { // either we've decypted the message, or displayAll is toggled
-            message = purifiedMessage;
-            if (difference > 20000) {
-                content.innerHTML += `<div class="text-center"><span class="between">` + time.toLocaleString() + `</span></div>`;
-            }
-            if (lightOrDark(color) == "dark") {
-                if (author == myName) {
-                    content.innerHTML += `<div class="d-flex align-items-center text-right justify-content-end" id="` + guid + `">
-                    <div class="pr-2"> <span class="name">Me ` + peopleWhoCanUnencrypt + `</span>
-                    <p class="msg bubbleright" style="background-color:` + color + `; color:white">` + message + `</p>
-                    </div>
-                    <div><img src="../icons/icons8-hacker-64.png" width="30" class="img1" /></div>
-                    </div>`
-                } else {
-                    content.innerHTML += `<!-- Sender Message-->
-                    <div class="d-flex align-items-center" id="` + guid + `">
-                    <div class="text-left pr-1"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /></div>
-                    <div class="pr-2 pl-1"> <span class="name">` + author + `</span>
-                    <p class="msg bubbleleft" style="background-color:` + color + `; color:white">` + message + `</p>
-                    </div>
-                    </div>`;
-                };
-            }
-            else {
-                if (author == myName) {
-                    content.innerHTML += `<div class="d-flex align-items-center text-right justify-content-end" id="` + guid + `">
-                    <div class="pr-2"> <span class="name">Me ` + peopleWhoCanUnencrypt + `</span>
-                    <p class="msg bubbleright" style="background-color:` + color + `; color:black">` + message + `</p>
-                    </div>
-                    <div><img src="../icons/icons8-hacker-64.png" width="30" class="img1" /></div>
-                    </div>`
-                } else {
-                    content.innerHTML += `<!-- Sender Message-->
-                    <div class="d-flex align-items-center" id="` + guid + `">
-                    <div class="text-left pr-1"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /></div>
-                    <div class="pr-2 pl-1"> <span class="name">` + author + `</span>
-                    <p class="msg bubbleleft" style="background-color:` + color + `; color:black">` + message + `</p>
-                    </div>
-                    </div>`;
-                };
-            }
-            dtOfLastMessage = time;
-            // console.log("time updated with message: " + message)
-        }
-    }
+    
+    
     
     /**
     * Send message when user presses Enter key
@@ -402,7 +308,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         }
         else {
             var count = $(this).val().length;
-            console.log("count is: " + count)
+            // console.log("count is: " + count)
             var remaining = 213 - count;
             if(remaining <= 0) {
                 // document.getElementById('charcount_text').innerHTML = '4000 character limit reached.' ;
@@ -483,6 +389,105 @@ $(function() { // this syntax means it's a function that will be run once once d
         ipcRenderer.invoke('login')
     })
 });
+
+/*
+    * Add message to the chat window
+    */
+function addMessage(author, message, color, dt, guid, entireMessage) {
+    if (document.getElementById(guid) != null) return; // this message is already in the chat
+    let UnencryptedMessage;
+    // console.log("Encrypted Message FROM " + author + ": " + message)
+    UnencryptedMessage = Custom_AES_REVERSE(message);
+    // if (message == UnencryptedMessage) return;
+    // console.log("Unencrypted Message: " + UnencryptedMessage)
+    // author = Custom_AES_REVERSE(author, encryptionType);
+    
+    var peopleWhoCanUnencrypt = "(Visible to";
+    entireMessage.text.forEach(element => {
+        if (element.recipient != myName) {
+            peopleWhoCanUnencrypt += " " + element.recipient + ","
+        }
+    });
+    if (peopleWhoCanUnencrypt != "(Visible to") {
+        peopleWhoCanUnencrypt = peopleWhoCanUnencrypt.substring(0, peopleWhoCanUnencrypt.length - 1)
+        peopleWhoCanUnencrypt += ")"
+    }
+    else peopleWhoCanUnencrypt = "";
+
+    
+    let purifiedMessage = DOMPurify.sanitize(UnencryptedMessage);
+    // let purifiedMessage = UnencryptedMessage;
+    // console.log("before purification")
+    // let remainderOfMessage = UnencryptedMessage;
+    // let purifiedMessage = "";
+    // while (remainderOfMessage.length != 0) {
+    //     try {
+    //         remainderOfMessage = remainderOfMessage.substr(0, 216);
+    //         purifiedMessage += DOM.sanitize(remainderOfMessage);
+    //     } catch (e) {
+    //         purifiedMessage += DOMPurify.sanitize(remainderOfMessage);
+    //         remainderOfMessage = "";
+    //     }
+    // }
+    // // chunkedMessage.forEach(chunk => {
+    // //     purifiedMessage += sanitizeHTML(chunk)
+    // // })
+    // // let purifiedMessage = sanitizeHTML(UnencryptedMessage);
+    if (purifiedMessage === "") return;
+    // console.log("after purification");
+    // console.log("author is " + Decrypt(author, encryptionType));
+    // console.log("encryption type is " + encryptionType)
+    const time = new Date(dt);
+    console.log("New Time is: " + dt);
+    const lastTime = new Date(dtOfLastMessage);
+    console.log("Old Time is: " + dtOfLastMessage);
+    let difference = time - lastTime;
+    if ((UnencryptedMessage !== message) || displayAll === true) { // either we've decypted the message, or displayAll is toggled
+        message = purifiedMessage;
+        if (difference > 20000) {
+            content.innerHTML += `<div class="text-center"><span class="between">` + time.toLocaleString() + `</span></div>`;
+        }
+        if (lightOrDark(color) == "dark") {
+            if (author == myName) {
+                content.innerHTML += `<div class="d-flex align-items-center text-right justify-content-end" id="` + guid + `">
+                <div class="pr-2"> <span class="name">Me ` + peopleWhoCanUnencrypt + `</span>
+                <p class="msg bubbleright" style="background-color:` + color + `; color:white">` + message + `</p>
+                </div>
+                <div><img src="../icons/icons8-hacker-64.png" width="30" class="img1" /></div>
+                </div>`
+            } else {
+                content.innerHTML += `<!-- Sender Message-->
+                <div class="d-flex align-items-center" id="` + guid + `">
+                <div class="text-left pr-1"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /></div>
+                <div class="pr-2 pl-1"> <span class="name">` + author + `</span>
+                <p class="msg bubbleleft" style="background-color:` + color + `; color:white">` + message + `</p>
+                </div>
+                </div>`;
+            };
+        }
+        else {
+            if (author == myName) {
+                content.innerHTML += `<div class="d-flex align-items-center text-right justify-content-end" id="` + guid + `">
+                <div class="pr-2"> <span class="name">Me ` + peopleWhoCanUnencrypt + `</span>
+                <p class="msg bubbleright" style="background-color:` + color + `; color:black">` + message + `</p>
+                </div>
+                <div><img src="../icons/icons8-hacker-64.png" width="30" class="img1" /></div>
+                </div>`
+            } else {
+                content.innerHTML += `<!-- Sender Message-->
+                <div class="d-flex align-items-center" id="` + guid + `">
+                <div class="text-left pr-1"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /></div>
+                <div class="pr-2 pl-1"> <span class="name">` + author + `</span>
+                <p class="msg bubbleleft" style="background-color:` + color + `; color:black">` + message + `</p>
+                </div>
+                </div>`;
+            };
+        }
+        
+        // console.log("time updated with message: " + message)
+    }
+    dtOfLastMessage = dt;
+}
 
 function toggleEncryptionForUser(id){
     // console.log("toggling user "+ id)
