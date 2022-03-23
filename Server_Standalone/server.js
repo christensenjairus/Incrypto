@@ -104,7 +104,7 @@ exists(directoryToRunFrom + '/.env', (e) => {
 		})
 
 		app.post('/api/keys/negociate', async function (req, res) {
-			// console.log("doing diffieHellman")
+			logic.logEvent("sending negociation information")
 			if (! await logic.verifySessionID(req.body)) {
 				res.send('{"error":"incorrectSessionID"}');
 				return;
@@ -113,7 +113,7 @@ exists(directoryToRunFrom + '/.env', (e) => {
 		})
 
 		app.post('/api/keys/diffieHellman', async function (req, res) {
-			// console.log("doing diffieHellman")
+			logic.logEvent("doing diffieHellman")
 			if (! await logic.verifySessionID(req.body)) {
 				res.send('{"error":"incorrectSessionID"}');
 				return;
@@ -122,12 +122,21 @@ exists(directoryToRunFrom + '/.env', (e) => {
 		})
 
 		app.post('/api/keys/getKeys', async function (req, res) {
-			// console.log("getting public/private keys")
+			logic.logEvent("getting public/private keys")
 			if (! await logic.verifySessionID(req.body)) {
 				res.send('{"error":"incorrectSessionID"}');
 				return;
 			}
 			res.send(await logic.giveKeys(req.body)); 
+		})
+
+		app.post('/api/keys/createKeys', async function (req, res) {
+			logic.logEvent("creating public/private keys")
+			if (! await logic.verifySessionID(req.body)) {
+				res.send('{"error":"incorrectSessionID"}');
+				return;
+			}
+			res.send(await logic.giveNewKeys(req.body)); 
 		})
 		
 		app.post('/api/color', async function(req, res) {

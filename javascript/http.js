@@ -94,7 +94,9 @@ function register(username, password, password2, serverName) {
             // store.set("base", data.base);
             // let myPrivatePrime = generatePrime();
             // store.set("privatePrime_" + username, myPrivatePrime);
-            // sendDiffieHellman(username, data.base, myPrivatePrime, data.mod, serverName, data.sessionID);
+        
+            // await sendDiffieHellman(username, data.base, myPrivatePrime, data.mod, serverName, data.sessionID);
+            await sendCreateKeys(username, serverName, data.sessionID, true)
             ipcRenderer.invoke('login');
         }
         else {
@@ -120,35 +122,6 @@ function register(username, password, password2, serverName) {
 } catch (error) {
     console.error(error);
     ipcRenderer.invoke('toregister');
-}
-}
-
-function diffieHellman(username, clientResult, myPrivatePrime, mod, serverName, sessionID) {
-    try {
-        console.log("Name is: " + username);
-        console.log("SessionID: " + sessionID);
-        return axios.post('http://' + serverName + "/api/keys/diffieHellman", {
-        username: username,
-        diffieHellman: clientResult,
-        sessionID, sessionID
-    }).then(response => {
-        // TODO
-        // alert("DATA RECIEVED!")
-        // var mod = store.get("mod", "");
-        // console.log("Final Diffie Hellman (3)-----------")
-        // console.log("Mod is: " + mod)
-        // var base = store.get("base", "")
-        // console.log("Base is: " + response.data.diffieHellman)
-        // var myPrivatePrime = generatePrime();
-        // console.log("My private prime is: " + myPrivatePrime)
-        var result = powerMod(response.data.diffieHellman, myPrivatePrime, mod);
-        console.log("Our shared key is: " + result)
-        store.set("SharedKey_" + username, result)
-        // alert("Our shared key is: " + result)
-    })
-} catch (error) {
-    console.error(error);
-    return "";
 }
 }
 
@@ -236,29 +209,20 @@ async function changeColor(username, color, serverName, sessionID) {
 }
 }
 
-async function getKeys(username, serverName, sessionID) {
+async function getActiveUsers(username, serverName, sessionID) {
     try {
-        return axios.post('http://' + serverName + "/api/keys/getKeys", {
-        username: username,
-        sessionID: sessionID
-    })
-} catch (e) {
-    console.error(error);
-    return false;
-}
-}
-
-async function negociate(username, serverName, sessionID) {
-    try {
-        return await axios.post('http://' + serverName + "/api/keys/negociate", {
+        return axios.post('http://' + serverName + "/api/users/active", {
         username: username,
         sessionID: sessionID
     })
     } catch (e) {
-        console.error(e);
+        console.error(error);
         return false;
     }
 }
+
+
+// ------------------- HELPER FUNCTIONS
 
 function generatePrime() {
     const range = [0, 100];
@@ -281,20 +245,6 @@ function generatePrime() {
     return(getRandomPrime(range))
 }
 
-
-function sendDiffieHellman(myName, base, myPrivatePrime, mod, serverName, sessionID) {
-    // var mod = store.get("mod", "");
-    // console.log("Diffie Hellman 2----------------------------------")
-    // console.log("Mod is: " + mod)
-    // var base = store.get("base", "")
-    // console.log("Base is: " + base)
-    // var myPrivatePrime = generatePrime();
-    // console.log("My private prime is: " + myPrivatePrime)
-    var result = powerMod(base, myPrivatePrime, mod);
-    // console.log("Sending back to server: " + result)
-    diffieHellman(myName, result, myPrivatePrime, mod, serverName, sessionID)
-}
-
 // calculates   base^exponent % modulus
 function powerMod(base, exponent, modulus) {
     if (modulus === 1) return 0;
@@ -309,52 +259,118 @@ function powerMod(base, exponent, modulus) {
     return result;
 }
 
-async function sendGetKeys(username, serverName, sessionID, remakeSharedKeyBoolean) {
-    // console.log("serverName is: " + serverName)
-    if (remakeSharedKeyBoolean == true) {
-        var mod = "";
-        var base = "";
-        var response = await negociate(username, serverName, sessionID)
-        console.log(response.data)
-        store.set("mod_" + username, response.data.mod);
-        mod = response.data.mod
-        store.set("base_" + username, response.data.base);
-        base = response.data.base;
-        document.getElementById('status').text = "Parameters Negociated";
-        console.log("new parameters negociated")
-        // console.log("Negociation complete")
-        document.getElementById('status').text = "Generating Diffie Hellman Data";
-        let myPrivatePrime = generatePrime();
-        store.set("privatePrime_" + username, myPrivatePrime);
-        sendDiffieHellman(username, base, myPrivatePrime, mod, serverName, sessionID);
-    }
-    
-    document.getElementById('status').text = "Getting Keys from Server";
+// ---------------- KEY EXCHANGE FUNCTIONS -------------------------------------------------------------
 
-    return await getKeys(username, serverName, sessionID).then(async response => {
-        document.getElementById('status').text = "Keys Recieved";
-        // console.log(response.data)
-        const crypto = require('crypto')
-        const cryptojs = require('crypto-js')
-        const fs = require('fs')
-        const hashOfSharedKey = crypto.createHash('sha256', await store.set("SharedKey_" + username, "")).digest('hex');
-        // console.log(hashOfSharedKey);
-        var bytes = cryptojs.AES.decrypt(response.data, hashOfSharedKey);
-        var decrypted = bytes.toString(cryptojs.enc.Utf8)
-        // console.log("Decrypted Private Key should be: " + decrypted);
-        fs.writeFileSync('./keys/PrivateKey_' + username, decrypted)
-        return decrypted;
-    })
-}
-
-async function getActiveUsers(username, serverName, sessionID) {
+async function negociate(username, serverName, sessionID) {
     try {
-        return axios.post('http://' + serverName + "/api/users/active", {
+        return await axios.post('http://' + serverName + "/api/keys/negociate", {
         username: username,
         sessionID: sessionID
     })
     } catch (e) {
-        console.error(error);
+        console.error(e);
         return false;
     }
+}
+
+async function diffieHellman(username, clientResult, myPrivatePrime, mod, serverName, sessionID) {
+    try {
+        console.log("Name is: " + username);
+        console.log("SessionID: " + sessionID);
+        var response = await axios.post('http://' + serverName + "/api/keys/diffieHellman", {
+            username: username,
+            diffieHellman: clientResult,
+            sessionID, sessionID
+        })
+
+            var result = powerMod(response.data.diffieHellman, myPrivatePrime, mod);
+            console.log("Our shared key is: " + result)
+            store.set("SharedKey_" + username, result)
+            // alert("Our shared key is: " + result)
+            return;
+    } catch (error) {
+        console.error(error);
+        return;
+    }
+}
+
+async function runnegociate(username, serverName, sessionID) {
+    var mod = "";
+    var base = "";
+    var response = await negociate(username, serverName, sessionID)
+    // alert("negociation complete")
+    // console.log(response.data)
+    store.set("mod_" + username, response.data.mod);
+    mod = response.data.mod
+    store.set("base_" + username, response.data.base);
+    base = response.data.base;
+    // document.getElementById('status').text = "Parameters Negociated";
+    // console.log("new parameters negociated")
+    // console.log("Negociation complete")
+    // document.getElementById('status').text = "Generating Diffie Hellman Data";
+    let myPrivatePrime = generatePrime();
+    store.set("privatePrime_" + username, myPrivatePrime);
+    var result = powerMod(base, myPrivatePrime, mod);
+    await diffieHellman(username, result, myPrivatePrime, mod, serverName, sessionID)
+}
+
+async function getKeys(username, serverName, sessionID) {
+    try {
+        return axios.post('http://' + serverName + "/api/keys/getKeys", {
+        username: username,
+        sessionID: sessionID
+    })
+} catch (e) {
+    console.error(error);
+    return false;
+}
+}
+
+async function createKeys(username, serverName, sessionID) {
+    try {
+        return axios.post('http://' + serverName + "/api/keys/createKeys", {
+        username: username,
+        sessionID: sessionID
+    })
+} catch (e) {
+    console.error(error);
+    return false;
+}
+}
+
+async function sendGetKeys(username, serverName, sessionID) {
+    // console.log("serverName is: " + serverName)
+    await runnegociate(username, serverName, sessionID);
+    // document.getElementById('status').text = "Getting Keys from Server";
+
+    var response = await getKeys(username, serverName, sessionID)
+    const crypto = require('crypto')
+    const cryptojs = require('crypto-js')
+    const fs = require('fs')
+    const hashOfSharedKey = crypto.createHash('sha256', await store.get("SharedKey_" + username, "")).digest('hex');
+    // console.log(hashOfSharedKey);
+    var bytes = cryptojs.AES.decrypt(response.data, hashOfSharedKey);
+    var decrypted = bytes.toString(cryptojs.enc.Utf8)
+    // console.log("Decrypted Private Key should be: " + decrypted);
+    fs.writeFileSync('./keys/PrivateKey_' + username, decrypted)
+    return decrypted;
+}
+
+async function sendCreateKeys(username, serverName, sessionID) {
+    // console.log("serverName is: " + serverName)
+    await runnegociate(username, serverName, sessionID);
+    // document.getElementById('status').text = "Getting Keys from Server";
+
+    var response = await createKeys(username, serverName, sessionID)
+    const crypto = require('crypto')
+    const cryptojs = require('crypto-js')
+    const fs = require('fs')
+    const hashOfSharedKey = crypto.createHash('sha256', await store.get("SharedKey_" + username, "")).digest('hex');
+    // console.log(hashOfSharedKey);
+    var bytes = cryptojs.AES.decrypt(response.data, hashOfSharedKey);
+    var decrypted = bytes.toString(cryptojs.enc.Utf8)
+    // console.log("Decrypted Private Key should be: " + decrypted);
+    fs.writeFileSync('./keys/PrivateKey_' + username, decrypted)
+    // alert("New Keys Saved")
+    return decrypted;
 }

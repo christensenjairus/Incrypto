@@ -10,6 +10,14 @@ function checkIn (username) {
 		activeUsers.find(activeUser => activeUser.username == username).active = true;
 		activeUsers.find(activeUser => activeUser.username == username).timeLastSeen = (new Date).getTime();
 	}
+	else {
+		var activeUser = {username:"", active:false, timeLastSeen:(new Date).getTime()};
+		activeUser.username = username;
+		activeUser.active = true;
+		activeUser.timeLastSeen = (new Date).getTime();
+		activeUsers.push(activeUser);
+		delete(activeUser);
+	}
 }
 
 setInterval(() => {
@@ -32,7 +40,7 @@ async function negociate(chunk) {
 	let base = generatePrime();				
 	// console.log("Base will be: " + base)
 	let serverPrime = generatePrime();
-	await createKeys(chunk.username)
+	// await createKeys(chunk.username)
 	await saveNegociateDataToMongo(chunk.username, mod, base, serverPrime);
 	checkIn(chunk.username);
 	await new Promise(r => setTimeout(r, 1000)); // will sleep for 1 second - shouldn't use this, but I can't get saveLoginDataToMongo() to return before this function returns
@@ -237,39 +245,25 @@ async function verifySessionID(chunk) {
 async function giveKeys(chunk) {
 	checkIn(chunk.username);
 	try {
-		// Including generateKeyPair from crypto module
-		// const { generateKeyPair } = require('crypto');
-		
-		// Calling generateKeyPair() method
-		// with its parameters
-		// var pubKey = "";
-		// var privKey = "";
+		var user = await getUser(chunk);
+		const crypto = require('crypto')
+		const cryptojs = require('crypto-js')
+		const hashOfSharedKey = crypto.createHash('sha256', user.sharedKey).digest('hex');
+		// console.log("Private Key: " + user.privKey)
+		// console.log("Hash of Shared Key: " + hashOfSharedKey);
+		var encrypted = cryptojs.AES.encrypt(user.privKey, hashOfSharedKey).toString();
+		// console.log(encrypted);
+		return encrypted;
+	} catch (e) {
+		console.log(e)
+	}
+}
 
-		// generateKeyPair('rsa', {
-		// 	modulusLength: 4096,
-		// 	publicKeyEncoding: {
-		// 		type: 'spki',
-		// 		format: 'pem'
-		// 	},
-		// 	privateKeyEncoding: {
-		// 		type: 'pkcs8',
-		// 		format: 'pem',
-		// 		cipher: 'aes-256-cbc',
-		// 		passphrase: 'top secret'
-		// 	}
-		// }, async (err, publicKey, privateKey) => {
-		// 	if(!err)
-		// 	{
-		// 		await saveKeysToMongo(chunk.username, publicKey, privateKey) // should I save these in hex?
-		// 	}
-		// 	else
-		// 	{
-		// 		// Prints error
-		// 		console.log("Errr is: ", err);
-		// 	}
-		// });
-		
-		// await new Promise(r => setTimeout(r, 1000)); // will sleep for 1 second - shouldn't use this
+async function giveNewKeys(chunk) {
+	checkIn(chunk.username);
+	try {
+		await createKeys(chunk.username)
+		await new Promise(r => setTimeout(r, 2000)); // will sleep for 2 seconds - shouldn't use this
 		var user = await getUser(chunk);
 		const crypto = require('crypto')
 		const cryptojs = require('crypto-js')
@@ -457,5 +451,6 @@ exports.sendAllUsers = sendAllUsers;
 exports.diffieHellman = diffieHellman;
 exports.verifySessionID = verifySessionID;
 exports.giveKeys = giveKeys;
+exports.giveNewKeys = giveNewKeys;
 exports.negociate = negociate;
 exports.sendActiveUsers = sendActiveUsers;

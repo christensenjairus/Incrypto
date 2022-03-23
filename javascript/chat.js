@@ -52,7 +52,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             var users = response.data;
             for (var i = 0; i < users.length; ++i) {
                 if (document.getElementById(users[i].username) == null && myName != users[i].username) { // if this user just joined or is unknown to us
-                    document.getElementById("peoplebox").innerHTML += `<div style="background-color:#6b0700; color:white" onclick="toggleEncryptionForUser('`+ users[i].username+`')" id="` + users[i].username + `"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" />` + users[i].username +`        <span class="dot" id="`+users[i].username + `_dot"></span></div>`
+                    document.getElementById("peoplebox").innerHTML += `<div style="background-color:#6b0700; color:white" onclick="toggleEncryptionForUser('`+ users[i].username+`')" id="` + users[i].username + `"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /><span class="dot" id="`+users[i].username + `_dot"></span>  ` + users[i].username +`</div>`
                     userArray.push(users[i]);
                     userArray.find(user => user.username == users[i].username).encryptForUser = false;
                     userArray.find(user => user.username == users[i].username).active = false;
@@ -137,19 +137,28 @@ $(function() { // this syntax means it's a function that will be run once once d
             // console.log(activeUsers);
             activeUsers.forEach(activeUser => {
                 if ((userArray.find(user => user.username == activeUser.username) != null) && (activeUser.username != myName)) {
+                    // console.log(activeUser.active)
+                    // console.log(userArray.find(user => user.username == activeUser.username).active)
                     if (activeUser.active != userArray.find(user => user.username == activeUser.username).active) {
-                        // console.log(activeUser.username + "Toggling active for " + activeUser.username)
-                        toggleActiveForUser(activeUser.username)
+                        // console.log("Toggling active for " + activeUser.username)
+                        if ((userArray.find(user => user.username == activeUser.username)).active == false) {
+                            (userArray.find(user => user.username == activeUser.username)).active = true;
+                            toggleActiveForUser(activeUser.username, true)
+                        }
+                        else {
+                            (userArray.find(user => user.username == activeUser.username)).active = false;
+                            toggleActiveForUser(activeUser.username, false)
+                        }
                     }
                 }
             })
         })
     }
     
-    function toggleActiveForUser (username) {
+    function toggleActiveForUser (username, activeBoolean) {
         let element;
         if ((element = document.getElementById(username+"_dot")) != null && element.style != null) {
-            if (element.style.backgroundColor != notActive) {
+            if (activeBoolean == true) {
                 element.style.backgroundColor = active;
                 // console.log("making " + username + " active")
             }
@@ -196,10 +205,10 @@ $(function() { // this syntax means it's a function that will be run once once d
             // do nothing, will do this later
             // alert("getting new key pair")
             console.log("Running this because no shared key is noticed on boot.\nserverName is: " + serverName)
-            myPrivateKey = await getMyKeysFromServer(myName, serverName, sessionID); // doesn't need to happen every time!
+            myPrivateKey = await sendGetKeys(myName, serverName, sessionID);
             // NOT SURE WHERE THE CODE BELOW SHOULD GO.
             // path = require('path').join('./','/PrivateKey_',myName)
-            alert("If this is a new computer for your user, you'll need to make a new key to read new messages. Your past messages will remain unreadable to you. Others will still be able to read past messages since their public keys have not changed.\n\nCreate new keys with Options > Get New Keys.")
+            // alert("If this is a new computer for your user, you'll need to make a new key to read new messages. Your past messages will remain unreadable to you. Others will still be able to read past messages since their public keys have not changed.\n\nCreate new keys with Options > Get New Keys.")
         }
         
         // initialize chat & users
@@ -365,7 +374,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     dropdown = document.getElementById('dropdownOptions');
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayAllMessages">All messages</a>'
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayOnlyUnencryptedMessages">Only readable messages</a>'
-    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="remakeSharedKey">Get New Keys</a>'
+    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="remakeKeys">Get New Keys</a>'
     document.getElementById("displayAllMessages").addEventListener('click', () => {
         ipcRenderer.invoke('setSeeAllMessages', true);
         ipcRenderer.invoke('login');
@@ -374,7 +383,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         ipcRenderer.invoke('setSeeAllMessages', false);
         ipcRenderer.invoke('login')
     });
-    document.getElementById('remakeSharedKey').addEventListener('click', async () => {
+    document.getElementById('remakeKeys').addEventListener('click', async () => {
         var path = "./keys/PrivateKey_" + myName;
         var path2 = "./keys/PublicKey_" + myName;
         try {
@@ -384,16 +393,16 @@ $(function() { // this syntax means it's a function that will be run once once d
         } catch (err) {
             console.log(err);
         }
-        console.log("Remaking key at button\nserverName is: " + serverName)
-        await remakeSharedKey(myName, serverName, sessionID);
+        // console.log("Remaking key at button\nserverName is: " + serverName)
+        await sendCreateKeys(myName, serverName, sessionID);
         
         ipcRenderer.invoke('login')
     })
 });
 
 /*
-    * Add message to the chat window
-    */
+* Add message to the chat window
+*/
 function addMessage(author, message, color, dt, guid, entireMessage) {
     if (document.getElementById(guid) != null) return; // this message is already in the chat
     let UnencryptedMessage;
@@ -414,7 +423,7 @@ function addMessage(author, message, color, dt, guid, entireMessage) {
         peopleWhoCanUnencrypt += ")"
     }
     else peopleWhoCanUnencrypt = "";
-
+    
     
     let purifiedMessage = DOMPurify.sanitize(UnencryptedMessage);
     // let purifiedMessage = UnencryptedMessage;
@@ -515,9 +524,9 @@ function createGuid() {
 }
 
 var sanitizeHTML = function (str) {
-	return str.replace(/[^\w. ]/gi, function (c) {
-		return '&#' + c.charCodeAt(0) + ';';
-	});
+    return str.replace(/[^\w. ]/gi, function (c) {
+        return '&#' + c.charCodeAt(0) + ';';
+    });
 };
 
 function lightOrDark(color) {
@@ -554,16 +563,6 @@ function lightOrDark(color) {
             }
         }
         
-        async function remakeSharedKey(myName, serverName, sessionID) {
-            console.log("remaking keys with server")
-            myPrivateKey = await sendGetKeys(myName, serverName, sessionID, true); // doesn't need to happen every time!
-        }
-
-        async function getMyKeysFromServer(myName, serverName, sessionID) {
-            console.log("getting new keys from server")
-            myPrivateKey = await sendGetKeys(myName, serverName, sessionID, false);
-        }
-        
         // _________________ Helper Functions ________________________________
         
         function getRandomColor() {
@@ -573,10 +572,6 @@ function lightOrDark(color) {
                 color += letters[Math.floor(Math.random() * 16)];
             }
             return color;
-        }
-        
-        function changeE_Type(EncryptionType) {
-            ipcRenderer.invoke('changeMessageE_Type', EncryptionType);
         }
         
         function showNotification(author, text) {
@@ -591,40 +586,6 @@ function lightOrDark(color) {
                 document.getElementById('input').focus();
             };
             ipcRenderer.invoke('incBadgeCnt', 1);
-        }
-        
-        function Encrypt(textin, username) {
-            let toReturn = "";
-            try {
-                toReturn = eval(EncryptionFunction + '("' + textin + '", "' + username + '")');
-            } catch(e) {
-                alert("There's an issue with the selected encryption algorithm: " + e);
-                // return textin;
-                return "";
-            }
-            return toReturn;
-        }
-        
-        function EncryptOther(textin, encryptionType) {
-            let toReturn = "";
-            try {
-                toReturn = eval(encryptionType + '("' + textin + '")');
-            } catch(e) {
-                return textin;
-            }
-            return toReturn;
-        }
-        
-        function Decrypt(textin, encryptionType) {
-            let toReturn = "";
-            try {
-                toReturn = eval(encryptionType + '_REVERSE("' + textin + '")');
-                // alert("success: toReturn=" + toReturn);
-            } catch(e) {
-                // alert("error in decryption: " + e);
-                return textin;
-            }
-            return toReturn;
         }
         
         const NodeRSA = require('encrypt-rsa').default;
@@ -654,5 +615,4 @@ function lightOrDark(color) {
                 return textin;
             }
         }
-        
         
