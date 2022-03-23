@@ -21,7 +21,7 @@ var active = "#00e33d";
 var notActive = "#f70505";
 var red = "#6b0700";
 var green = "#015400";
-var path = require('path').join('./','keys')
+var path = require('path').join(process.cwd(),'keys')
 // alert(path)
 fs.mkdirSync(path, { recursive: true })
 
