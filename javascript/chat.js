@@ -2,9 +2,7 @@
 SCRIPT FOR CONTROLLING CHAT CLIENT AND INDEX.HTML
 */
 
-const { response } = require('express');
 const fs = require('fs');
-const { domainToUnicode } = require('url');
 const DEBUG = true; // turn this on & use it with 'if(DEBUG)' to display more console.log info
 var serverName;
 var displayAll = true;
@@ -23,7 +21,9 @@ var active = "#00e33d";
 var notActive = "#f70505";
 var red = "#6b0700";
 var green = "#015400";
-fs.mkdirSync('./keys', { recursive: true })
+var path = require('path').join('./','keys')
+// alert(path)
+fs.mkdirSync(path, { recursive: true })
 
 let savedInputText = "";
 
@@ -83,8 +83,8 @@ $(function() { // this syntax means it's a function that will be run once once d
             // console.log(userArray)
         })
         refreshActiveUsers();
-        console.log("User Array: ")
-        console.log(userArray)
+        // console.log("User Array: ")
+        // console.log(userArray)
     }
     
     // ---------------------------------------- CHATS -------------------------------------------------------
@@ -170,8 +170,15 @@ $(function() { // this syntax means it's a function that will be run once once d
         await ipcRenderer.invoke('getName').then((result) => { 
             myName = result;
         });
+        path = require('path').join('./','/PrivateKey_',myName)
+        if (!fs.existsSync(path)) {
+            alert("Your private key does not exist on this instance of Incrypto, so you won't be able to read past messages send to you. Others will still be able to read what you sent them.\n\nCreate new keys with File > Get New Keys.")
+        }
         await ipcRenderer.invoke('getColor').then((result) => { 
+            // console.log("color recieved")
             myColor = result;
+            mystatus.text(myName).css('color', myColor);
+            document.getElementById('color').value = myColor;
         });
         await ipcRenderer.invoke('getSessionID').then((result) => {
             sessionID = result;
@@ -382,7 +389,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         mystatus.text(myName).css('color', myColor);
         ipcRenderer.invoke('setColor', myColor);
         document.getElementById('input').focus();
-        var result = changeColor(myName, myColor, serverName);
+        var result = changeColor(myName, myColor, serverName, sessionID);
     }
 
     document.getElementById('status').addEventListener('click', async () => {

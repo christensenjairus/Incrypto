@@ -2,7 +2,7 @@ const { default: axios } = require('axios');
 const Store = require('electron-store');
 const store = new Store(); // initalizes Store for ALL the LOGIN, REGISTER, and FRONTEND Pages
 const { ipcRenderer } = require('electron');
-const DOMPurify = require('dompurify');
+const DOMPurify = require('dompurify'); 
 
 function hashCode(password){
     return password.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);              
