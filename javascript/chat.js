@@ -44,7 +44,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             var users = response.data;
             for (var i = 0; i < users.length; ++i) {
                 if (document.getElementById(users[i].username) == null && myName != users[i].username) { // if this user just joined or is unknown to us
-                    document.getElementById("peoplebox").innerHTML += `<div style="background-color:red; color:white" onclick="toggleEncryptionForUser('`+ users[i].username+`')" id="` + users[i].username + `"><img src="../icons/icons8-hacker-64.png" width="30" class="img1" />     ` + users[i].username +`</div>`
+                    document.getElementById("peoplebox").innerHTML += `<div style="background-color:#6b0700; color:white" onclick="toggleEncryptionForUser('`+ users[i].username+`')" id="` + users[i].username + `"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" />     ` + users[i].username +`</div>`
                     userArray.push(users[i]);
                     userArray.find(user => user.username == users[i].username).encryptForUser = false;
                     // console.log("adding "+ users[i].username + " to people array")
@@ -393,13 +393,13 @@ $(function() { // this syntax means it's a function that will be run once once d
 function toggleEncryptionForUser(id){
     // console.log("toggling user "+ id)
     if (userArray.find(user => user.username == id).encryptForUser == false) {
-        document.getElementById(id).style.backgroundColor = "green"
+        document.getElementById(id).style.backgroundColor = "#6b0700"
         // store.set("encryptForUser_" + id, true)
         userArray.find(user => user.username == id).encryptForUser = true;
         input.focus();
     }
     else {
-        document.getElementById(id).style.backgroundColor = "red"
+        document.getElementById(id).style.backgroundColor = "#015400"
         // store.set("encryptForUser_" + id, false)
         userArray.find(user => user.username == id).encryptForUser = false;
         input.focus();
