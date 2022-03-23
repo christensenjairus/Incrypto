@@ -170,10 +170,6 @@ $(function() { // this syntax means it's a function that will be run once once d
         await ipcRenderer.invoke('getName').then((result) => { 
             myName = result;
         });
-        path = require('path').join('./','/PrivateKey_',myName)
-        if (!fs.existsSync(path)) {
-            alert("Your private key does not exist on this instance of Incrypto, so you won't be able to read past messages send to you. Others will still be able to read what you sent them.\n\nCreate new keys with File > Get New Keys.")
-        }
         await ipcRenderer.invoke('getColor').then((result) => { 
             // console.log("color recieved")
             myColor = result;
@@ -196,6 +192,11 @@ $(function() { // this syntax means it's a function that will be run once once d
             // do nothing, will do this later
             // alert("getting new key pair")
             myPrivateKey = await sendGetKeys(myName, serverName, sessionID); // doesn't need to happen every time!
+            // NOT SURE WHERE THE CODE BELOW SHOULD GO.
+            // path = require('path').join('./','/PrivateKey_',myName)
+            // if (!fs.existsSync(path)) {
+            //     alert("Your private key does not exist on this instance of Incrypto, so you won't be able to read past messages send to you. Others will still be able to read what you sent them.\n\nCreate new keys with File > Get New Keys.")
+            // }
         }
         
         // initialize chat & users
