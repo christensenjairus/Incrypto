@@ -6,7 +6,7 @@ const fs = require('fs');
 const { MongoGridFSChunkError } = require('mongodb');
 const DEBUG = true; // turn this on & use it with 'if(DEBUG)' to display more console.log info
 var serverName;
-var displayAll = true;
+var displayAll = false;
 var myName;
 var myColor;
 var chatRoom = [];
@@ -116,7 +116,7 @@ $(function() { // this syntax means it's a function that will be run once once d
                 newJSON.push(messages[i])
                 if (!isStarting && messages[i].username != myName) {
                     if (messages[i].text.find(recipient => recipient.recipient == myName) == null && displayAll == true) { // show a notification if the user is looking at all the messages despite some being encrypted
-                        showNotification(messages[i].username, Custom_AES_REVERSE(messages[i].text[0].text));
+                        // showNotification(messages[i].username, Custom_AES_REVERSE(messages[i].text[0].text)); // get messages notifications for gibbersih
                     }
                     else {
                         showNotification(messages[i].username, Custom_AES_REVERSE(messages[i].text.find(recipient => recipient.recipient == myName).text));

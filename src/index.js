@@ -45,7 +45,7 @@ const { isTypeParameterDeclaration } = require('typescript');
 app.setAppUserModelId("Incrypto");
 
 let codeEditor = store.get("codeEditor", "code"); // VS Code is the default
-let seeAllMessages = true;
+let seeAllMessages = false;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
