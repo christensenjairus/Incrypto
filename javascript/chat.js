@@ -366,9 +366,9 @@ $(function() { // this syntax means it's a function that will be run once once d
     });
     
     // add NAVBAR functionality
-    document.getElementById('logoutButton').addEventListener('click', () => {
-        logout();
-    })
+    // document.getElementById('logoutButton').addEventListener('click', () => {
+    //     logout();
+    // })
     
     var dropdown = document.getElementById('dropdown');
     // for (let i = 0; i < Encryption_Types.length; ++i) {
@@ -384,6 +384,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayAllMessages">All messages</a>'
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayOnlyUnencryptedMessages">Only readable messages</a>'
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="remakeKeys">Get New Keys</a>'
+    dropdown.innerHTML += `<div class="dropdown-item" href="#" id="logoutButton">Logout</div>`
     document.getElementById("displayAllMessages").addEventListener('click', () => {
         ipcRenderer.invoke('setSeeAllMessages', true);
         ipcRenderer.invoke('login');
@@ -407,6 +408,9 @@ $(function() { // this syntax means it's a function that will be run once once d
         await sendCreateKeys(myName, serverName, sessionID);
         
         ipcRenderer.invoke('login')
+    })
+    document.getElementById('logoutButton').addEventListener('click', () => {
+        logout();
     })
 });
 
