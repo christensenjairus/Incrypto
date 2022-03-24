@@ -114,15 +114,16 @@ $(function() { // this syntax means it's a function that will be run once once d
             for (var i = 0; i < messages.length; ++i) {
                 // if (document.getElementById(messages[i].guid) == null) { // only if not already added! (sometimes two messages come through)
                 newJSON.push(messages[i])
-                if (!isStarting && messages[i].username != myName) {
-                    if (messages[i].text.find(recipient => recipient.recipient == myName) == null && displayAll == true) { // show a notification if the user is looking at all the messages despite some being encrypted
-                        // showNotification(messages[i].username, Custom_AES_REVERSE(messages[i].text[0].text)); // get messages notifications for gibbersih
-                    }
-                    else {
-                        showNotification(messages[i].username, Custom_AES_REVERSE(messages[i].text.find(recipient => recipient.recipient == myName).text));
+                if (document.hasFocus() == false) { // only get notifications if not clicked in the window
+                    if (!isStarting && messages[i].username != myName) {
+                        if (messages[i].text.find(recipient => recipient.recipient == myName) == null && displayAll == true) { // show a notification if the user is looking at all the messages despite some being encrypted
+                            // showNotification(messages[i].username, Custom_AES_REVERSE(messages[i].text[0].text)); // get messages notifications for gibbersih
+                        }
+                        else {
+                            showNotification(messages[i].username, Custom_AES_REVERSE(messages[i].text.find(recipient => recipient.recipient == myName).text));
+                        }
                     }
                 }
-                
             }
             // }
             // if (Decrypt(messages[i].author, messages[i].encryption) == myName) myColor = messages[i].color;
