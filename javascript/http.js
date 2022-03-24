@@ -64,6 +64,11 @@ function login(username, password, serverName) {
 }
 
 function register(username, password, password2, serverName) {
+    if (username == "" || password == "") {
+        alert("Please fill in all the boxes");
+        ipcRenderer.invoke('toregister');
+        return false;
+    }
     if (password != password2) {
         alert("Passwords do not match")
         ipcRenderer.invoke('toregister');

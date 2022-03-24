@@ -21,6 +21,7 @@ registerButton.addEventListener('click', () => {
     var password = document.getElementById("password").value;
     var password2 = document.getElementById("password2").value;
     var serverName = document.getElementById("serverName").value;
+    ipcRenderer.invoke('setServerName', serverName);
     register(username, password, password2, serverName);
 });
 registerButton.onclick = function(event) {

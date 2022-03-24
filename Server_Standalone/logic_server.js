@@ -73,6 +73,8 @@ async function register(chunk) {
 	var sessionID = createGuid();
 	chunk.sessionID = sessionID;
 	chunk.color = "#0000FF"
+	if (chunk.username != "") return { type:'AuthResponse', result: "failure", sessionID:"no username" };
+	if (chunk.password != "") return { type:'AuthResponse', result: "failure", sessionID:"no password" };
 	if (await createUser(chunk)) {
 		logEvent("Successful registration for username: '" + chunk.username + "'")
 		await saveLoginDataToMongo(chunk.username, sessionID);
