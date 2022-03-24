@@ -385,6 +385,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         ipcRenderer.invoke('login')
     });
     document.getElementById('remakeKeys').addEventListener('click', async () => {
+        document.getElementById('body').innerHTML = ' <div class="loader" id="loader"></div> ' // add loading bar
         var path = require('path').join(__dirname,'../keys/PrivateKey_' + myName);
         var path2 = require('path').join(__dirname,'../keys/PublicKey_' + myName);
         try {
