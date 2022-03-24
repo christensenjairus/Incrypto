@@ -427,13 +427,13 @@ function addMessage(author, message, color, dt, guid, entireMessage) {
     // console.log("Unencrypted Message: " + UnencryptedMessage)
     // author = Custom_AES_REVERSE(author, encryptionType);
     
-    var peopleWhoCanUnencrypt = "(Visible to";
+    var peopleWhoCanUnencrypt = "(To";
     entireMessage.text.forEach(element => {
-        if (element.recipient != myName) {
+        if (element.recipient != myName && element.recipient != author) {
             peopleWhoCanUnencrypt += " " + element.recipient + ","
         }
     });
-    if (peopleWhoCanUnencrypt != "(Visible to") {
+    if (peopleWhoCanUnencrypt != "(To") {
         peopleWhoCanUnencrypt = peopleWhoCanUnencrypt.substring(0, peopleWhoCanUnencrypt.length - 1)
         peopleWhoCanUnencrypt += ")"
     }
@@ -484,11 +484,11 @@ function addMessage(author, message, color, dt, guid, entireMessage) {
                 content.innerHTML += `<!-- Sender Message-->
                 <div class="d-flex align-items-center" id="` + guid + `">
                 <div class="text-left pr-1"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /></div>
-                <div class="pr-2 pl-1"> <span class="name">` + author + `</span>
+                <div class="pr-2 pl-1"> <span class="name">` + author + " " + peopleWhoCanUnencrypt + `</span>
                 <p class="msg bubbleleft" style="background-color:` + color + `; color:white">` + message + `</p>
                 </div>
                 </div>`;
-            };
+            }; 
         }
         else {
             if (author == myName) {
@@ -502,7 +502,7 @@ function addMessage(author, message, color, dt, guid, entireMessage) {
                 content.innerHTML += `<!-- Sender Message-->
                 <div class="d-flex align-items-center" id="` + guid + `">
                 <div class="text-left pr-1"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /></div>
-                <div class="pr-2 pl-1"> <span class="name">` + author + `</span>
+                <div class="pr-2 pl-1"> <span class="name">` + author + " " + peopleWhoCanUnencrypt + `</span>
                 <p class="msg bubbleleft" style="background-color:` + color + `; color:black">` + message + `</p>
                 </div>
                 </div>`;

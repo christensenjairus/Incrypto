@@ -34,17 +34,21 @@ function ping() {
 }
 
 async function negociate(chunk) {
-	let mod = generatePrime();
+	// let mod = generatePrime();
+	// let mod = require('crypto').createDiffieHellman(100).getPrime();
 	// console.log("Mod will be: " + mod)
-	let base = generatePrime();				
+	// let base = generatePrime();	
+	// let base = require('crypto').createDiffieHellman(100).getPrime();			
 	// console.log("Base will be: " + base)
-	let serverPrime = generatePrime();
-	// await createKeys(chunk.username)
-	await saveNegociateDataToMongo(chunk.username, mod, base, serverPrime);
+	let g = require('crypto').createDiffieHellman(1024);
+	g = JSON.stringify(g.getPrime())
+	let serverPrime = require('crypto').createDiffieHellman(g);
+	let serverPrimeKey = serverPrime.generateKeys('base64');
+	await saveNegociateDataToMongo(chunk.username, g, serverPrimeKey);
 	checkIn(chunk.username);
-	await new Promise(r => setTimeout(r, 1000)); // will sleep for 1 second - shouldn't use this, but I can't get saveLoginDataToMongo() to return before this function returns
+	// await new Promise(r => setTimeout(r, 2000)); // will sleep for 2 seconds - shouldn't use this, but I can't get saveLoginDataToMongo() to return before this function returns
 	// console.log("Saved Data to Mongo")
-	return { mod: mod, base:base }
+	return { g:g }
 }
 
 async function login(chunk) {
@@ -131,8 +135,8 @@ async function diffieHellman(chunk) {
 	var serverPrime = user.serverPrime;
 	// console.log("ServerPrime is: " + serverPrime)
 	var result = powerMod(base, serverPrime, mod);
-	saveSharedKeyToMongo(user.username, result)
-	await new Promise(r => setTimeout(r, 300)); // will sleep for .3 seconds - shouldn't use this
+	await saveSharedKeyToMongo(user.username, result)
+	// await new Promise(r => setTimeout(r, 300)); // will sleep for .3 seconds - shouldn't use this
 	logEvent("SharedKey for " + user.username + ": " + result);
 	// now send client your generated number
 	base = user.base;
@@ -231,7 +235,6 @@ function powerMod(base, exponent, modulus) {
 
 async function verifySessionID(chunk) {
 	try {
-		// console.log(JSON.stringify(chunk))
 		var user = await getUser(chunk);
 		if (chunk.sessionID != user.sessionID) {
 			logEvent("SessionID verification failed for " + user.username)
@@ -250,10 +253,7 @@ async function giveKeys(chunk) {
 		const crypto = require('crypto')
 		const cryptojs = require('crypto-js')
 		const hashOfSharedKey = crypto.createHash('sha256', user.sharedKey).digest('hex');
-		// console.log("Private Key: " + user.privKey)
-		// console.log("Hash of Shared Key: " + hashOfSharedKey);
 		var encrypted = cryptojs.AES.encrypt(user.privKey, hashOfSharedKey).toString();
-		// console.log(encrypted);
 		return encrypted;
 	} catch (e) {
 		console.log(e)
@@ -264,15 +264,11 @@ async function giveNewKeys(chunk) {
 	checkIn(chunk.username);
 	try {
 		await createKeys(chunk.username)
-		await new Promise(r => setTimeout(r, 2000)); // will sleep for 2 seconds - shouldn't use this
 		var user = await getUser(chunk);
 		const crypto = require('crypto')
 		const cryptojs = require('crypto-js')
 		const hashOfSharedKey = crypto.createHash('sha256', user.sharedKey).digest('hex');
-		// console.log("Private Key: " + user.privKey)
-		// console.log("Hash of Shared Key: " + hashOfSharedKey);
 		var encrypted = cryptojs.AES.encrypt(user.privKey, hashOfSharedKey).toString();
-		// console.log(encrypted);
 		return encrypted;
 	} catch (e) {
 		console.log(e)
@@ -345,16 +341,17 @@ async function saveLoginDataToMongo(username, sessionID) {
 	// console.log("Returning now")
 }
 
-async function saveNegociateDataToMongo(username, mod, base, serverPrime) {
+async function saveNegociateDataToMongo(username, g, serverPrimeKey) {
 	_db = await getDbConnection();
 	var myquery = { username: username };
-	var newvalues = { $set: {mod: mod, base: base, serverPrime: serverPrime } };
-	return await _db.collection("Users").updateOne(myquery, newvalues, function(err, res) {
-		if (err) throw err;
-		logEvent("User document updated with mod, base, and server prime for " + username);
-		// db.close();
-	});
-	// return data;
+	var newvalues = { $set: {g:g, serverPrimeKey: serverPrimeKey } };
+	var result = await _db.collection("Users").updateOne(myquery, newvalues) //, function(err, res) {
+	// 	if (err) throw err;
+	// 	logEvent("User document updated with g and server prime key for " + username);
+	// 	// db.close();
+	// });
+	logEvent("User document updated with g and server prime key for " + username);
+	return result;
 	// console.log("Returning now")
 }
 
@@ -362,23 +359,26 @@ async function saveSharedKeyToMongo(username, sharedKey) {
 	_db = await getDbConnection();
 	var myquery = { username: username };
 	var newvalues = { $set: { sharedKey: sharedKey } };
-	return await _db.collection("Users").updateOne(myquery, newvalues, function(err, res) {
-		if (err) throw err;
-		logEvent("User document updated with shared key for " + username);
-		// db.close();
-	});
+	var data = await _db.collection("Users").updateOne(myquery, newvalues);//, function(err, res) {
+	// 	if (err) throw err;
+	// 	logEvent("User document updated with shared key for " + username);
+	// 	// db.close();
+	// });
+	logEvent("User document updated with shared key for " + username);
+	return data;
 }
 
 async function saveKeysToMongo(username, pubKey, privKey) {
 	_db = await getDbConnection();
 	var myquery = { username: username };
 	var newvalues = { $set: { pubKey:pubKey, privKey: privKey } };
-	return await _db.collection("Users").updateOne(myquery, newvalues, function(err, res) {
-		if (err) throw err;
-		logEvent("User document updated with private and public keys for " + username);
-		// db.close();
-	});
-	// return data;
+	var data = await _db.collection("Users").updateOne(myquery, newvalues);//, function(err, res) {
+	// 	if (err) throw err;
+	// 	logEvent("User document updated with private and public keys for " + username);
+	// 	// db.close();
+	// });
+	logEvent("User document updated with private and public keys for " + username);
+	return data;
 	// console.log("Returning now")
 }
 

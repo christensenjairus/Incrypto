@@ -121,7 +121,7 @@ function register(username, password, password2, serverName) {
         //     alert(e);
         // }
     }, error => {
-        alert("Cannot connect to that server");
+        alert("Cannot connect to that server\n" + error);
         ipcRenderer.invoke('toregister');
     })
 } catch (error) {
@@ -284,20 +284,20 @@ async function negociate(username, serverName, sessionID) {
     }
 }
 
-async function diffieHellman(username, clientResult, myPrivatePrime, mod, serverName, sessionID) {
+async function diffieHellman(username, myPrivatePrime, myPrivatePrimeKey, serverName, sessionID) {
     try {
         console.log("Name is: " + username);
         console.log("SessionID: " + sessionID);
         var response = await axios.post('http://' + serverName + "/api/keys/diffieHellman", {
             username: username,
-            diffieHellman: clientResult,
+            diffieHellman: myPrivatePrime,
             sessionID, sessionID
         })
 
-            var result = powerMod(response.data.diffieHellman, myPrivatePrime, mod);
+            // var result = powerMod(response.data.diffieHellman, myPrivatePrime, mod);
+            var result = myPrivatePrime.computeSecret(myPrivatePrimeKey, "base64")
             console.log("Our shared key is: " + result)
             store.set("SharedKey_" + username, result)
-            // alert("Our shared key is: " + result)
             return;
     } catch (error) {
         console.error(error);
@@ -306,23 +306,15 @@ async function diffieHellman(username, clientResult, myPrivatePrime, mod, server
 }
 
 async function runnegociate(username, serverName, sessionID) {
-    var mod = "";
-    var base = "";
+    var g = "";
     var response = await negociate(username, serverName, sessionID)
-    // alert("negociation complete")
-    // console.log(response.data)
-    store.set("mod_" + username, response.data.mod);
-    mod = response.data.mod
-    store.set("base_" + username, response.data.base);
-    base = response.data.base;
-    // document.getElementById('status').text = "Parameters Negociated";
-    // console.log("new parameters negociated")
-    // console.log("Negociation complete")
-    // document.getElementById('status').text = "Generating Diffie Hellman Data";
-    let myPrivatePrime = generatePrime();
-    store.set("privatePrime_" + username, myPrivatePrime);
-    var result = powerMod(base, myPrivatePrime, mod);
-    await diffieHellman(username, result, myPrivatePrime, mod, serverName, sessionID)
+    g = response.data.g;
+    store.set("g_" + username, g);
+    let myPrivatePrime = require('crypto').createDiffieHellman(g);
+    let myPrivatePrimeKey = myPrivatePrime.generateKeys("base64")
+    // alert("My Private Prime Key: " + myPrivatePrimeKey)
+    store.set("privatePrimeKey_" + username, myPrivatePrimeKey);
+    await diffieHellman(username, myPrivatePrime, myPrivatePrimeKey, serverName, sessionID)
 }
 
 async function getKeys(username, serverName, sessionID) {
@@ -352,8 +344,6 @@ async function createKeys(username, serverName, sessionID) {
 async function sendGetKeys(username, serverName, sessionID) {
     // console.log("serverName is: " + serverName)
     await runnegociate(username, serverName, sessionID);
-    // document.getElementById('status').text = "Getting Keys from Server";
-
     var response = await getKeys(username, serverName, sessionID)
     const crypto = require('crypto')
     const cryptojs = require('crypto-js')
