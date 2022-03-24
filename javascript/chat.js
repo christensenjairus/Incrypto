@@ -64,22 +64,28 @@ $(function() { // this syntax means it's a function that will be run once once d
                     userArray.find(user => user.username == myName).encryptForUser = true;
                 }
                 if (users[i].pubKey != null) { // check everyones public key every time
-                    // console.log("checking " + users[i].username + " public key")
-                    if (fs.existsSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username))) {
-                        // console.log("public key exists")
-                        var pubkey = fs.readFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username))
-                        if (pubkey != users[i].pubKey) { // file exists but is not correct
-                            fs.writeFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username), users[i].pubKey)
-                            // console.log("is not correct")
+                    try {
+                        // console.log("checking " + users[i].username + " public key")
+                        if (fs.existsSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username))) {
+                            // console.log("public key exists")
+                            var pubkey = fs.readFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username))
+                            if (pubkey != users[i].pubKey) { // file exists but is not correct
+                                fs.writeFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username), users[i].pubKey)
+                                // console.log("is not correct")
+                            }
+                            else {
+                                // console.log("is correct")
+                            }
                         }
                         else {
-                            // console.log("is correct")
+                            // create the file
+                            fs.writeFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username), users[i].pubKey)
+                            // console.log("public key did not exist, create it")
                         }
-                    }
-                    else {
-                        // create the file
-                        fs.writeFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username), users[i].pubKey)
-                        // console.log("public key did not exist, create it")
+                    } catch (e) {
+                        console.log("Keys files unable to save. Creating new keys directory...")
+                        var path = require('path').join(__dirname,'../keys')
+                        fs.mkdirSync(path, { recursive: true })
                     }
                 }
             }
@@ -201,6 +207,8 @@ $(function() { // this syntax means it's a function that will be run once once d
         // })
         try {
             myPrivateKey = fs.readFileSync(require('path').join(__dirname,'../keys/PrivateKey_' + myName));
+            // if (process.env.PrivateKey == null) sendGetKeys(myName, serverName, sessionID)
+            // console.log(process.env.PrivateKey)
         }
         catch (e) {
             // do nothing, will do this later
@@ -608,9 +616,12 @@ function lightOrDark(color) {
         function Custom_AES_REVERSE(textin) {
             try {
                 // console.log("Decrypting with key from " + myName)
+                // const key = new NodeRSA(process.env.PrivateKey, 'pkcs8')
+                // return key.decrypt(textin, 'utf8')
                 return nodeRSA.decryptStringWithRsaPrivateKey({ 
                     text: textin, 
                     keyPath: require('path').join(__dirname,'../keys/PrivateKey_' + myName)
+                    // keyCode: process.env.PrivateKey
                 });
             } catch (e) {
                 // console.log(e)

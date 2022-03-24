@@ -169,16 +169,22 @@ function getAllUsers(username, chatRoomName, serverName, sessionID) {
 function sendMessage(username, msg, color, chatRoomName, serverName, sessionID) {
     var message = [];
     var guid = createGuid();
+    var successfulEncryptionCount = 0;
     userArray.forEach(async user => {
         if (user.encryptForUser == true) {
             var recipient = { recipient: "", text: ""};
             // console.log("Encrypting message for: " + user.username)
             recipient.recipient = user.username
             recipient.text = Custom_AES(msg, user.username);
+            if (recipient.text != "") successfulEncryptionCount++;
             message.push(recipient) // encrypt message with their public key
         }   
     })
     // console.log(message)
+    if (successfulEncryptionCount == 0) {
+        alert ("Incrypto is not encrypting messages correctly. This problem is usually experienced when the app is installed in a read-only mode. Please reinstall the app with more permissions.");
+        return;
+    }
     try {
         return axios.post('http://' + serverName + "/api/message", {
             username: username,
@@ -353,6 +359,7 @@ async function sendGetKeys(username, serverName, sessionID) {
     var decrypted = bytes.toString(cryptojs.enc.Utf8)
     // console.log("Decrypted Private Key should be: " + decrypted);
     fs.writeFileSync(require('path').join(__dirname,'../keys/PrivateKey_' + username), decrypted)
+    // process.env.PrivateKey = decrypted;
     return decrypted;
 }
 
@@ -371,6 +378,7 @@ async function sendCreateKeys(username, serverName, sessionID) {
     var decrypted = bytes.toString(cryptojs.enc.Utf8)
     // console.log("Decrypted Private Key should be: " + decrypted);
     fs.writeFileSync(require('path').join(__dirname,'../keys/PrivateKey_' + username), decrypted)
+    // process.env.PrivateKey = decrypted;
     // alert("New Keys Saved")
     return decrypted;
 }
