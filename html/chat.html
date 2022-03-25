@@ -17,34 +17,36 @@
 
 <body id='body'>
 <nav class="navbar navbar-expand-sm navbar-dark">
-    <a class="navbar-brand" href="#">Incrypto Chat</a>
+    <a class="navbar-brand" href="#" id="brand">Incrypto</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <i class="navbar-toggler-icon"></i>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <!-- <ul class="navbar-nav">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" style="color:grey" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Encryption Types
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="dropdown"></div>
-            </li>
-        </ul> -->
-        
         <ul class="navbar-nav">
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" style="color:grey" href="#" id="navbarDropdownOptionsLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" style="color:grey" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Change Chatroom
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="chatRoomChangeDropdown"></div>
+            </li>
+        </ul>
+        
+        <!-- <input class="navbar-nav" type="text" style="background-color:#3110445b; opacity: .5; color: white;" placeholder="Jump to Chatroom..." id="search"> -->
+
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" style="color:grey;" href="#" id="navbarDropdownOptionsLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Options
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownOptionsLink" id="dropdownOptions">
-                    
-                </div>
-            </li>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownOptionsLink" id="dropdownOptions">   
+                </li>
         </ul>
         
         <div class="navbar-nav ml-auto" style="color:red;" id="status">Performing Key Exchange...</div>
         <div class="navbar-nav ml-auto" style="color:grey">Color: |</div>
         <input type="color" style="color:white;" id="color"/>
+
+
     </div>
 </nav>
 

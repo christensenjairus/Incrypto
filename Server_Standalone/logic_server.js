@@ -2,32 +2,17 @@ var fs = require('fs');
 var crypto = require('crypto').generateKey
 const DEBUG = true;
 
-var activeUsers = [];
+// var activeUsers = [];
 
-function checkIn (username) {
-	if (activeUsers.find(activeUser => activeUser.username == username) != null) {
-		if (activeUsers.find(activeUser => activeUser.username == username).active == false) logEvent(username + " is active")
-		activeUsers.find(activeUser => activeUser.username == username).active = true;
-		activeUsers.find(activeUser => activeUser.username == username).timeLastSeen = (new Date).getTime();
-	}
-	else {
-		var activeUser = {username:"", active:false, timeLastSeen:(new Date).getTime()};
-		activeUser.username = username;
-		activeUser.active = true;
-		activeUser.timeLastSeen = (new Date).getTime();
-		activeUsers.push(activeUser);
-	}
-}
-
-setInterval(() => {
-	let timeNow = (new Date).getTime();
-	activeUsers.forEach(activeUser => {
-		if (activeUser.active == true && activeUser.timeLastSeen + 7000 < timeNow) {
-			activeUser.active = false;
-			logEvent(activeUser.username + " is no longer active")
-		}
-	})
-}, 3000)
+// setInterval(() => {
+// 	let timeNow = (new Date).getTime();
+// 	activeUsers.forEach(activeUser => {
+// 		if (activeUser.active == true && activeUser.timeLastSeen + 7000 < timeNow) {
+// 			activeUser.active = false;
+// 			logEvent(activeUser.username + " is no longer active")
+// 		}
+// 	})
+// }, 3000)
 
 function ping() {
 	return { type:'Pong', result: "success" };
@@ -45,7 +30,6 @@ async function negociate(chunk) {
 	let serverPrime = require('crypto').createDiffieHellman(g);
 	let serverPrimeKey = serverPrime.generateKeys('base64');
 	await saveNegociateDataToMongo(chunk.username, g, serverPrimeKey);
-	checkIn(chunk.username);
 	// await new Promise(r => setTimeout(r, 2000)); // will sleep for 2 seconds - shouldn't use this, but I can't get saveLoginDataToMongo() to return before this function returns
 	// console.log("Saved Data to Mongo")
 	return { g:g }
@@ -57,10 +41,9 @@ async function login(chunk) {
 		if (user.password == chunk.password) {
 			var sessionID = createGuid();
 			user.sessionID = sessionID;
-			if (updateUser(user)) {
+			if (await updateUser(user)) {
 				logEvent("Successful login by username: '" + chunk.username + "'")
 				await saveLoginDataToMongo(chunk.username, sessionID);
-				checkIn(chunk.username);
 				return { type:'AuthResponse', color:user.color, result: "success", sessionID:sessionID };
 			}
 			else {
@@ -77,12 +60,11 @@ async function register(chunk) {
 	var sessionID = createGuid();
 	chunk.sessionID = sessionID;
 	chunk.color = "#0000FF"
-	if (chunk.username != "") return { type:'AuthResponse', result: "failure", sessionID:"no username" };
-	if (chunk.password != "") return { type:'AuthResponse', result: "failure", sessionID:"no password" };
+	if (chunk.username == "") return { type:'AuthResponse', result: "failure", sessionID:"no username" };
+	if (chunk.password == "") return { type:'AuthResponse', result: "failure", sessionID:"no password" };
 	if (await createUser(chunk)) {
 		logEvent("Successful registration for username: '" + chunk.username + "'")
 		await saveLoginDataToMongo(chunk.username, sessionID);
-		checkIn(chunk.username);
 		return { type:'AuthResponse', color:"#0000FF", result: "success", sessionID:sessionID };
 	}
 	else {
@@ -96,7 +78,6 @@ async function receiveChatMessage(chunk) {
 	// if (DEBUG) logEvent("Username:'" + chunk.username + "' sent '" + chunk.message + "' with '" + chunk.encryption + "' encryption")
 	// else logEvent("Message recieved from username: '" + chunk.username + "'");
 	logEvent("Message recieved from username: '" + chunk.username + "'");
-	checkIn(chunk.username);
 	var obj = {
 		time: chunk.time,
 		// text: replaceEscapeCharacters(chunk.msg),
@@ -109,45 +90,28 @@ async function receiveChatMessage(chunk) {
 }
 
 async function sendAllMessages(chunk) {
-	checkIn(chunk.username);
 	return getAllMessagesFromMongo(chunk.chatRoomName);
 }
 
 async function sendAllUsers(chunk) {
-	checkIn(chunk.username);
 	return getAllUsersFromMongo(chunk.chatRoomName);
 }
 
+async function sendChatRoomUsers(chunk) {
+	checkIn(chunk.username, chunk.chatRoomName);
+	return getChatRoomUsersFromMongo(chunk.chatRoomName);
+}
+
 async function sendNewMessages(chunk) {
-	checkIn(chunk.username);
 	return getNewMessagesFromMongo(chunk.timeOfLastMessage, chunk.chatRoomName);
 }
 
 async function diffieHellman(chunk) {
-	checkIn(chunk.username);
 	var user = await getUser(chunk);
-	// console.log(JSON.stringify(user));
-	// console.log("Chunk username is: " + chunk.username)
-	var mod = user.mod;
-	// console.log("Mod is: " + mod)
-	var base = chunk.diffieHellman;
-	// console.log("Base is: " + base)
-	var serverPrime = user.serverPrime;
-	// console.log("ServerPrime is: " + serverPrime)
-	var result = powerMod(base, serverPrime, mod);
-	await saveSharedKeyToMongo(user.username, result)
-	// await new Promise(r => setTimeout(r, 300)); // will sleep for .3 seconds - shouldn't use this
-	logEvent("SharedKey for " + user.username + ": " + result);
-	// now send client your generated number
-	base = user.base;
-	// console.log("Base is: " + base)
-	result = powerMod(base, serverPrime, mod);
-	// console.log("Sending to client: " + result)
-	return { diffieHellman: result }
+	return { diffieHellman: user.serverPrime }
 }
 
 async function changeChatColor(chunk) {
-	checkIn(chunk.username);
 	// change User 
 	var user = await getUser(chunk);
 	if (user != null) {
@@ -194,45 +158,6 @@ function logEvent(dataToLog) {
 	console.log(dataToLog);
 }
 
-function replaceEscapeCharacters(str) {
-	return String(str).replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"');
-}
-
-function generatePrime() {
-    const range = [0, 1000000]; // make this larger when a loading screen is created
-    const getPrimes = (min, max) => {
-    const result = Array(max + 1)
-    .fill(0)
-    .map((_, i) => i);
-    for (let i = 2; i <= Math.sqrt(max + 1); i++) {
-        for (let j = i ** 2; j < max + 1; j += i) delete result[j];
-    }
-    return Object.values(result.slice(min));
-    };
-    const getRandomNum = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-    };
-    const getRandomPrime = ([min, max]) => {
-    const primes = getPrimes(min, max);
-    return primes[getRandomNum(0, primes.length - 1)];
-    };
-    return(getRandomPrime(range))
-}
-
-// calculates   base^exponent % modulus
-function powerMod(base, exponent, modulus) {
-    if (modulus === 1) return 0;
-    var result = 1;
-    base = base % modulus;
-    while (exponent > 0) {
-        if (exponent % 2 === 1)  //odd number
-            result = (result * base) % modulus;
-        exponent = exponent >> 1; //divide by 2
-        base = (base * base) % modulus;
-    }
-    return result;
-}
-
 async function verifySessionID(chunk) {
 	try {
 		var user = await getUser(chunk);
@@ -247,7 +172,6 @@ async function verifySessionID(chunk) {
 }
 
 async function giveKeys(chunk) {
-	checkIn(chunk.username);
 	try {
 		var user = await getUser(chunk);
 		const crypto = require('crypto')
@@ -261,7 +185,6 @@ async function giveKeys(chunk) {
 }
 
 async function giveNewKeys(chunk) {
-	checkIn(chunk.username);
 	try {
 		await createKeys(chunk.username)
 		var user = await getUser(chunk);
@@ -282,21 +205,39 @@ async function createKeys(username) {
 	await saveKeysToMongo(username, publicKey, privateKey)
 }
 
-async function sendActiveUsers(chunk) {
-	checkIn(chunk.username);
-	if (activeUsers.length == 0) {
-		var data = await getAllUsersFromMongo("");
-			// console.log(data)
-			data.forEach(user => {
-				var activeUser = {username:"", active:false, timeLastSeen:(new Date).getTime()};
-				activeUser.username = user.username;
-				activeUser.active = false;
-				activeUser.timeLastSeen = (new Date).getTime();
-				activeUsers.push(activeUser);
-			})
-	}
-	return activeUsers;
-}
+// async function sendActiveUsers(chunk) {
+// 	checkIn(chunk.username);
+// 	if (activeUsers.length == 0) {
+// 		var data = await getAllUsersFromMongo("");
+// 			// console.log(data)
+// 			data.forEach(user => {
+// 				var activeUser = {username:"", active:false, timeLastSeen:(new Date).getTime()};
+// 				activeUser.username = user.username;
+// 				activeUser.active = false;
+// 				activeUser.timeLastSeen = (new Date).getTime();
+// 				activeUsers.push(activeUser);
+// 			})
+// 	}
+// 	return activeUsers;
+// }
+
+// async function sendActiveChatRoomUsers(chunk) {
+// 	checkIn(chunk.username);
+// 	if (activeUsers.length == 0) {
+// 		var data = await getChatRoomUsersFromMongo(chunk.chatRoomName);
+// 			// console.log(data)
+// 			data.forEach(user => {
+// 				var activeUser = {username:"", active:false, timeLastSeen:(new Date).getTime()};
+// 				activeUser.username = user.username;
+// 				activeUser.active = false;
+// 				activeUser.timeLastSeen = (new Date).getTime();
+// 				activeUsers.push(activeUser);
+// 			})
+// 	}
+// 	return activeUsers;
+// }
+
+
 
 // MONGO DATABASE FUNCTIONS --------------------------------------------------------- 
 
@@ -321,6 +262,14 @@ const getDbConnection = async () => {
 	_db = _connection.db(process.env.DATABASE_NAME);
 	logEvent("Connected to MongoDB");
 	return _db;
+}
+
+async function checkIn (username, chatRoomName) {
+	_db = await getDbConnection();
+	var myquery = { username: username, "chatRooms.name": chatRoomName };
+	var newvalues = { $set: {"chatRooms.$.lastActivity": (new Date).getTime() }};
+	_db.collection("Users").updateOne(myquery, newvalues);
+	return;
 }
 
 async function saveMsgToMongo(chatRoomName, obj) {
@@ -353,6 +302,60 @@ async function saveNegociateDataToMongo(username, g, serverPrimeKey) {
 	logEvent("User document updated with g and server prime key for " + username);
 	return result;
 	// console.log("Returning now")
+}
+
+async function joinChatRoom(chunk) {
+	_db = await getDbConnection();
+	var user = await getUser(chunk);
+	let isInChatRoom = 0;
+	user.chatRooms.forEach(chatRoom => {
+		if (chatRoom.name == chunk.chatRoomName) ++isInChatRoom;
+	})
+	if (isInChatRoom != 0) return false;
+	var myquery = { username: chunk.username };
+	var newvalues = { $push: {chatRooms: {name: chunk.chatRoomName, lastActivity:(new Date).getTime()}}};
+	var result = await _db.collection("Users").updateOne(myquery, newvalues) 
+	if (result.modifiedCount == 0) {
+		logEvent("Could not join " + chunk.username + " to chatroom " + chunk.chatRoomName)
+		return false;
+	}
+	else {
+		logEvent("User document updated for " + chunk.username + " joining chatroom " + chunk.chatRoomName);
+		return true;
+	}
+}
+
+async function leaveChatRoom(chunk) {
+	_db = await getDbConnection();
+	if (chunk.chatRoomName == "Chatroom_New Users") return false;
+	var user = await getUser(chunk);
+	let isInChatRoom = 0;
+	user.chatRooms.forEach(chatRoom => {
+		if (chatRoom.name == chunk.chatRoomName) ++isInChatRoom;
+	})
+	if (isInChatRoom == 0) return false;
+	var myquery = { username: chunk.username };
+	var newvalues = { $pull: {chatRooms: {name: chunk.chatRoomName}}};
+	var result = await _db.collection("Users").updateOne(myquery, newvalues) 
+	if (result.modifiedCount == 0) {
+		logEvent("Could not remove " + chunk.username + " from chatroom " + chunk.chatRoomName)
+		return false;
+	}
+	else {
+		logEvent("User document updated for " + chunk.username + " leaving chatroom " + chunk.chatRoomName);
+		return true;
+	}
+}
+
+
+async function createChatRoom(chunk) {
+	_db = await getDbConnection();
+	try {
+		await _db.createCollection(chunk.chatRoomName)
+		return true;
+	} catch (e) {
+		return false;
+	}
 }
 
 async function saveSharedKeyToMongo(username, sharedKey) {
@@ -389,9 +392,20 @@ async function getAllMessagesFromMongo(chatRoomName) {
 	return data;
 }
 
-async function getAllUsersFromMongo(chatRoomName) {
+async function getAllUsersFromMongo() {
 	_db = await getDbConnection();
-	var data = await _db.collection("Users").find({}, {projection:{color: 0, time: 0, encryption: 0, password: 0, _id: 0, privKey: 0, sessionID: 0, serverPrime: 0, mod: 0, base: 0, sharedKey: 0}}).toArray(); // usernames of messages are omitted so they're hidden from clients
+	var data = await _db.collection("Users").find({}, {projection:{color: 0, time: 0, encryption: 0, password: 0, _id: 0, privKey: 0, sessionID: 0, serverPrime: 0, serverPrimeKey: 0, g: 0, sharedKey: 0, chatRooms: 0}}).toArray(); // usernames of messages are omitted so they're hidden from clients
+	// closeConnection();
+	// console.log(data);
+	return data;
+}
+
+async function getChatRoomUsersFromMongo(chatRoomName) {
+	_db = await getDbConnection();
+	// logEvent("Querying users in chatroom: " + chatRoomName)
+	var data = await _db.collection("Users").find({
+		chatRooms: {"$elemMatch": {"name":chatRoomName}}
+	  }, {projection:{color: 0, time: 0, encryption: 0, password: 0, _id: 0, privKey: 0, sessionID: 0, serverPrime: 0, serverPrimeKey: 0, g: 0, sharedKey: 0}}).toArray(); // usernames of messages are omitted so they're hidden from clients
 	// closeConnection();
 	// console.log(data);
 	return data;
@@ -448,9 +462,13 @@ exports.sendAllMessages = sendAllMessages;
 exports.changeChatColor = changeChatColor;
 exports.sendNewMessages = sendNewMessages;
 exports.sendAllUsers = sendAllUsers;
+exports.sendChatRoomUsers = sendChatRoomUsers;
 exports.diffieHellman = diffieHellman;
 exports.verifySessionID = verifySessionID;
 exports.giveKeys = giveKeys;
 exports.giveNewKeys = giveNewKeys;
 exports.negociate = negociate;
-exports.sendActiveUsers = sendActiveUsers;
+// exports.sendActiveUsers = sendActiveUsers;
+exports.joinChatRoom = joinChatRoom;
+exports.createChatRoom = createChatRoom;
+exports.leaveChatRoom = leaveChatRoom;

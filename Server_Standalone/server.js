@@ -95,6 +95,39 @@ exists(directoryToRunFrom + '/.env', (e) => {
 			res.send(await logic.sendAllUsers(req.body));
 		})
 
+		app.post('/api/users/chatroom', async function (req, res) {
+			// console.log("getting all users")
+			if (! await logic.verifySessionID(req.body)) {
+				res.send('{"error":"incorrectSessionID"}');
+				return;
+			}
+			res.send(await logic.sendChatRoomUsers(req.body));
+		})
+
+		app.post('/api/users/chatroom/join', async function (req, res) {
+			if (! await logic.verifySessionID(req.body)) {
+				res.send('{"error":"incorrectSessionID"}');
+				return;
+			}
+			res.send(await logic.joinChatRoom(req.body));
+		})
+
+		app.post('/api/users/chatroom/leave', async function (req, res) {
+			if (! await logic.verifySessionID(req.body)) {
+				res.send('{"error":"incorrectSessionID"}');
+				return;
+			}
+			res.send(await logic.leaveChatRoom(req.body));
+		})
+
+		app.post('/api/users/chatroom/create', async function (req, res) {
+			if (! await logic.verifySessionID(req.body)) {
+				res.send('{"error":"incorrectSessionID"}');
+				return;
+			}
+			res.send(await logic.createChatRoom(req.body));
+		})
+
 		app.post('/api/users/active', async function (req,res) {
 			if (! await logic.verifySessionID(req.body)) {
 				res.send('{"error":"incorrectSessionID"}');
@@ -104,38 +137,38 @@ exists(directoryToRunFrom + '/.env', (e) => {
 		})
 
 		app.post('/api/keys/negociate', async function (req, res) {
-			logic.logEvent("sending negociation information")
 			if (! await logic.verifySessionID(req.body)) {
 				res.send('{"error":"incorrectSessionID"}');
 				return;
 			}
+			logic.logEvent("Sending negociation information to " + req.body.username)
 			res.send(await logic.negociate(req.body));
 		})
 
 		app.post('/api/keys/diffieHellman', async function (req, res) {
-			logic.logEvent("doing diffieHellman")
 			if (! await logic.verifySessionID(req.body)) {
 				res.send('{"error":"incorrectSessionID"}');
 				return;
 			}
+			logic.logEvent("Performing Diffie-Hellman exchange with " + req.body.username)
 			res.send(await logic.diffieHellman(req.body));
 		})
 
 		app.post('/api/keys/getKeys', async function (req, res) {
-			logic.logEvent("getting public/private keys")
 			if (! await logic.verifySessionID(req.body)) {
 				res.send('{"error":"incorrectSessionID"}');
 				return;
 			}
+			logic.logEvent("Getting public/private keys for " + req.body.username)
 			res.send(await logic.giveKeys(req.body)); 
 		})
 
 		app.post('/api/keys/createKeys', async function (req, res) {
-			logic.logEvent("creating public/private keys")
 			if (! await logic.verifySessionID(req.body)) {
 				res.send('{"error":"incorrectSessionID"}');
 				return;
 			}
+			logic.logEvent("Creating public/private keys for " + req.body.username)
 			res.send(await logic.giveNewKeys(req.body)); 
 		})
 		

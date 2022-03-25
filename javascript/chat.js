@@ -3,14 +3,13 @@ SCRIPT FOR CONTROLLING CHAT CLIENT AND INDEX.HTML
 */
 
 const fs = require('fs');
-const { MongoGridFSChunkError } = require('mongodb');
 const DEBUG = true; // turn this on & use it with 'if(DEBUG)' to display more console.log info
-var serverName;
+var serverName = false;
 var displayAll = false;
 var myName;
 var myColor;
 var chatRoom = [];
-var chatRoomName = "ChatRoom1"
+var chatRoomName = false;
 var EncryptionFunction;
 var sessionID = "";
 var myPrivateKey = "";
@@ -23,6 +22,7 @@ var notActive = "#f70505";
 var red = "#6b0700";
 var green = "#015400";
 var dtOfLastMessage = "";
+var myChatRoomNames = [];
 // var path = require('path').join(process.cwd(),'keys')
 var path = require('path').join(__dirname,'../keys')
 // alert(path)
@@ -34,6 +34,34 @@ function logout() {
     ipcRenderer.invoke('logout');
 }
 
+async function changeToChatRoom(name) {
+    await store.set('chatRoomName_' + myName, name)
+    ipcRenderer.invoke('login')
+}
+
+async function createNewChatRoom() {
+    var inputFromUser = await ipcRenderer.invoke('promptForNewChat');
+    if (inputFromUser == null) return;
+    var newRoomName = "Chatroom_" + inputFromUser;
+    await createChatRoom(myName, serverName, sessionID, newRoomName)
+    await joinChatRoom(myName, serverName, sessionID, newRoomName)
+    changeToChatRoom(newRoomName);
+}
+
+async function leaveRoom() {
+    var result = await leaveChatRoom(myName, serverName, sessionID, chatRoomName)
+    if (result.data == false) {
+        if (chatRoomName == "Chatroom_New Users") {
+            ipcRenderer.invoke('alert','',"'New Users' is the default chatroom. Without it you could not find your new friends", "error", false);
+        }
+        else {
+            ipcRenderer.invoke('alert','',"We could not remove you from this chatroom", "error", false);
+        }
+        return;
+    }
+    changeToChatRoom("Chatroom_New Users")
+}
+
 $(function() { // this syntax means it's a function that will be run once once document.ready is true
     "use strict";
     content = document.getElementById("chatbox");
@@ -43,7 +71,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     // -------------------------------------- USERS -----------------------------------------------------------
     
     async function refreshUsers(chatRoomName) {
-        getAllUsers(myName, chatRoomName, serverName, sessionID).then(async response => {
+        getChatRoomUsers(myName, chatRoomName, serverName, sessionID).then(async response => {
             if (response.data.error == "incorrectSessionID") {
                 // alert("You've logged in somewhere else. You will be logged out here.")
                 // ipcRenderer.invoke('logout');
@@ -53,15 +81,27 @@ $(function() { // this syntax means it's a function that will be run once once d
             var users = response.data;
             for (var i = 0; i < users.length; ++i) {
                 if (document.getElementById(users[i].username) == null && myName != users[i].username) { // if this user just joined or is unknown to us
-                    document.getElementById("peoplebox").innerHTML += `<div style="background-color:#6b0700; color:white" onclick="toggleEncryptionForUser('`+ users[i].username+`')" id="` + users[i].username + `"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /><span class="dot" id="`+users[i].username + `_dot"></span>  ` + users[i].username +`</div>`
+                    document.getElementById("peoplebox").innerHTML += `<div style="background-color:`+ green + `; color:white" onclick="toggleEncryptionForUser('`+ users[i].username+`')" id="` + users[i].username + `"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /><span class="dot" id="`+users[i].username + `_dot"></span>  ` + users[i].username +`</div>`
                     userArray.push(users[i]);
-                    userArray.find(user => user.username == users[i].username).encryptForUser = false;
-                    userArray.find(user => user.username == users[i].username).active = false;
+                    userArray.find(user => user.username == users[i].username).encryptForUser = true;
                     // console.log("adding "+ users[i].username + " to people array")
                 }
                 else if (userArray.find(user => user.username == myName) == null) { // if I'm not found on list, add me
                     userArray.push(users[i]);
                     userArray.find(user => user.username == myName).encryptForUser = true;
+                    users[i].chatRooms.forEach(chatRoom => {
+                        myChatRoomNames.push(chatRoom.name)
+                    })
+                    // console.log(myChatRoomNames)
+                    // add options for switching chatrooms to Navbar
+                    var dropdown = document.getElementById('chatRoomChangeDropdown');
+                    myChatRoomNames.forEach(name => {
+                        dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="changeToChatRoom('` + name + `')">` + name.substring(9) + `</a>`
+                    })
+                    dropdown.innerHTML += `<a class="dropdown-item" href="#"></a>`
+                    dropdown.innerHTML += `<a class="dropdown-item" href="#"></a>`
+                    dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="leaveRoom()">Leave this chatroom</a>`
+                    dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="createNewChatRoom()">Create or join a chatroom</a>`
                 }
                 if (users[i].pubKey != null) { // check everyones public key every time
                     try {
@@ -91,8 +131,8 @@ $(function() { // this syntax means it's a function that will be run once once d
             }
             // console.log("Users Array:")
             // console.log(userArray)
+            refreshActiveUsers(response);
         })
-        refreshActiveUsers();
         // console.log("User Array: ")
         // console.log(userArray)
     }
@@ -103,7 +143,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         // var time = (new Date()).getTime();
         getNewMessages(myName, timeOfLastMessage, chatRoomName, serverName, sessionID).then(async response => {
             if (response.data.error == "incorrectSessionID") {
-                alert("You've logged in somewhere else. You will be logged out here.")
+                ipcRenderer.invoke('alert','Logging you out...',"You've logged in somewhere else. You will be logged out here.", "", false);
                 ipcRenderer.invoke('logout');
                 return;
             }
@@ -139,28 +179,22 @@ $(function() { // this syntax means it's a function that will be run once once d
         })
     }
     
-    async function refreshActiveUsers() {
-        getActiveUsers(myName, serverName, sessionID).then(response => {
-            var activeUsers = response.data
-            // console.log(activeUsers);
-            activeUsers.forEach(activeUser => {
-                if ((userArray.find(user => user.username == activeUser.username) != null) && (activeUser.username != myName)) {
-                    // console.log(activeUser.active)
-                    // console.log(userArray.find(user => user.username == activeUser.username).active)
-                    if (activeUser.active != userArray.find(user => user.username == activeUser.username).active) {
-                        // console.log("Toggling active for " + activeUser.username)
-                        if ((userArray.find(user => user.username == activeUser.username)).active == false) {
-                            (userArray.find(user => user.username == activeUser.username)).active = true;
-                            toggleActiveForUser(activeUser.username, true)
+    async function refreshActiveUsers(response) {
+            var chatRoomUsers = response.data
+            chatRoomUsers.forEach(user => {
+                if ((userArray.find(user => user.username == user.username) != null) && (user.username != myName)) {
+                    if (user.chatRooms.find(chatRoom => chatRoom.name == chatRoomName) != null) {
+                        if (user.chatRooms.find(chatRoom => chatRoom.name == chatRoomName).lastActivity < ((new Date).getTime() - 11000)) {
+                            toggleActiveForUser(user.username, false)
+                            // console.log(user.username + " is off")
                         }
                         else {
-                            (userArray.find(user => user.username == activeUser.username)).active = false;
-                            toggleActiveForUser(activeUser.username, false)
+                            toggleActiveForUser(user.username, true)
+                            // console.log(user.username + " is on")
                         }
                     }
                 }
             })
-        })
     }
     
     function toggleActiveForUser (username, activeBoolean) {
@@ -185,21 +219,14 @@ $(function() { // this syntax means it's a function that will be run once once d
         await ipcRenderer.invoke('getSeeAllMessages').then((result) => { 
             displayAll = result;
         });
-        await ipcRenderer.invoke('getName').then((result) => { 
-            myName = result;
-        });
-        await ipcRenderer.invoke('getColor').then((result) => { 
-            // console.log("color recieved")
-            myColor = result;
-            mystatus.text(myName).css('color', myColor);
-            document.getElementById('color').value = myColor;
-        });
-        await ipcRenderer.invoke('getSessionID').then((result) => {
-            sessionID = result;
-        })
-        await ipcRenderer.invoke('getServerName'). then((result) => {
-            serverName = result;
-        })
+        myName = await ipcRenderer.invoke('getName')
+        myColor = await ipcRenderer.invoke('getColor')
+        mystatus.text(myName).css('color', myColor);
+        document.getElementById('color').value = myColor;
+        sessionID = await ipcRenderer.invoke('getSessionID')
+        serverName = await ipcRenderer.invoke('getServerName')
+        chatRoomName = await store.get("chatRoomName_" + myName, "Chatroom_New Users")
+        document.getElementById("brand").innerText += ": " + chatRoomName.substring(9)
         // console.log("SessionID: " + sessionID)
         // EncryptionFunction = await store.get("encryptionType", Encryption_Types[0]);  // TODO: switch this back to default Encryption
         //default encryption type is first in file
@@ -227,7 +254,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         
         // refresh users every 10 seconds
         setInterval(function() {
-            refreshUsers(store.get(chatRoomName))
+            refreshUsers(chatRoomName)
         }, 10000)
         
         // refresh every 3 seconds
@@ -283,7 +310,7 @@ $(function() { // this syntax means it's a function that will be run once once d
                 return;
             }
             if (msg.length > 214) {
-                alert("You have entered more than our 215 character limit")
+                ipcRenderer.invoke('alert','Character Limit Reached',"You have entered more than our 215 character limit", "error", false);
                 return;
             }
             
@@ -292,7 +319,7 @@ $(function() { // this syntax means it's a function that will be run once once d
                 if (person.encryptForUser == true) timesToEncrypt++;
             })
             if (timesToEncrypt == 1) {
-                alert("Select any red name on the left column before sending.")
+                ipcRenderer.invoke('alert',"Select any red name on the left column before sending.", "Without selecting a person to encrypt it for, it's a useless message.","", false);
                 return;
             }
             
@@ -306,7 +333,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             }).join('');
             if (!characterInString) return; // the message is only spaces
             let tmp1 = DOMPurify.sanitize(msg); // remove cross site scripting possibilities
-            if (tmp1 !== msg) alert("To protect against cross site scripting, we will remove what we view as dangerous text from your message.")
+            if (tmp1 !== msg) ipcRenderer.invoke('alert',"","To protect against cross site scripting, we will remove what we view as dangerous text from your message.", "", false);
             // msg = tmp1;
             tmp1 = msg;
             
@@ -320,7 +347,7 @@ $(function() { // this syntax means it's a function that will be run once once d
                     return;
                 }
                 else {
-                    alert("There was an issue sending your message");
+                    ipcRenderer.invoke('alert','',"There was an issue sending your message", "", false);
                 }
             })
             
@@ -338,8 +365,8 @@ $(function() { // this syntax means it's a function that will be run once once d
     });
     
     var colorPicker = document.getElementById('color')
-    colorPicker.addEventListener("input", watchColorPicker, false);
-    // colorPicker.addEventListener("change", watchColorPicker, false);
+    // colorPicker.addEventListener("input", watchColorPicker, false);
+    colorPicker.addEventListener("change", watchColorPicker, false);
     
     function watchColorPicker(event) {
         // document.querySelectorAll("p").forEach(function(p) {
@@ -359,29 +386,14 @@ $(function() { // this syntax means it's a function that will be run once once d
         mystatus.text(myName).css('color', myColor);
         ipcRenderer.invoke('setColor', myColor);
         document.getElementById('input').focus();
-        var result = changeColor(myName, myColor, serverName);
+        var result = changeColor(myName, myColor, serverName, sessionID);
         document.getElementById('color').value = myColor
     });
     content.addEventListener('click', async () => {
         document.getElementById('input').focus();
     });
     
-    // add NAVBAR functionality
-    // document.getElementById('logoutButton').addEventListener('click', () => {
-    //     logout();
-    // })
-    
-    var dropdown = document.getElementById('dropdown');
-    // for (let i = 0; i < Encryption_Types.length; ++i) {
-    //     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="encryption_type_' + i + '")>' + Encryption_Types[i] + '</a>'
-    // }
-    // for (let i = 0; i < Encryption_Types.length; ++i) {
-    //     document.getElementById("encryption_type_" + i).addEventListener('click', () => {
-    //         changeE_Type(Encryption_Types[i]);
-    //     })
-    // }
-    
-    dropdown = document.getElementById('dropdownOptions');
+    var dropdown = document.getElementById('dropdownOptions');
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayAllMessages">All messages</a>'
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayOnlyUnencryptedMessages">Only readable messages</a>'
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="remakeKeys">Get New Keys</a>'
@@ -591,6 +603,7 @@ function lightOrDark(color) {
         
         function showNotification(author, text) {
             const NOTIFICATION_TITLE = author
+            // text =  chatRoomName.substring(9) + ": " + text
             const notification = {
                 title: author,
                 body: text,

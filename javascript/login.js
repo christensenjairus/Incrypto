@@ -3,6 +3,10 @@
 var attempt = 3; // Variable to count number of attempts.
 
 $(function() { // run this as soon as the document loads
+  var path = require('path').join(__dirname,'../keys')
+  // alert(path)
+  require('fs').mkdirSync(path, { recursive: true })
+
   if (document.getElementById("username") != null) {
     document.getElementById("username").value = store.get("lastUser", ""); // show last username used
   }

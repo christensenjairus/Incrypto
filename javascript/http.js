@@ -3,28 +3,33 @@ const Store = require('electron-store');
 const store = new Store(); // initalizes Store for ALL the LOGIN, REGISTER, and FRONTEND Pages
 const { ipcRenderer } = require('electron');
 const DOMPurify = require('dompurify'); 
-
-function hashCode(password){
-    return password.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);              
-}
+const crypto = require('crypto');
+const bcrypt = require('bcrypt');
+var salt = bcrypt.genSaltSync(10);
 
 function login(username, password, serverName) {
     if (serverName === "") {
-        alert("Please enter a valid server name");
+        ipcRenderer.invoke('alert','Can not connect without a server','Please enter a valid server name', "error", false);
         ipcRenderer.invoke('logout');
         return false;
     }
-    password = hashCode(password);
+    password = crypto.createHash('sha256', password).digest('hex');
+    // password = bcrypt.hashSync(password, salt);
+    var time = (new Date()).getTime()
     try {
         axios.post('http://' + serverName + "/api/login", {
         username: username,
         password: password,
         encryption: "plain_text", 
-        time: (new Date()).getTime()
+        time: time,
+        chatRooms: [
+            {name:"Chatroom_New Users", lastActivity:time}
+        ]
     }).then(response => {
         // try {
         var data = response.data;
         if (data.result === 'success') {
+            if (store.get("chatRoomName_" + username, "") == "") store.set("chatRoomName_" + username, "Chatroom_New Users")
             store.set(username + "_sessionID", data.sessionID);
             ipcRenderer.invoke('setSessionID', data.sessionID);
             store.set("lastUser", username);
@@ -40,12 +45,12 @@ function login(username, password, serverName) {
         }
         else {
             if (data.sessionID === "incorrect_credentials") {
-                alert("Incorrect credentials")
+                ipcRenderer.invoke('alert','','Incorrect Credentials', "error", false);
                 ipcRenderer.invoke('logout');
                 return false;
             }
             else {
-                alert("We're not sure what happened. Please try again")
+                ipcRenderer.invoke('alert','We are not sure what happened','Please try again', "error", false);
                 ipcRenderer.invoke('logout');
                 return false;
             }
@@ -54,7 +59,7 @@ function login(username, password, serverName) {
         //     alert(e)
         // }
     }, error => {
-        alert("Could not connect to provided server\n" + error);
+        ipcRenderer.invoke('alert',"Could not connect to server", error.message, "error", false);
         ipcRenderer.invoke('logout');
     })
 } catch (error) {
@@ -65,18 +70,20 @@ function login(username, password, serverName) {
 
 function register(username, password, password2, serverName) {
     if (username == "" || password == "") {
-        alert("Please fill in all the boxes");
+        ipcRenderer.invoke('alert',"", "Fill in all the boxes", "error", false);
         ipcRenderer.invoke('toregister');
         return false;
     }
     if (password != password2) {
-        alert("Passwords do not match")
+        ipcRenderer.invoke('alert',"", "Passwords do not match", "error", false);
         ipcRenderer.invoke('toregister');
         return false;
     }
-    password = hashCode(password);
+    password = crypto.createHash('sha256', password).digest('hex');
+    // password = bcrypt.hashSync(password, salt);
+    var time = (new Date()).getTime();
     if (serverName === "") {
-        alert("Please enter a valid server name");
+        ipcRenderer.invoke('alert',"", "Please enter a valid server name", "error", false);
         ipcRenderer.invoke('toregister');
         return false;
     }
@@ -85,11 +92,15 @@ function register(username, password, password2, serverName) {
         username: username,
         password: password,
         encryption: "plain_text", 
-        time: (new Date()).getTime()
+        time: time,
+        chatRooms: [
+            {name:"Chatroom_New Users", lastActivity:time}
+        ]
     }).then(async response => {
         // try {
         var data = response.data
         if (data.result === 'success') {
+            store.set("chatRoomName_" + username, "Chatroom_New Users")
             store.set(username + "_sessionID", data.sessionID);
             ipcRenderer.invoke('setSessionID', data.sessionID);
             store.set("lastUser", username);
@@ -106,12 +117,12 @@ function register(username, password, password2, serverName) {
         }
         else {
             if (data.sessionID === "username_exists") {
-                alert("That username is taken. Please try another")
+                ipcRenderer.invoke('alert',"", "That username is taken. Please try another", "error", false);
                 ipcRenderer.invoke('toregister');
                 return false;
             }
             else {
-                alert("We're not sure what happened. Please try again")
+                ipcRenderer.invoke('alert',"", "We are not sure what happened. Please try again", "error", false);
                 ipcRenderer.invoke('toregister');
                 return false;
             }
@@ -121,7 +132,7 @@ function register(username, password, password2, serverName) {
         //     alert(e);
         // }
     }, error => {
-        alert("Cannot connect to that server\n" + error);
+        ipcRenderer.invoke('alert',"Could not connect to server", error.message, "error", false);
         ipcRenderer.invoke('toregister');
     })
 } catch (error) {
@@ -157,9 +168,21 @@ function getAllMessages(username, chatRoomName, serverName, sessionID) {
 }
 }
 
-function getAllUsers(username, chatRoomName, serverName, sessionID) {
+function getAllUsers(username, serverName, sessionID) {
     try {
         return axios.post('http://' + serverName + "/api/users/all", {
+            username: username,
+            sessionID: sessionID
+        })
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+
+function getChatRoomUsers(username, chatRoomName, serverName, sessionID) {
+    try {
+        return axios.post('http://' + serverName + "/api/users/chatroom", {
             chatRoomName: chatRoomName,
             username: username,
             sessionID: sessionID
@@ -187,7 +210,7 @@ function sendMessage(username, msg, color, chatRoomName, serverName, sessionID) 
     })
     // console.log(message)
     if (successfulEncryptionCount == 0) {
-        alert ("Incrypto is not encrypting messages correctly. This problem is usually experienced when the app is installed in a read-only mode. Please reinstall the app with more permissions.");
+        ipcRenderer.invoke('alert',"Incrypto is not encrypting messages correctly. This problem is usually experienced when the app is installed in a read-only mode. Please reinstall the app with more permissions.", "", false);
         return;
     }
     try {
@@ -232,6 +255,44 @@ async function getActiveUsers(username, serverName, sessionID) {
     }
 }
 
+function createChatRoom(username, serverName, sessionID, chatRoomName) {
+    try {
+        return axios.post('http://' + serverName + "/api/users/chatroom/create", {
+            username: username,
+            sessionID: sessionID,
+            chatRoomName: chatRoomName
+        })
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+
+function joinChatRoom(username, serverName, sessionID, chatRoomName) {
+    try {
+        return axios.post('http://' + serverName + "/api/users/chatroom/join", {
+            username: username,
+            sessionID: sessionID,
+            chatRoomName: chatRoomName
+        })
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+
+function leaveChatRoom(username, serverName, sessionID, chatRoomName) {
+    try {
+        return axios.post('http://' + serverName + "/api/users/chatroom/leave", {
+            username: username,
+            sessionID: sessionID,
+            chatRoomName: chatRoomName
+        })
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
 
 // ------------------- HELPER FUNCTIONS
 

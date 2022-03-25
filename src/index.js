@@ -190,15 +190,19 @@ function createWindow(width, height) {
                     {label: "Clear All Local Data",
                         click() {
                             store.clear();
-                            fs.rmdir(require('path').join(__dirname, '../keys'), { recursive: true }, (err) => {
-                                if (err) {
-                                    throw err;
-                                }
-                                else {
-                                    console.log(`Keys were deleted!`);
-                                    switchToLoginPage();
-                                }
-                            });
+                            try {
+                                fs.rmdir(require('path').join(__dirname, '../keys'), { recursive: true }, (err) => {
+                                    if (err) {
+                                        throw err;
+                                    }
+                                    else {
+                                        console.log(`Keys were deleted!`);
+                                        switchToLoginPage();
+                                    }
+                                });
+                            } catch (e) {
+                                console.log("Could not delete keys directory")
+                            }
                         }},
                     // {label: "Get New Keys",
                     //     click() {
@@ -455,6 +459,41 @@ ipcMain.handle('login', async (event) => {
     return;
 })
 
+ipcMain.handle('promptForNewChat', async (event) => {
+    const prompt = require('electron-prompt');
+    var r = await prompt({
+        title: 'Create/join a chatroom',
+        label: 'Chatroom Name:',
+        value: '',
+        inputAttrs: {
+            type: 'text'
+        },
+        type: 'input'
+    })
+    return r;
+})
+
+ipcMain.handle('alert', async (event, title, text, icon, showCancelButton) => {
+    const Alert = require('electron-alert');
+    let alert = new Alert();
+
+    let swalOptions = {
+        title: title,
+        text: text,
+        icon: icon,
+        showCancelButton: showCancelButton
+    };
+
+    let promise = alert.fireWithFrame(swalOptions, "Incrypto - Alert", null, false);
+    promise.then((result) => {
+        if (result.value) {
+            // confirmed
+        } else if (result.dismiss === Alert.DismissReason.cancel) {
+            // canceled
+        }
+    })
+})
+
 ipcMain.handle('logout', (event) => {
     // const result = await doSomeWork(someArgument)
     switchToLoginPage();
@@ -489,14 +528,18 @@ ipcMain.handle('setName', (event, name) => {
     return true;
 })
 
-let EncryptionType = store.get("encryptionType", "Default_Encryption");
+// let chatRoomName = store.get("chatRoomName_" + myName, "Default");
 let sessionID = store.get(myName + "_sessionID", "")
 let serverName = store.get("serverName");
 
-ipcMain.handle('setEncryptionType', (event, name) => {
-    EncryptionType = name;
-    return true;
-})
+// ipcMain.handle('setChatRoomName', (event, name) => {
+//     chatRoomName = name;
+//     return true;
+// })
+
+// ipcMain.handle('getChatRoomName', (event) => {
+//     return chatRoomName;
+// })
 
 ipcMain.handle('setSessionID', (event, name) => {
     // console.log("sessionID set to " + name)
@@ -518,10 +561,6 @@ ipcMain.handle('setServerName', (event, name) => {
     // console.log("serverName set to " + name)
     serverName = name;
     return true;
-})
-
-ipcMain.handle('getEncryptionType', (event) => {
-    return EncryptionType;
 })
 
 ipcMain.handle('getColor', (event) => {
