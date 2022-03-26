@@ -23,6 +23,7 @@ var red = "#6b0700";
 var green = "#015400";
 var dtOfLastMessage = "";
 var myChatRoomNames = [];
+var sendToAll = true;
 // var path = require('path').join(process.cwd(),'keys')
 var path = require('path').join(__dirname,'../keys')
 // alert(path)
@@ -81,9 +82,11 @@ $(function() { // this syntax means it's a function that will be run once once d
             var users = response.data;
             for (var i = 0; i < users.length; ++i) {
                 if (document.getElementById(users[i].username) == null && myName != users[i].username) { // if this user just joined or is unknown to us
-                    document.getElementById("peoplebox").innerHTML += `<div style="background-color:`+ green + `; color:white" onclick="toggleEncryptionForUser('`+ users[i].username+`')" id="` + users[i].username + `"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /><span class="dot" id="`+users[i].username + `_dot"></span>  ` + users[i].username +`</div>`
+                    if (sendToAll == true) document.getElementById("peoplebox").innerHTML += `<div style="background-color:`+ green + `; color:white" onclick="toggleEncryptionForUser('`+ users[i].username+`')" id="` + users[i].username + `"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /><span class="dot" id="`+users[i].username + `_dot"></span>  ` + users[i].username +`</div>`
+                    else document.getElementById("peoplebox").innerHTML += `<div style="background-color:`+ red + `; color:white" onclick="toggleEncryptionForUser('`+ users[i].username+`')" id="` + users[i].username + `"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /><span class="dot" id="`+users[i].username + `_dot"></span>  ` + users[i].username +`</div>`
                     userArray.push(users[i]);
-                    userArray.find(user => user.username == users[i].username).encryptForUser = true;
+                    if (sendToAll == true) userArray.find(user => user.username == users[i].username).encryptForUser = true;
+                    else userArray.find(user => user.username == users[i].username).encryptForUser = false;
                     // console.log("adding "+ users[i].username + " to people array")
                 }
                 else if (userArray.find(user => user.username == myName) == null) { // if I'm not found on list, add me
@@ -100,9 +103,9 @@ $(function() { // this syntax means it's a function that will be run once once d
                             dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="changeToChatRoom('` + name + `')">` + name.substring(9) + `</a>`
                         }
                     })
-                    dropdown.innerHTML += `<a class="dropdown-item" href="#"></a>`
-                    dropdown.innerHTML += `<a class="dropdown-item" href="#"></a>`
-                    dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="leaveRoom()">Leave this chatroom</a>`
+                    dropdown.innerHTML += `<a class="dropdown-item" href="#"></a>` // just used for extra space
+                    dropdown.innerHTML += `<a class="dropdown-item" href="#"></a>` // just used for extra space
+                    if (chatRoomName != "Chatroom_Global") dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="leaveRoom()">Leave this chatroom</a>`
                     dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="createNewChatRoom()">Create or join a chatroom</a>`
                 }
                 if (users[i].pubKey != null) { // check everyones public key every time
@@ -229,6 +232,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         serverName = await ipcRenderer.invoke('getServerName')
         chatRoomName = await store.get("chatRoomName_" + myName, "Chatroom_Global")
         document.getElementById("brand").innerText += ": " + chatRoomName.substring(9)
+        sendToAll = await store.get("sendToAll_" + myName, true);
         // console.log("SessionID: " + sessionID)
         // EncryptionFunction = await store.get("encryptionType", Encryption_Types[0]);  // TODO: switch this back to default Encryption
         //default encryption type is first in file
@@ -398,6 +402,8 @@ $(function() { // this syntax means it's a function that will be run once once d
     var dropdown = document.getElementById('dropdownOptions');
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayAllMessages">All messages</a>'
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayOnlyUnencryptedMessages">Only readable messages</a>'
+    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToAll">Send to All</a>'
+    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToNone">Send to None</a>'
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="remakeKeys">Get New Keys</a>'
     dropdown.innerHTML += `<div class="dropdown-item" href="#" id="logoutButton">Logout</div>`
     document.getElementById("displayAllMessages").addEventListener('click', () => {
@@ -422,6 +428,14 @@ $(function() { // this syntax means it's a function that will be run once once d
         // console.log("Remaking key at button\nserverName is: " + serverName)
         await sendCreateKeys(myName, serverName, sessionID);
         
+        ipcRenderer.invoke('login')
+    })
+    document.getElementById('sendToAll').addEventListener('click', async () => {
+        await store.set("sendToAll_" + myName, true);
+        ipcRenderer.invoke('login')
+    })
+    document.getElementById('sendToNone').addEventListener('click', async () => {
+        await store.set("sendToAll_" + myName, false);
         ipcRenderer.invoke('login')
     })
     document.getElementById('logoutButton').addEventListener('click', () => {

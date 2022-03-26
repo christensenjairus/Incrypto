@@ -32,6 +32,7 @@ function login(username, password, serverName) {
             store.set("lastUser", username);
             ipcRenderer.invoke('setColor', data.color)
             store.set("serverName", serverName);
+            store.set("sendToAll_" + username, true)
             // store.set("mod_" + username, data.mod);
             // store.set("base_" + username, data.base);
             // let myPrivatePrime = generatePrime();
@@ -102,6 +103,7 @@ function register(username, password, password2, serverName) {
             store.set("lastUser", username);
             ipcRenderer.invoke('setColor', data.color)
             store.set("serverName", serverName);
+            store.set("sendToAll_" + username, true)
             // store.set("mod", data.mod);
             // store.set("base", data.base);
             // let myPrivatePrime = generatePrime();
