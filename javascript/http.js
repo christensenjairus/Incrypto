@@ -27,12 +27,13 @@ function login(username, password, serverName) {
         var data = response.data;
         if (data.result === 'success') {
             if (store.get("chatRoomName_" + username, "") == "") store.set("chatRoomName_" + username, "Chatroom_Global")
+            if (store.get("sendToAll_" + username, "") == "") store.set("sendToAll_" + username, true)
             store.set(username + "_sessionID", data.sessionID);
             ipcRenderer.invoke('setSessionID', data.sessionID);
             store.set("lastUser", username);
-            ipcRenderer.invoke('setColor', data.color)
+            ipcRenderer.invoke('setColor', data.color);
             store.set("serverName", serverName);
-            store.set("sendToAll_" + username, true)
+            
             // store.set("mod_" + username, data.mod);
             // store.set("base_" + username, data.base);
             // let myPrivatePrime = generatePrime();
@@ -98,12 +99,12 @@ function register(username, password, password2, serverName) {
         var data = response.data
         if (data.result === 'success') {
             store.set("chatRoomName_" + username, "Chatroom_Global")
+            store.set("sendToAll_" + username, true)
             store.set(username + "_sessionID", data.sessionID);
             ipcRenderer.invoke('setSessionID', data.sessionID);
             store.set("lastUser", username);
             ipcRenderer.invoke('setColor', data.color)
             store.set("serverName", serverName);
-            store.set("sendToAll_" + username, true)
             // store.set("mod", data.mod);
             // store.set("base", data.base);
             // let myPrivatePrime = generatePrime();

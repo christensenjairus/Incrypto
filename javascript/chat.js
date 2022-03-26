@@ -23,7 +23,7 @@ var red = "#6b0700";
 var green = "#015400";
 var dtOfLastMessage = "";
 var myChatRoomNames = [];
-var sendToAll = true;
+var sendToAll = false;
 // var path = require('path').join(process.cwd(),'keys')
 var path = require('path').join(__dirname,'../keys')
 // alert(path)
@@ -402,8 +402,8 @@ $(function() { // this syntax means it's a function that will be run once once d
     var dropdown = document.getElementById('dropdownOptions');
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayAllMessages">All messages</a>'
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayOnlyUnencryptedMessages">Only readable messages</a>'
-    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToAll">Send to All</a>'
-    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToNone">Send to None</a>'
+    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToAllButton">Send to All</a>'
+    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToNoneButton">Send to None</a>'
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="remakeKeys">Get New Keys</a>'
     dropdown.innerHTML += `<div class="dropdown-item" href="#" id="logoutButton">Logout</div>`
     document.getElementById("displayAllMessages").addEventListener('click', () => {
@@ -430,11 +430,11 @@ $(function() { // this syntax means it's a function that will be run once once d
         
         ipcRenderer.invoke('login')
     })
-    document.getElementById('sendToAll').addEventListener('click', async () => {
+    document.getElementById('sendToAllButton').addEventListener('click', async () => {
         await store.set("sendToAll_" + myName, true);
         ipcRenderer.invoke('login')
     })
-    document.getElementById('sendToNone').addEventListener('click', async () => {
+    document.getElementById('sendToNoneButton').addEventListener('click', async () => {
         await store.set("sendToAll_" + myName, false);
         ipcRenderer.invoke('login')
     })
