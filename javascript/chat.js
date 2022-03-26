@@ -41,7 +41,7 @@ async function changeToChatRoom(name) {
 
 async function createNewChatRoom() {
     var inputFromUser = await ipcRenderer.invoke('promptForNewChat');
-    if (inputFromUser == null) return;
+    if (inputFromUser == null || inputFromUser == "") return;
     var newRoomName = "Chatroom_" + inputFromUser;
     await createChatRoom(myName, serverName, sessionID, newRoomName)
     await joinChatRoom(myName, serverName, sessionID, newRoomName)
@@ -51,15 +51,15 @@ async function createNewChatRoom() {
 async function leaveRoom() {
     var result = await leaveChatRoom(myName, serverName, sessionID, chatRoomName)
     if (result.data == false) {
-        if (chatRoomName == "Chatroom_New Users") {
-            ipcRenderer.invoke('alert','',"'New Users' is the default chatroom. Without it you could not find your new friends", "error", false);
+        if (chatRoomName == "Chatroom_Global") {
+            ipcRenderer.invoke('alert','',"'Global' is the default chatroom. Without it you could not find your new friends", "error", false);
         }
         else {
             ipcRenderer.invoke('alert','',"We could not remove you from this chatroom", "error", false);
         }
         return;
     }
-    changeToChatRoom("Chatroom_New Users")
+    changeToChatRoom("Chatroom_Global")
 }
 
 $(function() { // this syntax means it's a function that will be run once once document.ready is true
@@ -96,7 +96,9 @@ $(function() { // this syntax means it's a function that will be run once once d
                     // add options for switching chatrooms to Navbar
                     var dropdown = document.getElementById('chatRoomChangeDropdown');
                     myChatRoomNames.forEach(name => {
-                        dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="changeToChatRoom('` + name + `')">` + name.substring(9) + `</a>`
+                        if (name != chatRoomName) {
+                            dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="changeToChatRoom('` + name + `')">` + name.substring(9) + `</a>`
+                        }
                     })
                     dropdown.innerHTML += `<a class="dropdown-item" href="#"></a>`
                     dropdown.innerHTML += `<a class="dropdown-item" href="#"></a>`
@@ -225,7 +227,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         document.getElementById('color').value = myColor;
         sessionID = await ipcRenderer.invoke('getSessionID')
         serverName = await ipcRenderer.invoke('getServerName')
-        chatRoomName = await store.get("chatRoomName_" + myName, "Chatroom_New Users")
+        chatRoomName = await store.get("chatRoomName_" + myName, "Chatroom_Global")
         document.getElementById("brand").innerText += ": " + chatRoomName.substring(9)
         // console.log("SessionID: " + sessionID)
         // EncryptionFunction = await store.get("encryptionType", Encryption_Types[0]);  // TODO: switch this back to default Encryption

@@ -327,7 +327,7 @@ async function joinChatRoom(chunk) {
 
 async function leaveChatRoom(chunk) {
 	_db = await getDbConnection();
-	if (chunk.chatRoomName == "Chatroom_New Users") return false;
+	if (chunk.chatRoomName == "Chatroom_Global") return false;
 	var user = await getUser(chunk);
 	let isInChatRoom = 0;
 	user.chatRooms.forEach(chatRoom => {
