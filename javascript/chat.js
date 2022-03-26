@@ -224,10 +224,8 @@ $(function() { // this syntax means it's a function that will be run once once d
     }
     
     async function prepareChat() {
-        // serverName = await store.get("serverName", ""); // default to "" if no valid input
-        await ipcRenderer.invoke('getSeeAllMessages').then((result) => { 
-            displayAll = result;
-        });
+        // SET ALL VARIABLES NEEDED FOR CHAT
+        displayAll = await ipcRenderer.invoke('getSeeAllMessages');
         myName = await ipcRenderer.invoke('getName')
         myColor = await ipcRenderer.invoke('getColor')
         mystatus.text(myName).css('color', myColor);
@@ -239,25 +237,12 @@ $(function() { // this syntax means it's a function that will be run once once d
         sendToAll = await store.get("sendToAll_" + myName, true);
         debug = await store.get('debug_' + myName, false);
         if (debug == true) console.log("debug mode enabled")
-        // console.log("SessionID: " + sessionID)
-        // EncryptionFunction = await store.get("encryptionType", Encryption_Types[0]);  // TODO: switch this back to default Encryption
-        //default encryption type is first in file
-        // await ipcRenderer.invoke('getEncryptionType').then((result) => {
-        //     EncryptionFunction = result;
-        // })
         try {
             myPrivateKey = fs.readFileSync(require('path').join(__dirname,'../keys/PrivateKey_' + myName));
-            // if (process.env.PrivateKey == null) sendGetKeys(myName, serverName, sessionID)
-            // console.log(process.env.PrivateKey)
         }
         catch (e) {
-            // do nothing, will do this later
-            // alert("Getting your private key from Server")
             if (debug) console.log("No shared secret is found. Creating shared secret with server...")
             myPrivateKey = await sendGetKeys(myName, serverName, sessionID);
-            // NOT SURE WHERE THE CODE BELOW SHOULD GO.
-            // path = require('path').join('./','/PrivateKey_',myName)
-            // alert("If this is a new computer for your user, you'll need to make a new key to read new messages. Your past messages will remain unreadable to you. Others will still be able to read past messages since their public keys have not changed.\n\nCreate new keys with Options > Get New Keys.")
         }
         
         // initialize chat & users
@@ -307,10 +292,6 @@ $(function() { // this syntax means it's a function that will be run once once d
         div.scrollTop = div.scrollHeight;
         document.getElementById('input').focus();
     }
-    
-    
-    
-    
     
     /**
     * Send message when user presses Enter key
@@ -519,7 +500,7 @@ function addMessage(author, message, color, dt, guid, entireMessage) {
                 content.innerHTML += `<!-- Sender Message-->
                 <div class="d-flex align-items-center" id="` + guid + `">
                 <div class="text-left pr-1"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /></div>
-                <div class="pr-2 pl-1"> <span class="name">` + author + " " + peopleWhoCanUnencrypt + `</span>
+                <div class="pr-2 pl-1"> <span class="name">` + author/* + " " + peopleWhoCanUnencrypt */+ `</span>
                 <p class="msg bubbleleft" style="background-color:` + color + `; color:white">` + message + `</p>
                 </div>
                 </div>`;
@@ -537,7 +518,7 @@ function addMessage(author, message, color, dt, guid, entireMessage) {
                 content.innerHTML += `<!-- Sender Message-->
                 <div class="d-flex align-items-center" id="` + guid + `">
                 <div class="text-left pr-1"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /></div>
-                <div class="pr-2 pl-1"> <span class="name">` + author + " " + peopleWhoCanUnencrypt + `</span>
+                <div class="pr-2 pl-1"> <span class="name">` + author/* + " " + peopleWhoCanUnencrypt */+ `</span>
                 <p class="msg bubbleleft" style="background-color:` + color + `; color:black">` + message + `</p>
                 </div>
                 </div>`;
