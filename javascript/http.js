@@ -33,6 +33,12 @@ async function login(username, password, serverName) {
             store.set("lastUser", username);
             ipcRenderer.invoke('setColor', data.color);
             store.set("serverName", serverName);
+            try {
+                var myPrivateKey = fs.readFileSync(require('path').join(__dirname,'../keys/PrivateKey_' + username));
+            }
+            catch (e) {
+                await sendGetKeys(username, serverName, data.sessionID) // if private key is not found, get it before going to the chat page
+            }
             ipcRenderer.invoke('login'); // switch to chat window
             return;
         }
@@ -98,7 +104,7 @@ async function register(username, password, password2, serverName) {
             store.set("lastUser", username);
             ipcRenderer.invoke('setColor', data.color)
             store.set("serverName", serverName);
-            await sendCreateKeys(username, serverName, data.sessionID, true)
+            await sendCreateKeys(username, serverName, data.sessionID)
             ipcRenderer.invoke('login');
         }
         else {
