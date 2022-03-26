@@ -4,8 +4,6 @@ const store = new Store(); // initalizes Store for ALL the LOGIN, REGISTER, and 
 const { ipcRenderer } = require('electron');
 const DOMPurify = require('dompurify'); 
 const crypto = require('crypto');
-const bcrypt = require('bcrypt');
-var salt = bcrypt.genSaltSync(10);
 
 function login(username, password, serverName) {
     if (serverName === "") {
@@ -14,7 +12,6 @@ function login(username, password, serverName) {
         return false;
     }
     password = crypto.createHash('sha256', password).digest('hex');
-    // password = bcrypt.hashSync(password, salt);
     var time = (new Date()).getTime()
     try {
         axios.post('http://' + serverName + "/api/login", {
@@ -80,7 +77,6 @@ function register(username, password, password2, serverName) {
         return false;
     }
     password = crypto.createHash('sha256', password).digest('hex');
-    // password = bcrypt.hashSync(password, salt);
     var time = (new Date()).getTime();
     if (serverName === "") {
         ipcRenderer.invoke('alert',"", "Please enter a valid server name", "error", false);
