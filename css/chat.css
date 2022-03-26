@@ -136,6 +136,14 @@ p {
     z-index: 4;
 }
 
+.dropdown-item:hover {
+    background-color: #1c0229;
+}
+
+.dropdown-menu {
+    background-color: black;
+}
+
 .form-control {
     font-size: 12px;
     font-weight: 400;

@@ -1,6 +1,8 @@
 // CONTAINS DOM MANIPULATION FOR LOGIN PAGE
 
 var attempt = 3; // Variable to count number of attempts.
+var debug = true;
+const fs = require('fs')
 
 $(function() { // run this as soon as the document loads
   var path = require('path').join(__dirname,'../keys')

@@ -462,7 +462,7 @@ ipcMain.handle('login', async (event) => {
 ipcMain.handle('promptForNewChat', async (event) => {
     const prompt = require('electron-prompt');
     var r = await prompt({
-        title: 'Create/join a chatroom',
+        title: 'Create or join a chatroom',
         label: 'Chatroom Name:',
         value: '',
         inputAttrs: {

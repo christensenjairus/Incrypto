@@ -3,7 +3,7 @@ SCRIPT FOR CONTROLLING CHAT CLIENT AND INDEX.HTML
 */
 
 const fs = require('fs');
-const DEBUG = true; // turn this on & use it with 'if(DEBUG)' to display more console.log info
+let debug = false; // turn this on & use it with 'if(debug)' to display more console.log info
 var serverName = false;
 var displayAll = false;
 var myName;
@@ -37,6 +37,12 @@ function logout() {
 
 async function changeToChatRoom(name) {
     await store.set('chatRoomName_' + myName, name)
+    ipcRenderer.invoke('login')
+}
+
+async function toggleDebugMode() {
+    if (debug == true) await store.set('debug_' + myName, false)
+    else await store.set('debug_' + myName, true)
     ipcRenderer.invoke('login')
 }
 
@@ -103,10 +109,8 @@ $(function() { // this syntax means it's a function that will be run once once d
                             dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="changeToChatRoom('` + name + `')">` + name.substring(9) + `</a>`
                         }
                     })
-                    dropdown.innerHTML += `<a class="dropdown-item" href="#"></a>` // just used for extra space
-                    dropdown.innerHTML += `<a class="dropdown-item" href="#"></a>` // just used for extra space
-                    if (chatRoomName != "Chatroom_Global") dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="leaveRoom()">Leave this chatroom</a>`
-                    dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="createNewChatRoom()">Create or join a chatroom</a>`
+                    if (chatRoomName != "Chatroom_Global") dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="leaveRoom()" style="color:red">Leave this chatroom</a>`
+                    dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="createNewChatRoom()" style="color:green">Create or join a chatroom</a>`
                 }
                 if (users[i].pubKey != null) { // check everyones public key every time
                     try {
@@ -148,7 +152,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         // var time = (new Date()).getTime();
         getNewMessages(myName, timeOfLastMessage, chatRoomName, serverName, sessionID).then(async response => {
             if (response.data.error == "incorrectSessionID") {
-                ipcRenderer.invoke('alert','Logging you out...',"You've logged in somewhere else. You will be logged out here.", "", false);
+                await ipcRenderer.invoke('alert','Logging you out...',"You've logged in somewhere else. You will be logged out here.", "", false);
                 ipcRenderer.invoke('logout');
                 return;
             }
@@ -233,6 +237,8 @@ $(function() { // this syntax means it's a function that will be run once once d
         chatRoomName = await store.get("chatRoomName_" + myName, "Chatroom_Global")
         document.getElementById("brand").innerText += ": " + chatRoomName.substring(9)
         sendToAll = await store.get("sendToAll_" + myName, true);
+        debug = await store.get('debug_' + myName, false);
+        if (debug == true) console.log("debug mode enabled")
         // console.log("SessionID: " + sessionID)
         // EncryptionFunction = await store.get("encryptionType", Encryption_Types[0]);  // TODO: switch this back to default Encryption
         //default encryption type is first in file
@@ -247,7 +253,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         catch (e) {
             // do nothing, will do this later
             // alert("Getting your private key from Server")
-            console.log("Running this because no shared key is noticed on boot.\nserverName is: " + serverName)
+            if (debug) console.log("No shared secret is found. Creating shared secret with server...")
             myPrivateKey = await sendGetKeys(myName, serverName, sessionID);
             // NOT SURE WHERE THE CODE BELOW SHOULD GO.
             // path = require('path').join('./','/PrivateKey_',myName)
@@ -339,7 +345,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             }).join('');
             if (!characterInString) return; // the message is only spaces
             let tmp1 = DOMPurify.sanitize(msg); // remove cross site scripting possibilities
-            if (tmp1 !== msg) ipcRenderer.invoke('alert',"","To protect against cross site scripting, we will remove what we view as dangerous text from your message.", "", false);
+            if (tmp1 !== msg) await ipcRenderer.invoke('alert',"","To protect against cross site scripting, we will remove what we view as dangerous text from your message.", "", false);
             // msg = tmp1;
             tmp1 = msg;
             
@@ -353,7 +359,7 @@ $(function() { // this syntax means it's a function that will be run once once d
                     return;
                 }
                 else {
-                    ipcRenderer.invoke('alert','',"There was an issue sending your message", "", false);
+                    await ipcRenderer.invoke('alert','',"There was an issue sending your message", "", false);
                 }
             })
             
@@ -400,11 +406,12 @@ $(function() { // this syntax means it's a function that will be run once once d
     });
     
     var dropdown = document.getElementById('dropdownOptions');
-    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayAllMessages">All messages</a>'
-    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayOnlyUnencryptedMessages">Only readable messages</a>'
-    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToAllButton">Send to All</a>'
-    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToNoneButton">Send to None</a>'
+    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayAllMessages">Display all messages</a>'
+    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayOnlyUnencryptedMessages">Display readable messages</a>'
+    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToAllButton" style="color:green">Send to All</a>'
+    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToNoneButton" style="color:red">Send to None</a>'
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="remakeKeys">Get New Keys</a>'
+    dropdown.innerHTML += `<div class="dropdown-item" href="#" onclick="toggleDebugMode()">Toggle debug mode</div>`
     dropdown.innerHTML += `<div class="dropdown-item" href="#" id="logoutButton">Logout</div>`
     document.getElementById("displayAllMessages").addEventListener('click', () => {
         ipcRenderer.invoke('setSeeAllMessages', true);

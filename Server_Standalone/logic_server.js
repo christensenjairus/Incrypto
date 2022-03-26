@@ -1,38 +1,8 @@
 var fs = require('fs');
-var crypto = require('crypto').generateKey
-const DEBUG = true;
-
-// var activeUsers = [];
-
-// setInterval(() => {
-// 	let timeNow = (new Date).getTime();
-// 	activeUsers.forEach(activeUser => {
-// 		if (activeUser.active == true && activeUser.timeLastSeen + 7000 < timeNow) {
-// 			activeUser.active = false;
-// 			logEvent(activeUser.username + " is no longer active")
-// 		}
-// 	})
-// }, 3000)
+const debug = false;
 
 function ping() {
 	return { type:'Pong', result: "success" };
-}
-
-async function negociate(chunk) {
-	// let mod = generatePrime();
-	// let mod = require('crypto').createDiffieHellman(100).getPrime();
-	// console.log("Mod will be: " + mod)
-	// let base = generatePrime();	
-	// let base = require('crypto').createDiffieHellman(100).getPrime();			
-	// console.log("Base will be: " + base)
-	let g = require('crypto').createDiffieHellman(1024);
-	g = JSON.stringify(g.getPrime())
-	let serverPrime = require('crypto').createDiffieHellman(g);
-	let serverPrimeKey = serverPrime.generateKeys('base64');
-	await saveNegociateDataToMongo(chunk.username, g, serverPrimeKey);
-	// await new Promise(r => setTimeout(r, 2000)); // will sleep for 2 seconds - shouldn't use this, but I can't get saveLoginDataToMongo() to return before this function returns
-	// console.log("Saved Data to Mongo")
-	return { g:g }
 }
 
 async function login(chunk) {
@@ -75,7 +45,7 @@ async function register(chunk) {
 
 async function receiveChatMessage(chunk) {
 	// store.set(chunk.username + "_Color", chunk.color);
-	// if (DEBUG) logEvent("Username:'" + chunk.username + "' sent '" + chunk.message + "' with '" + chunk.encryption + "' encryption")
+	// if (debug) logEvent("Username:'" + chunk.username + "' sent '" + chunk.message + "' with '" + chunk.encryption + "' encryption")
 	// else logEvent("Message recieved from username: '" + chunk.username + "'");
 	logEvent("Message recieved from username: '" + chunk.username + "'");
 	var obj = {
@@ -104,11 +74,6 @@ async function sendChatRoomUsers(chunk) {
 
 async function sendNewMessages(chunk) {
 	return getNewMessagesFromMongo(chunk.timeOfLastMessage, chunk.chatRoomName);
-}
-
-async function diffieHellman(chunk) {
-	var user = await getUser(chunk);
-	return { diffieHellman: user.serverPrime }
 }
 
 async function changeChatColor(chunk) {
@@ -171,16 +136,63 @@ async function verifySessionID(chunk) {
 	}
 }
 
+async function negociate(chunk) {
+	// generate base and mod prime numbers to use in diffie hellman exchange
+	const getlargePrime = require('get-large-prime');
+	let mod = await getlargePrime(1024);
+	mod = mod.toString();
+	if (debug) logEvent("Mod for " + chunk.username + ": " + mod)
+	let base = await getlargePrime(1024);
+	base = base.toString();
+	if (debug) logEvent("Base for " + chunk.username + ": " + base)
+
+	// save to database for retrieval at diffieHellman()
+	await saveNegociateDataToMongo(chunk.username, base, mod)
+	return { base:base, mod:mod }
+
+}
+
+async function diffieHellman(chunk) {
+	// retrieve prime numbers needed for diffie-hellman prime math
+	let user = await getUser(chunk);
+	let mod = user.mod;
+	let base = user.base;
+	let clientPartial = chunk.clientPartial;
+	if (debug) logEvent("clientPartial for " + user.username + ": " + clientPartial)
+
+	// create server's prime number to be it's secret
+	const getlargePrime = require('get-large-prime');
+	let serverExponent = await getlargePrime(1024);
+	serverExponent = serverExponent.toString();
+	if (debug) logEvent("serverExponent for " + user.username + ": " + serverExponent)
+
+	// compute shared secret using the diffie hellman data sent by client
+	let sharedSecret = compute(clientPartial, serverExponent, mod)
+	await saveSharedSecretToMongo(chunk.username, sharedSecret)
+	if (debug) logEvent("sharedSecret for " + user.username + ": " + sharedSecret)
+
+	// compute server's diffie hellman data to send to client
+	let serverPartial = compute(base, serverExponent, mod)
+	if (debug) logEvent("serverPartial for " + user.username + ": " + serverPartial)
+	return { serverPartial: serverPartial }
+}
+
+const CryptoJS = require('crypto-js')
+const crypto = require('crypto')
+const encrypt = (content, password) => CryptoJS.AES.encrypt(JSON.stringify({ content }), password).toString()
+const decrypt = (crypted, password) => JSON.parse(CryptoJS.AES.decrypt(crypted, password).toString(CryptoJS.enc.Utf8)).content
+
 async function giveKeys(chunk) {
 	try {
 		var user = await getUser(chunk);
-		const crypto = require('crypto')
-		const cryptojs = require('crypto-js')
-		const hashOfSharedKey = crypto.createHash('sha256', user.sharedKey).digest('hex');
-		var encrypted = cryptojs.AES.encrypt(user.privKey, hashOfSharedKey).toString();
+		if (user.privKey == null || user.pubKey == null) await createKeys(chunk.username); // create keys if none are in the database
+		const hashOfSharedKey = crypto.createHash('sha256', user.sharedSecret).digest('hex'); // is there any way I can get around hashing this?
+		if (debug) logEvent("Hash of Shared Secret used to encrypt key for " + chunk.username + ": " + hashOfSharedKey)
+		var encrypted = encrypt(user.privKey, hashOfSharedKey)
 		return encrypted;
 	} catch (e) {
 		console.log(e)
+		return "Error"
 	}
 }
 
@@ -188,13 +200,13 @@ async function giveNewKeys(chunk) {
 	try {
 		await createKeys(chunk.username)
 		var user = await getUser(chunk);
-		const crypto = require('crypto')
-		const cryptojs = require('crypto-js')
-		const hashOfSharedKey = crypto.createHash('sha256', user.sharedKey).digest('hex');
-		var encrypted = cryptojs.AES.encrypt(user.privKey, hashOfSharedKey).toString();
+		const hashOfSharedKey = crypto.createHash('sha256', user.sharedSecret).digest('hex'); // is there any way I can get around hashing this?
+		if (debug) logEvent("Hash of Shared Secret used to encrypt key for " + chunk.username + ": " + hashOfSharedKey)
+		var encrypted = encrypt(user.privKey, hashOfSharedKey)
 		return encrypted;
 	} catch (e) {
 		console.log(e)
+		return "Error"
 	}
 }
 
@@ -204,40 +216,6 @@ async function createKeys(username) {
 	const { privateKey, publicKey } = nodeRSA.createPrivateAndPublicKeys()
 	await saveKeysToMongo(username, publicKey, privateKey)
 }
-
-// async function sendActiveUsers(chunk) {
-// 	checkIn(chunk.username);
-// 	if (activeUsers.length == 0) {
-// 		var data = await getAllUsersFromMongo("");
-// 			// console.log(data)
-// 			data.forEach(user => {
-// 				var activeUser = {username:"", active:false, timeLastSeen:(new Date).getTime()};
-// 				activeUser.username = user.username;
-// 				activeUser.active = false;
-// 				activeUser.timeLastSeen = (new Date).getTime();
-// 				activeUsers.push(activeUser);
-// 			})
-// 	}
-// 	return activeUsers;
-// }
-
-// async function sendActiveChatRoomUsers(chunk) {
-// 	checkIn(chunk.username);
-// 	if (activeUsers.length == 0) {
-// 		var data = await getChatRoomUsersFromMongo(chunk.chatRoomName);
-// 			// console.log(data)
-// 			data.forEach(user => {
-// 				var activeUser = {username:"", active:false, timeLastSeen:(new Date).getTime()};
-// 				activeUser.username = user.username;
-// 				activeUser.active = false;
-// 				activeUser.timeLastSeen = (new Date).getTime();
-// 				activeUsers.push(activeUser);
-// 			})
-// 	}
-// 	return activeUsers;
-// }
-
-
 
 // MONGO DATABASE FUNCTIONS --------------------------------------------------------- 
 
@@ -290,16 +268,30 @@ async function saveLoginDataToMongo(username, sessionID) {
 	// console.log("Returning now")
 }
 
-async function saveNegociateDataToMongo(username, g, serverPrimeKey) {
+async function saveNegociateDataToMongo(username, base, mod) {
 	_db = await getDbConnection();
 	var myquery = { username: username };
-	var newvalues = { $set: {g:g, serverPrimeKey: serverPrimeKey } };
+	var newvalues = { $set: {base:base, mod:mod} };
 	var result = await _db.collection("Users").updateOne(myquery, newvalues) //, function(err, res) {
 	// 	if (err) throw err;
 	// 	logEvent("User document updated with g and server prime key for " + username);
 	// 	// db.close();
 	// });
-	logEvent("User document updated with g and server prime key for " + username);
+	logEvent("User document updated with base and mod for " + username);
+	return result;
+	// console.log("Returning now")
+}
+
+async function saveSharedSecretToMongo(username, sharedSecret) {
+	_db = await getDbConnection();
+	var myquery = { username: username };
+	var newvalues = { $set: {sharedSecret:sharedSecret} };
+	var result = await _db.collection("Users").updateOne(myquery, newvalues) //, function(err, res) {
+	// 	if (err) throw err;
+	// 	logEvent("User document updated with g and server prime key for " + username);
+	// 	// db.close();
+	// });
+	logEvent("User document updated with shared secret for " + username);
 	return result;
 	// console.log("Returning now")
 }
@@ -358,18 +350,18 @@ async function createChatRoom(chunk) {
 	}
 }
 
-async function saveSharedKeyToMongo(username, sharedKey) {
-	_db = await getDbConnection();
-	var myquery = { username: username };
-	var newvalues = { $set: { sharedKey: sharedKey } };
-	var data = await _db.collection("Users").updateOne(myquery, newvalues);//, function(err, res) {
-	// 	if (err) throw err;
-	// 	logEvent("User document updated with shared key for " + username);
-	// 	// db.close();
-	// });
-	logEvent("User document updated with shared key for " + username);
-	return data;
-}
+// async function saveSharedSecretToMongo(username, sharedKey) {
+// 	_db = await getDbConnection();
+// 	var myquery = { username: username };
+// 	var newvalues = { $set: { sharedKey: sharedKey } };
+// 	var data = await _db.collection("Users").updateOne(myquery, newvalues);//, function(err, res) {
+// 	// 	if (err) throw err;
+// 	// 	logEvent("User document updated with shared key for " + username);
+// 	// 	// db.close();
+// 	// });
+// 	logEvent("User document updated with shared key for " + username);
+// 	return data;
+// }
 
 async function saveKeysToMongo(username, pubKey, privKey) {
 	_db = await getDbConnection();
@@ -448,6 +440,35 @@ async function updateUser(chunk) {
 }
 
 // other functions
+
+// function KeyGen(base, modulo, exponent) {
+// 	var result = 1;
+// 	while(exponent > 0){
+// 		if(exponent % 2 == 1){
+// 		  result = (result * base) % modulo;
+// 		}
+// 	  base = (base * base) % modulo;
+// 		exponent = exponent >>> 1;
+// 	}
+// 	return result;
+// }
+
+function compute(base, exponent, modulo){
+    // const bigInt = require('big-integer')
+    const bigintModArith = require('bigint-mod-arith')
+    const JSONbig = require('json-bigint')
+	var base = BigInt(base.toString());
+	var exponent = BigInt(exponent.toString());
+	var modulo = BigInt(modulo.toString());
+
+	// var res = bigInt.BitInteger.modPow(exponent, modulo);
+    var res = bigintModArith.modPow(base, exponent, modulo)
+    res = JSONbig.stringify(res)
+	// console.log("Result: " + res)
+	return res;
+}
+
+
 
 // exports
 

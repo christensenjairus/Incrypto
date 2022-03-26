@@ -1,28 +1,28 @@
 const { default: axios } = require('axios');
 const Store = require('electron-store');
 const store = new Store(); // initalizes Store for ALL the LOGIN, REGISTER, and FRONTEND Pages
-const { ipcRenderer } = require('electron');
 const DOMPurify = require('dompurify'); 
 const crypto = require('crypto');
 
-function login(username, password, serverName) {
+// ---------- API ENDPOINTS ------------------------------------------
+
+async function login(username, password, serverName) {
     if (serverName === "") {
-        ipcRenderer.invoke('alert','Can not connect without a server','Please enter a valid server name', "error", false);
+        await ipcRenderer.invoke('alert','Can not connect without a server','Please enter a valid server name', "error", false);
         ipcRenderer.invoke('logout');
         return false;
     }
-    password = crypto.createHash('sha256', password).digest('hex');
+    password = crypto.createHash('sha256').update(password).digest('hex');
     var time = (new Date()).getTime()
     try {
         axios.post('http://' + serverName + "/api/login", {
         username: username,
         password: password,
-        encryption: "plain_text", 
         time: time,
         chatRooms: [
             {name:"Chatroom_Global", lastActivity:time}
         ]
-    }).then(response => {
+    }).then(async response => {
         // try {
         var data = response.data;
         if (data.result === 'success') {
@@ -33,23 +33,17 @@ function login(username, password, serverName) {
             store.set("lastUser", username);
             ipcRenderer.invoke('setColor', data.color);
             store.set("serverName", serverName);
-            
-            // store.set("mod_" + username, data.mod);
-            // store.set("base_" + username, data.base);
-            // let myPrivatePrime = generatePrime();
-            // store.set("privatePrime_" + username, myPrivatePrime);
-            // sendDiffieHellman(username, data.base, myPrivatePrime, data.mod, serverName, data.sessionID);
             ipcRenderer.invoke('login'); // switch to chat window
             return;
         }
         else {
             if (data.sessionID === "incorrect_credentials") {
-                ipcRenderer.invoke('alert','','Incorrect Credentials', "error", false);
+                await ipcRenderer.invoke('alert','','Incorrect Credentials', "error", false);
                 ipcRenderer.invoke('logout');
                 return false;
             }
             else {
-                ipcRenderer.invoke('alert','We are not sure what happened','Please try again', "error", false);
+                await ipcRenderer.invoke('alert','We are not sure what happened','Please try again', "error", false);
                 ipcRenderer.invoke('logout');
                 return false;
             }
@@ -57,8 +51,8 @@ function login(username, password, serverName) {
         // } catch (e) {
         //     alert(e)
         // }
-    }, error => {
-        ipcRenderer.invoke('alert',"Could not connect to server", error.message, "error", false);
+    }, async error => {
+        await ipcRenderer.invoke('alert',"Could not connect to server", error.message, "error", false);
         ipcRenderer.invoke('logout');
     })
 } catch (error) {
@@ -67,21 +61,21 @@ function login(username, password, serverName) {
 }
 }
 
-function register(username, password, password2, serverName) {
+async function register(username, password, password2, serverName) {
     if (username == "" || password == "") {
-        ipcRenderer.invoke('alert',"", "Fill in all the boxes", "error", false);
+        await ipcRenderer.invoke('alert',"", "Fill in all the boxes", "error", false);
         ipcRenderer.invoke('toregister');
         return false;
     }
     if (password != password2) {
-        ipcRenderer.invoke('alert',"", "Passwords do not match", "error", false);
+        await ipcRenderer.invoke('alert',"", "Passwords do not match", "error", false);
         ipcRenderer.invoke('toregister');
         return false;
     }
-    password = crypto.createHash('sha256', password).digest('hex');
+    password = crypto.createHash('sha256').update(password).digest('hex');
     var time = (new Date()).getTime();
     if (serverName === "") {
-        ipcRenderer.invoke('alert',"", "Please enter a valid server name", "error", false);
+        await ipcRenderer.invoke('alert',"", "Please enter a valid server name", "error", false);
         ipcRenderer.invoke('toregister');
         return false;
     }
@@ -89,7 +83,6 @@ function register(username, password, password2, serverName) {
         axios.post('http://' + serverName + "/api/register", {
         username: username,
         password: password,
-        encryption: "plain_text", 
         time: time,
         chatRooms: [
             {name:"Chatroom_Global", lastActivity:time}
@@ -105,23 +98,17 @@ function register(username, password, password2, serverName) {
             store.set("lastUser", username);
             ipcRenderer.invoke('setColor', data.color)
             store.set("serverName", serverName);
-            // store.set("mod", data.mod);
-            // store.set("base", data.base);
-            // let myPrivatePrime = generatePrime();
-            // store.set("privatePrime_" + username, myPrivatePrime);
-        
-            // await sendDiffieHellman(username, data.base, myPrivatePrime, data.mod, serverName, data.sessionID);
             await sendCreateKeys(username, serverName, data.sessionID, true)
             ipcRenderer.invoke('login');
         }
         else {
             if (data.sessionID === "username_exists") {
-                ipcRenderer.invoke('alert',"", "That username is taken. Please try another", "error", false);
+                await ipcRenderer.invoke('alert',"", "That username is taken. Please try another", "error", false);
                 ipcRenderer.invoke('toregister');
                 return false;
             }
             else {
-                ipcRenderer.invoke('alert',"", "We are not sure what happened. Please try again", "error", false);
+                await ipcRenderer.invoke('alert',"", "We are not sure what happened. Please try again", "error", false);
                 ipcRenderer.invoke('toregister');
                 return false;
             }
@@ -130,8 +117,8 @@ function register(username, password, password2, serverName) {
         // } catch (e) {
         //     alert(e);
         // }
-    }, error => {
-        ipcRenderer.invoke('alert',"Could not connect to server", error.message, "error", false);
+    }, async error => {
+        await ipcRenderer.invoke('alert',"Could not connect to server", error.message, "error", false);
         ipcRenderer.invoke('toregister');
     })
 } catch (error) {
@@ -193,7 +180,7 @@ function getChatRoomUsers(username, chatRoomName, serverName, sessionID) {
 }
 
 // sendMessage(myName, msg, myColor, chatRoomName, serverName, sessionID)
-function sendMessage(username, msg, color, chatRoomName, serverName, sessionID) {
+async function sendMessage(username, msg, color, chatRoomName, serverName, sessionID) {
     var message = [];
     var guid = createGuid();
     var successfulEncryptionCount = 0;
@@ -209,7 +196,7 @@ function sendMessage(username, msg, color, chatRoomName, serverName, sessionID) 
     })
     // console.log(message)
     if (successfulEncryptionCount == 0) {
-        ipcRenderer.invoke('alert',"Incrypto is not encrypting messages correctly. This problem is usually experienced when the app is installed in a read-only mode. Please reinstall the app with more permissions.", "", false);
+        await ipcRenderer.invoke('alert',"Incrypto is not encrypting messages correctly. This problem is usually experienced when the app is installed in a read-only mode. Please reinstall the app with more permissions.", "", false);
         return;
     }
     try {
@@ -293,43 +280,6 @@ function leaveChatRoom(username, serverName, sessionID, chatRoomName) {
     }
 }
 
-// ------------------- HELPER FUNCTIONS
-
-function generatePrime() {
-    const range = [0, 100];
-    const getPrimes = (min, max) => {
-        const result = Array(max + 1)
-        .fill(0)
-        .map((_, i) => i);
-        for (let i = 2; i <= Math.sqrt(max + 1); i++) {
-            for (let j = i ** 2; j < max + 1; j += i) delete result[j];
-        }
-        return Object.values(result.slice(min));
-    };
-    const getRandomNum = (min, max) => {
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    };
-    const getRandomPrime = ([min, max]) => {
-        const primes = getPrimes(min, max);
-        return primes[getRandomNum(0, primes.length - 1)];
-    };
-    return(getRandomPrime(range))
-}
-
-// calculates   base^exponent % modulus
-function powerMod(base, exponent, modulus) {
-    if (modulus === 1) return 0;
-    var result = 1;
-    base = base % modulus;
-    while (exponent > 0) {
-        if (exponent % 2 === 1)  //odd number
-        result = (result * base) % modulus;
-        exponent = exponent >> 1; //divide by 2
-        base = (base * base) % modulus;
-    }
-    return result;
-}
-
 // ---------------- KEY EXCHANGE FUNCTIONS -------------------------------------------------------------
 
 async function negociate(username, serverName, sessionID) {
@@ -344,37 +294,47 @@ async function negociate(username, serverName, sessionID) {
     }
 }
 
-async function diffieHellman(username, myPrivatePrime, myPrivatePrimeKey, serverName, sessionID) {
+async function diffieHellman(username, clientPartial, serverName, sessionID) {
     try {
-        console.log("Name is: " + username);
-        console.log("SessionID: " + sessionID);
-        var response = await axios.post('http://' + serverName + "/api/keys/diffieHellman", {
+        return await axios.post('http://' + serverName + "/api/keys/diffieHellman", {
             username: username,
-            diffieHellman: myPrivatePrime,
+            clientPartial: clientPartial,
             sessionID, sessionID
         })
-
-            // var result = powerMod(response.data.diffieHellman, myPrivatePrime, mod);
-            var result = myPrivatePrime.computeSecret(myPrivatePrimeKey, "base64")
-            console.log("Our shared key is: " + result)
-            store.set("SharedKey_" + username, result)
-            return;
     } catch (error) {
         console.error(error);
         return;
     }
 }
 
-async function runnegociate(username, serverName, sessionID) {
-    var g = "";
+async function generateSharedKey(username, serverName, sessionID) {
+    // retrieve from server new prime numbers for diffie-hellman math
+    if (debug) console.log("Starting Part 1 of Diffie Hellman...")
     var response = await negociate(username, serverName, sessionID)
-    g = response.data.g;
-    store.set("g_" + username, g);
-    let myPrivatePrime = require('crypto').createDiffieHellman(g);
-    let myPrivatePrimeKey = myPrivatePrime.generateKeys("base64")
-    // alert("My Private Prime Key: " + myPrivatePrimeKey)
-    store.set("privatePrimeKey_" + username, myPrivatePrimeKey);
-    await diffieHellman(username, myPrivatePrime, myPrivatePrimeKey, serverName, sessionID)
+    if (response.data == null || response.data.base == null || response.data.mod == null) {
+        alert("Unable to retrieve base and mod from server")
+        return;
+    }
+    var base = response.data.base;
+    var mod = response.data.mod;
+
+    // create client prime number for diffie-hellman math
+    const getlargePrime = require('get-large-prime');
+	let clientExponent = await getlargePrime(1024);
+    clientExponent = clientExponent.toString();
+
+    // do math, sent diffie-hellman data to server
+    var clientPartial = compute(base, clientExponent, mod);
+    if (debug) console.log("Client's partial key: " + clientPartial)
+    if (debug) console.log("Starting Part 2 of Diffie Hellman...")
+
+    response = await diffieHellman(username, clientPartial, serverName, sessionID)
+
+    // generate Shared Key from server's diffie-hellman data
+    var serverPartial = response.data.serverPartial;
+    var sharedSecret = compute(serverPartial, clientExponent, mod);
+    if (debug) console.log("SharedSecret: " + sharedSecret)
+    store.set("sharedSecret_" + username, sharedSecret);
 }
 
 async function getKeys(username, serverName, sessionID) {
@@ -401,39 +361,52 @@ async function createKeys(username, serverName, sessionID) {
 }
 }
 
+// ----------- Encryption / Decryption Functions -----------------------------------------
+
+const CryptoJS = require('crypto-js')
+const encrypt = (content, password) => CryptoJS.AES.encrypt(JSON.stringify({ content }), password).toString()
+const decrypt = (crypted, password) => JSON.parse(CryptoJS.AES.decrypt(crypted, password).toString(CryptoJS.enc.Utf8)).content
+
 async function sendGetKeys(username, serverName, sessionID) {
-    // console.log("serverName is: " + serverName)
-    await runnegociate(username, serverName, sessionID);
-    var response = await getKeys(username, serverName, sessionID)
-    const crypto = require('crypto')
-    const cryptojs = require('crypto-js')
-    const fs = require('fs')
-    const hashOfSharedKey = crypto.createHash('sha256', await store.get("SharedKey_" + username, "")).digest('hex');
-    // console.log(hashOfSharedKey);
-    var bytes = cryptojs.AES.decrypt(response.data, hashOfSharedKey);
-    var decrypted = bytes.toString(cryptojs.enc.Utf8)
-    // console.log("Decrypted Private Key should be: " + decrypted);
+    // generate shared key
+    await generateSharedKey(username, serverName, sessionID);
+    // retrieve new keys from server
+    var response = await getKeys(username, serverName, sessionID);
+    if (response.data == "Error") ipcRenderer.invoke('alert','Unable to get your keys',"You may want to log out and back in", "error", false);
+    var data = response.data;
+    const hashOfSharedKey = crypto.createHash('sha256', await store.get("sharedKey_" + username, "")).digest('hex');
+    var decrypted = decrypt(data, hashOfSharedKey);
+    if (debug) console.log("Hash of Shared Secret used to decrypt: " + hashOfSharedKey)
     fs.writeFileSync(require('path').join(__dirname,'../keys/PrivateKey_' + username), decrypted)
-    // process.env.PrivateKey = decrypted;
+    if (debug) console.log("Decrypted Private Key Saved");
     return decrypted;
 }
 
 async function sendCreateKeys(username, serverName, sessionID) {
-    // console.log("serverName is: " + serverName)
-    await runnegociate(username, serverName, sessionID);
-    // document.getElementById('status').text = "Getting Keys from Server";
-
+    // generate shared key
+    await generateSharedKey(username, serverName, sessionID);
+    // retrieve new keys from server
     var response = await createKeys(username, serverName, sessionID)
-    const crypto = require('crypto')
-    const cryptojs = require('crypto-js')
-    const fs = require('fs')
-    const hashOfSharedKey = crypto.createHash('sha256', await store.get("SharedKey_" + username, "")).digest('hex');
-    // console.log(hashOfSharedKey);
-    var bytes = cryptojs.AES.decrypt(response.data, hashOfSharedKey);
-    var decrypted = bytes.toString(cryptojs.enc.Utf8)
-    // console.log("Decrypted Private Key should be: " + decrypted);
+    if (response.data == "Error") ipcRenderer.invoke('alert','Unable to get your keys',"You may want to log out and back in", "error", false);
+    var data = response.data;
+    const hashOfSharedKey = crypto.createHash('sha256', await store.get("sharedKey_" + username, "")).digest('hex');
+    var decrypted = decrypt(data, hashOfSharedKey);
+    if (debug) console.log("Hash of Shared Secret used to decrypt: " + hashOfSharedKey)
     fs.writeFileSync(require('path').join(__dirname,'../keys/PrivateKey_' + username), decrypted)
-    // process.env.PrivateKey = decrypted;
-    // alert("New Keys Saved")
+    if (debug) console.log("Decrypted Private Key Saved");
     return decrypted;
+}
+
+function compute(base, exponent, modulo){
+    const bigintModArith = require('bigint-mod-arith')
+    const JSONbig = require('json-bigint')
+    if (debug) console.log("Base: " + base)
+	var base = BigInt(base.toString());
+    if (debug) console.log("Exponent: " + exponent)
+	var exponent = BigInt(exponent.toString());
+    if (debug) console.log("Modulo: " + modulo)
+	var modulo = BigInt(modulo.toString());
+    var res = bigintModArith.modPow(base, exponent, modulo) // diffie-hellman math
+    res = JSONbig.stringify(res) // turn into string (gets rid of the strange data type BigInt)
+	return res;
 }

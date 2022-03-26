@@ -1,7 +1,7 @@
 {
   "name": "Incrypto",
   "productName": "Incrypto",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Encrypted Messaging App",
   "engines": {
     "node": ">=15.0"
@@ -37,7 +37,7 @@
       "electronWinstallerConfig": {
         "name": "Incrypto",
         "icon": "./icons/hacker-25899.ico",
-        "setupExe": "Incrypto_Setup-4.0.0.exe",
+        "setupExe": "Incrypto_Setup-4.1.0.exe",
         "ignore": [
           "out",
           "dist"
@@ -75,11 +75,11 @@
   },
   "dependencies": {
     "axios": "^0.23.0",
+    "bigint-mod-arith": "^3.0.2",
     "body-parser": "^1.19.1",
     "bootstrap-icons": "^1.7.1",
     "cookie-parser": "^1.4.6",
     "create-desktop-shortcuts": "^1.6.0",
-    "crypto": "^1.0.1",
     "crypto-js": "^4.1.1",
     "dompurify": "^2.3.3",
     "dotenv": "^14.2.0",
@@ -92,9 +92,12 @@
     "encrypt-rsa": "^1.2.1",
     "express": "^4.17.2",
     "fs": "^0.0.1-security",
+    "get-large-prime": "^1.0.3",
+    "json-bigint": "^1.0.0",
     "mongodb": "^4.3.1",
     "multer": "^1.4.4",
     "open-in-editor": "^2.2.0",
+    "openssl-nodejs": "^1.0.5",
     "perfect-scrollbar": "^1.5.3",
     "source-map-support": "^0.5.20",
     "svg.draggable.js": "^2.2.1",
