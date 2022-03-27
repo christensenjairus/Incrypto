@@ -133,13 +133,14 @@ async function register(username, password, password2, serverName) {
 }
 }
 
-function getNewMessages(username, timeOfLastMessage, chatRoomName, serverName, sessionID) {
+function getNewMessages(username, timeOfLastMessage, chatRoomName, serverName, sessionID, numberOfChats) {
     try {
         return axios.post('http://' + serverName + "/api/message/new", {
         timeOfLastMessage: timeOfLastMessage,
         chatRoomName: chatRoomName,
         sessionID: sessionID,
-        username: username
+        username: username,
+        numberOfChats: numberOfChats
     })
 } catch (error) {
     console.error(error);

@@ -68,14 +68,14 @@ exists(directoryToRunFrom + '/.env', (e) => {
 			}
 		})
 		
-		app.post('/api/message/all', async function (req, res) {
-			// console.log("getting all messages")
-			if (! await logic.verifySessionID(req.body)) {
-				res.send('{"error":"incorrectSessionID"}');
-				return;
-			}
-			res.send(await logic.sendAllMessages(req.body));
-		})
+		// app.post('/api/message/all', async function (req, res) {
+		// 	// console.log("getting all messages")
+		// 	if (! await logic.verifySessionID(req.body)) {
+		// 		res.send('{"error":"incorrectSessionID"}');
+		// 		return;
+		// 	}
+		// 	res.send(await logic.sendAllMessages(req.body));
+		// })
 		
 		app.post('/api/message/new', async function(req, res) {
 			// console.log("getting new messages")
@@ -86,14 +86,14 @@ exists(directoryToRunFrom + '/.env', (e) => {
 			res.send(await logic.sendNewMessages(req.body));
 		})
 
-		app.post('/api/users/all', async function (req, res) {
-			// console.log("getting all users")
-			if (! await logic.verifySessionID(req.body)) {
-				res.send('{"error":"incorrectSessionID"}');
-				return;
-			}
-			res.send(await logic.sendAllUsers(req.body));
-		})
+		// app.post('/api/users/all', async function (req, res) {
+		// 	// console.log("getting all users")
+		// 	if (! await logic.verifySessionID(req.body)) {
+		// 		res.send('{"error":"incorrectSessionID"}');
+		// 		return;
+		// 	}
+		// 	res.send(await logic.sendAllUsers(req.body));
+		// })
 
 		app.post('/api/users/chatroom', async function (req, res) {
 			// console.log("getting all users")
@@ -128,13 +128,13 @@ exists(directoryToRunFrom + '/.env', (e) => {
 			res.send(await logic.createChatRoom(req.body));
 		})
 
-		app.post('/api/users/active', async function (req,res) {
-			if (! await logic.verifySessionID(req.body)) {
-				res.send('{"error":"incorrectSessionID"}');
-				return;
-			}
-			res.send(await logic.sendActiveUsers(req.body))
-		})
+		// app.post('/api/users/active', async function (req,res) {
+		// 	if (! await logic.verifySessionID(req.body)) {
+		// 		res.send('{"error":"incorrectSessionID"}');
+		// 		return;
+		// 	}
+		// 	res.send(await logic.sendActiveUsers(req.body))
+		// })
 
 		app.post('/api/keys/negociate', async function (req, res) {
 			if (! await logic.verifySessionID(req.body)) {

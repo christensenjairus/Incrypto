@@ -473,6 +473,20 @@ ipcMain.handle('promptForNewChat', async (event) => {
     return r;
 })
 
+ipcMain.handle('promptForNumberOfChats', async (event) => {
+    const prompt = require('electron-prompt');
+    var r = await prompt({
+        title: 'How many chats to load?',
+        label: 'Enter the number of chats to load',
+        value: '',
+        inputAttrs: {
+            type: 'number'
+        },
+        type: 'input'
+    })
+    return r;
+})
+
 ipcMain.handle('alert', async (event, title, text, icon, showCancelButton) => {
     const Alert = require('electron-alert');
     let alert = new Alert();

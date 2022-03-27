@@ -59,13 +59,13 @@ async function receiveChatMessage(chunk) {
 	return await saveMsgToMongo(chunk.chatRoomName, obj);
 }
 
-async function sendAllMessages(chunk) {
-	return getAllMessagesFromMongo(chunk.chatRoomName);
-}
+// async function sendAllMessages(chunk) {
+// 	return getAllMessagesFromMongo(chunk.chatRoomName);
+// }
 
-async function sendAllUsers(chunk) {
-	return getAllUsersFromMongo(chunk.chatRoomName);
-}
+// async function sendAllUsers(chunk) {
+// 	return getAllUsersFromMongo(chunk.chatRoomName);
+// }
 
 async function sendChatRoomUsers(chunk) {
 	checkIn(chunk.username, chunk.chatRoomName);
@@ -73,7 +73,7 @@ async function sendChatRoomUsers(chunk) {
 }
 
 async function sendNewMessages(chunk) {
-	return getNewMessagesFromMongo(chunk.timeOfLastMessage, chunk.chatRoomName);
+	return getNewMessagesFromMongo(chunk.timeOfLastMessage, chunk.chatRoomName, chunk.numberOfChats);
 }
 
 async function changeChatColor(chunk) {
@@ -377,20 +377,20 @@ async function saveKeysToMongo(username, pubKey, privKey) {
 	// console.log("Returning now")
 }
 
-async function getAllMessagesFromMongo(chatRoomName) {
-	_db = await getDbConnection();
-	var data = await _db.collection(chatRoomName).find({}, {projection:{}}).toArray(); // usernames of messages are omitted so they're hidden from clients
-	// closeConnection();
-	return data;
-}
+// async function getAllMessagesFromMongo(chatRoomName) {
+// 	_db = await getDbConnection();
+// 	var data = await _db.collection(chatRoomName).find({}, {projection:{}}).toArray(); // usernames of messages are omitted so they're hidden from clients
+// 	// closeConnection();
+// 	return data;
+// }
 
-async function getAllUsersFromMongo() {
-	_db = await getDbConnection();
-	var data = await _db.collection("Users").find({}, {projection:{color: 0, time: 0, encryption: 0, password: 0, _id: 0, privKey: 0, sessionID: 0, serverPrime: 0, serverPrimeKey: 0, g: 0, sharedKey: 0, chatRooms: 0}}).toArray(); // usernames of messages are omitted so they're hidden from clients
-	// closeConnection();
-	// console.log(data);
-	return data;
-}
+// async function getAllUsersFromMongo() {
+// 	_db = await getDbConnection();
+// 	var data = await _db.collection("Users").find({}, {projection:{color: 0, time: 0, encryption: 0, password: 0, _id: 0, privKey: 0, sessionID: 0, serverPrime: 0, serverPrimeKey: 0, g: 0, sharedKey: 0, chatRooms: 0}}).toArray(); // usernames of messages are omitted so they're hidden from clients
+// 	// closeConnection();
+// 	// console.log(data);
+// 	return data;
+// }
 
 async function getChatRoomUsersFromMongo(chatRoomName) {
 	_db = await getDbConnection();
@@ -403,16 +403,16 @@ async function getChatRoomUsersFromMongo(chatRoomName) {
 	return data;
 }
 
-async function getNewMessagesFromMongo(timeOfLastMessage, chatRoomName) {
+async function getNewMessagesFromMongo(timeOfLastMessage, chatRoomName, numberOfChats) {
 	_db = await getDbConnection();
 	var data = "";
 	if (timeOfLastMessage == "") {
 		// console.log("Time not provided")
-		data = await _db.collection(chatRoomName).find({}).toArray();
+		data = await _db.collection(chatRoomName).find({}).sort({time:-1}).limit(numberOfChats).toArray();
 	}
 	else {
 		// console.log("Time provided")
-		data = await _db.collection(chatRoomName).find({ time: { $gt: timeOfLastMessage }}, {projection:{}}).toArray(); // usernames of messages are omitted so they're hidden from clients
+		data = await _db.collection(chatRoomName).find({ time: { $gt: timeOfLastMessage }}, {projection:{}}).sort({time:-1}).limit(numberOfChats).toArray(); // usernames of messages are omitted so they're hidden from clients
 	}
 	// console.log(data)
 	return data;
@@ -439,20 +439,8 @@ async function updateUser(chunk) {
 	return await _db.collection("Users").findOneAndReplace({username: chunk.username}, chunk)
 }
 
-// other functions
-
-// function KeyGen(base, modulo, exponent) {
-// 	var result = 1;
-// 	while(exponent > 0){
-// 		if(exponent % 2 == 1){
-// 		  result = (result * base) % modulo;
-// 		}
-// 	  base = (base * base) % modulo;
-// 		exponent = exponent >>> 1;
-// 	}
-// 	return result;
-// }
-
+// --------------- HELPER FUNCTIONS --------------------------
+// computes the diffie-hellman results
 function compute(base, exponent, modulo){
     // const bigInt = require('big-integer')
     const bigintModArith = require('bigint-mod-arith')
@@ -468,8 +456,6 @@ function compute(base, exponent, modulo){
 	return res;
 }
 
-
-
 // exports
 
 exports.getDbConnection = getDbConnection;
@@ -479,10 +465,10 @@ exports.register = register;
 exports.logEvent = logEvent;
 exports.ping = ping;
 exports.receiveChatMessage = receiveChatMessage;
-exports.sendAllMessages = sendAllMessages;
+// exports.sendAllMessages = sendAllMessages;
 exports.changeChatColor = changeChatColor;
 exports.sendNewMessages = sendNewMessages;
-exports.sendAllUsers = sendAllUsers;
+// exports.sendAllUsers = sendAllUsers;
 exports.sendChatRoomUsers = sendChatRoomUsers;
 exports.diffieHellman = diffieHellman;
 exports.verifySessionID = verifySessionID;

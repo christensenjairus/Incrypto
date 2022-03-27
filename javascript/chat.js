@@ -24,6 +24,9 @@ var green = "#015400";
 var dtOfLastMessage = "";
 var myChatRoomNames = [];
 var sendToAll = false;
+var numberOfChats = 5;
+var isStarting = true;
+var guidsOfNotificationMessages = []; // store the guids of the messages that we've notified the user of. That way they are not notified of the same message later.
 // var path = require('path').join(process.cwd(),'keys')
 var path = require('path').join(__dirname,'../keys')
 // alert(path)
@@ -35,15 +38,27 @@ function logout() {
     ipcRenderer.invoke('logout');
 }
 
+function refresh() {
+    ipcRenderer.invoke('login')
+}
+
 async function changeToChatRoom(name) {
     await store.set('chatRoomName_' + myName, name)
-    ipcRenderer.invoke('login')
+    refresh();
 }
 
 async function toggleDebugMode() {
     if (debug == true) await store.set('debug_' + myName, false)
     else await store.set('debug_' + myName, true)
-    ipcRenderer.invoke('login')
+    refresh();
+}
+
+async function setNumberOfChats() {
+    var inputFromUser = await ipcRenderer.invoke('promptForNumberOfChats');
+    if (inputFromUser == null || inputFromUser == "") return;
+    if (isNaN(inputFromUser) == true) return;
+    await store.set("numberOfChats_" + myName, parseInt(inputFromUser))
+    refresh();
 }
 
 async function createNewChatRoom() {
@@ -101,7 +116,8 @@ $(function() { // this syntax means it's a function that will be run once once d
                     users[i].chatRooms.forEach(chatRoom => {
                         myChatRoomNames.push(chatRoom.name)
                     })
-                    // console.log(myChatRoomNames)
+                    if (debug) console.log("MyChatRoomNames: " + myChatRoomNames)
+                    setupUserRefreshes();
                     // add options for switching chatrooms to Navbar
                     var dropdown = document.getElementById('chatRoomChangeDropdown');
                     myChatRoomNames.forEach(name => {
@@ -138,19 +154,15 @@ $(function() { // this syntax means it's a function that will be run once once d
                     }
                 }
             }
-            // console.log("Users Array:")
-            // console.log(userArray)
             refreshActiveUsers(response);
         })
-        // console.log("User Array: ")
-        // console.log(userArray)
     }
     
     // ---------------------------------------- CHATS -------------------------------------------------------
     
-    async function refreshChat(timeOfLastMessage, chatRoomName, isStarting) {
+    async function refreshChat(timeOfLastMessage, messageChatRoomName, numberOfChatsToGrab) {
         // var time = (new Date()).getTime();
-        getNewMessages(myName, timeOfLastMessage, chatRoomName, serverName, sessionID).then(async response => {
+        getNewMessages(myName, timeOfLastMessage, messageChatRoomName, serverName, sessionID, numberOfChatsToGrab).then(async response => {
             if (response.data.error == "incorrectSessionID") {
                 await ipcRenderer.invoke('alert','Logging you out...',"You've logged in somewhere else. You will be logged out here.", "", false);
                 ipcRenderer.invoke('logout');
@@ -160,24 +172,14 @@ $(function() { // this syntax means it's a function that will be run once once d
             var messages = response.data;
             if (messages.length > 0) store.set("timeOfLastMessage_" + sessionID, messages[messages.length - 1].time); // use time from right before we asked last time
             let newJSON = [];
-            for (var i = 0; i < messages.length; ++i) {
+            for (var i = messages.length - 1; i >= 0; --i) {
                 // if (document.getElementById(messages[i].guid) == null) { // only if not already added! (sometimes two messages come through)
                 newJSON.push(messages[i])
-                if (document.hasFocus() == false) { // only get notifications if not clicked in the window
-                    if (!isStarting && messages[i].username != myName) {
-                        if (messages[i].text.find(recipient => recipient.recipient == myName) == null && displayAll == true) { // show a notification if the user is looking at all the messages despite some being encrypted
-                            // showNotification(messages[i].username, Custom_AES_REVERSE(messages[i].text[0].text)); // get messages notifications for gibbersih
-                        }
-                        else {
-                            showNotification(messages[i].username, Custom_AES_REVERSE(messages[i].text.find(recipient => recipient.recipient == myName).text));
-                        }
-                    }
-                }
             }
             // }
             // if (Decrypt(messages[i].author, messages[i].encryption) == myName) myColor = messages[i].color;
             
-            await appendChat(newJSON)
+            await appendChat(newJSON, messageChatRoomName)
             if (myColor) {
                 mystatus.text(myName).css('color', myColor);
                 document.getElementById('color').value = myColor;
@@ -186,6 +188,21 @@ $(function() { // this syntax means it's a function that will be run once once d
             input.focus();
             scroll();
         })
+    }
+
+    async function setupUserRefreshes() {
+        // refresh every 3 seconds
+        setInterval(function() {
+            myChatRoomNames.forEach(messageChatRoomName => {
+                if (messageChatRoomName != chatRoomName) {
+                    refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), messageChatRoomName, 5)
+                }
+                else {
+                    refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), messageChatRoomName, numberOfChats)
+                    scroll();
+                }
+            })
+        }, 3000)
     }
     
     async function refreshActiveUsers(response) {
@@ -225,18 +242,28 @@ $(function() { // this syntax means it's a function that will be run once once d
     
     async function prepareChat() {
         // SET ALL VARIABLES NEEDED FOR CHAT
-        displayAll = await ipcRenderer.invoke('getSeeAllMessages');
         myName = await ipcRenderer.invoke('getName')
+        debug = await store.get('debug_' + myName, false);
+        if (debug) console.log("isStarting: " + isStarting);
+        if (debug) console.log("MyName: " + myName)
+        if (debug == true) console.log("Debug: enabled")
+        displayAll = await ipcRenderer.invoke('getSeeAllMessages');
+        if (debug) console.log("DisplayAll: " + displayAll)
         myColor = await ipcRenderer.invoke('getColor')
+        if (debug) console.log("MyColor: " + myColor)
         mystatus.text(myName).css('color', myColor);
         document.getElementById('color').value = myColor;
         sessionID = await ipcRenderer.invoke('getSessionID')
+        if (debug) console.log("SessionID: " + sessionID)
         serverName = await ipcRenderer.invoke('getServerName')
+        if (debug) console.log("ServerName: " + serverName)
         chatRoomName = await store.get("chatRoomName_" + myName, "Chatroom_Global")
+        if (debug) console.log("ChatRoomName: " + chatRoomName)
         document.getElementById("brand").innerText += ": " + chatRoomName.substring(9)
         sendToAll = await store.get("sendToAll_" + myName, true);
-        debug = await store.get('debug_' + myName, false);
-        if (debug == true) console.log("debug mode enabled")
+        if (debug) console.log("SendToAll: " + sendToAll)
+        numberOfChats = await store.get("numberOfChats_" + myName, 5);
+        if (debug) console.log("NumberOfChats: " + numberOfChats)
         try {
             myPrivateKey = fs.readFileSync(require('path').join(__dirname,'../keys/PrivateKey_' + myName));
         }
@@ -247,29 +274,26 @@ $(function() { // this syntax means it's a function that will be run once once d
         
         // initialize chat & users
         refreshUsers(chatRoomName) // populate the people initially
-        refreshChat("", chatRoomName, true) // populate the chat initially
+        refreshChat("", chatRoomName, numberOfChats) // populate the chat initially
         
         // refresh users every 10 seconds
         setInterval(function() {
             refreshUsers(chatRoomName)
         }, 10000)
-        
-        // refresh every 3 seconds
-        setInterval(function() {
-            refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, false)
-            scroll();
-        }, 3000)
     }
     prepareChat();
+    setTimeout(() => {
+        if (debug) console.log("isStarting: " + false) // only show this once
+        isStarting = false; // once chat is initially loaded, we are "not starting" anymore
+    }, 7000)
     
-    function appendChat(newJSON) {
-        
+    async function appendChat(newJSON, messageChatRoomName) {
         for (var i=0; i < newJSON.length; i++) {
             if (newJSON[i].text.find(message => message.recipient == myName) != null) {
-                addMessage(newJSON[i].username, newJSON[i].text.find(message => message.recipient == myName).text, newJSON[i].color, newJSON[i].time, newJSON[i].guid, newJSON[i]); 
+                addMessage(newJSON[i].username, newJSON[i].text.find(message => message.recipient == myName).text, newJSON[i].color, newJSON[i].time, newJSON[i].guid, newJSON[i], messageChatRoomName); 
             }
             else {
-                addMessage(newJSON[i].username, newJSON[i].text[0].text, newJSON[i].color, newJSON[i].time, newJSON[i].guid, newJSON[i]); // just take the first encrypted part and send it
+                addMessage(newJSON[i].username, newJSON[i].text[0].text, newJSON[i].color, newJSON[i].time, newJSON[i].guid, newJSON[i], messageChatRoomName); // just take the first encrypted part and send it
             }
             dtOfLastMessage = newJSON[i].time;
         }
@@ -332,7 +356,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             
             await sendMessage(myName, msg, myColor, chatRoomName, serverName, sessionID).then(async response => {
                 if (response.data == 'Recieved') {
-                    await refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, false)
+                    await refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, numberOfChats)
                     scroll();
                     savedInputText = "";
                     document.getElementById('input').value = "";
@@ -389,6 +413,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     var dropdown = document.getElementById('dropdownOptions');
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayAllMessages">Display all messages</a>'
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayOnlyUnencryptedMessages">Display readable messages</a>'
+    dropdown.innerHTML += `<div class="dropdown-item" href="#" onclick="setNumberOfChats()">Set number of chats loaded</div>`
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToAllButton" style="color:green">Send to All</a>'
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToNoneButton" style="color:red">Send to None</a>'
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="remakeKeys">Get New Keys</a>'
@@ -434,15 +459,38 @@ $(function() { // this syntax means it's a function that will be run once once d
 /*
 * Add message to the chat window
 */
-function addMessage(author, message, color, dt, guid, entireMessage) {
-    if (document.getElementById(guid) != null) return; // this message is already in the chat
-    let UnencryptedMessage;
-    // console.log("Encrypted Message FROM " + author + ": " + message)
-    UnencryptedMessage = Custom_AES_REVERSE(message);
-    // if (message == UnencryptedMessage) return;
-    // console.log("Unencrypted Message: " + UnencryptedMessage)
-    // author = Custom_AES_REVERSE(author, encryptionType);
+function addMessage(author, message, color, dt, guid, entireMessage, messageChatRoomName) {
+    if (document.getElementById(guid) != null) return; // end now if this message is already in the chat
+
+    // --------------- NOTIFICATION LOGIC
+
+    if (document.hasFocus() == false) { // only get notifications if not clicked in the window
+        if ((isStarting == false) && (author != myName)) { // if I didn't write it && if the page is just barely loading
+            if (entireMessage.text.find(recipient => recipient.recipient == myName) != null) { // if it's to me
+                if (guidsOfNotificationMessages.find(messageguid => messageguid == guid) == null) { // if you haven't gotten the notification yet
+                    if (Custom_AES_REVERSE(entireMessage.text.find(recipient => recipient.recipient == myName).text) != message) { // if it was decrypted successfully
+                        if (messageChatRoomName == chatRoomName) { // Normal notification
+                            showNotification(author, Custom_AES_REVERSE(entireMessage.text.find(recipient => recipient.recipient == myName).text));
+                        }
+                        else {
+                            showNotification(author + " (" + messageChatRoomName.substring(9) + ")", Custom_AES_REVERSE(entireMessage.text.find(recipient => recipient.recipient == myName).text));
+                        }
+                        guidsOfNotificationMessages.push(guid)
+                    }
+                }
+            }
+        }
+        else if (isStarting == true) { // add these old messages to the array so we don't get notified of them as soon as isStarting becomes false
+            guidsOfNotificationMessages.push(guid)
+        }
+    }
+
+    // ----------------- ADDING MESSAGE TO GUI LOGIC
+
+    if (messageChatRoomName != chatRoomName) return;
+    let UnencryptedMessage = Custom_AES_REVERSE(message);
     
+    // count the 
     var peopleWhoCanUnencrypt = "(To";
     entireMessage.text.forEach(element => {
         if (element.recipient != myName && element.recipient != author) {
@@ -457,31 +505,10 @@ function addMessage(author, message, color, dt, guid, entireMessage) {
     
     
     let purifiedMessage = DOMPurify.sanitize(UnencryptedMessage);
-    // let purifiedMessage = UnencryptedMessage;
-    // console.log("before purification")
-    // let remainderOfMessage = UnencryptedMessage;
-    // let purifiedMessage = "";
-    // while (remainderOfMessage.length != 0) {
-    //     try {
-    //         remainderOfMessage = remainderOfMessage.substr(0, 216);
-    //         purifiedMessage += DOM.sanitize(remainderOfMessage);
-    //     } catch (e) {
-    //         purifiedMessage += DOMPurify.sanitize(remainderOfMessage);
-    //         remainderOfMessage = "";
-    //     }
-    // }
-    // // chunkedMessage.forEach(chunk => {
-    // //     purifiedMessage += sanitizeHTML(chunk)
-    // // })
-    // // let purifiedMessage = sanitizeHTML(UnencryptedMessage);
-    if (purifiedMessage === "") return;
-    // console.log("after purification");
-    // console.log("author is " + Decrypt(author, encryptionType));
-    // console.log("encryption type is " + encryptionType)
+    if (purifiedMessage === "") return; // if message purification fails (usually was a bad message anyway!)
+
     const time = new Date(dt);
-    // console.log("New Time is: " + dt);
     const lastTime = new Date(dtOfLastMessage);
-    // console.log("Old Time is: " + dtOfLastMessage);
     let difference = time - lastTime;
     if ((UnencryptedMessage !== message) || displayAll === true) { // either we've decypted the message, or displayAll is toggled
         message = purifiedMessage;
@@ -524,8 +551,6 @@ function addMessage(author, message, color, dt, guid, entireMessage) {
                 </div>`;
             };
         }
-        
-        // console.log("time updated with message: " + message)
     }
     dtOfLastMessage = dt;
 }
