@@ -95,7 +95,7 @@ function createWindow(width, height) {
             hasShadow: true,
             width: width,
             height: height,
-            minWidth: 1000,
+            minWidth: 750,
             minHeight: 800,
             icon: process.execPath + '.png', // for AppImage
             title: "Incrypto"
@@ -115,7 +115,7 @@ function createWindow(width, height) {
             hasShadow: true,
             width: width,
             height: height,
-            minWidth: 1000,
+            minWidth: 750,
             minHeight: 800,
             icon: basepath + '/../icons/hacker-25899.png', // works in linux with a png! / windows with a png as well!
             title: "Incrypto"
@@ -146,8 +146,8 @@ function createWindow(width, height) {
         let { width, height } = mainWindow.getBounds();
         
         // Now that we have them, save them using the `set` method.
-        if (width < 1000) {
-            width = 1000;
+        if (width < 750) {
+            width = 750;
         }
         if (height < 800) {
             height = 800;

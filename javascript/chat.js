@@ -24,9 +24,10 @@ var green = "#015400";
 var dtOfLastMessage = "";
 var myChatRoomNames = [];
 var sendToAll = false;
-var numberOfChats = 5;
+var numberOfChats = 25;
 var isStarting = true;
 var guidsOfNotificationMessages = []; // store the guids of the messages that we've notified the user of. That way they are not notified of the same message later.
+var timesRecievedLogoutMessage = 0; // will be used to prevent double logout messages
 // var path = require('path').join(process.cwd(),'keys')
 var path = require('path').join(__dirname,'../keys')
 // alert(path)
@@ -95,9 +96,6 @@ $(function() { // this syntax means it's a function that will be run once once d
     async function refreshUsers(chatRoomName) {
         getChatRoomUsers(myName, chatRoomName, serverName, sessionID).then(async response => {
             if (response.data.error == "incorrectSessionID") {
-                // alert("You've logged in somewhere else. You will be logged out here.")
-                // ipcRenderer.invoke('logout');
-                // ^ removed so that you dont get two logout messages
                 return;
             }
             var users = response.data;
@@ -164,7 +162,10 @@ $(function() { // this syntax means it's a function that will be run once once d
         // var time = (new Date()).getTime();
         getNewMessages(myName, timeOfLastMessage, messageChatRoomName, serverName, sessionID, numberOfChatsToGrab).then(async response => {
             if (response.data.error == "incorrectSessionID") {
-                ipcRenderer.invoke('alert','Logging you out...',"You've logged in somewhere else. You will be logged out here.", "", false);
+                if (timesRecievedLogoutMessage == 0) {
+                    ipcRenderer.invoke('alert','Logging you out...',"You've logged in somewhere else. You will be logged out here.", "", false);
+                    timesRecievedLogoutMessage++;
+                }
                 ipcRenderer.invoke('logout');
                 return;
             }
@@ -273,7 +274,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         document.getElementById("brand").innerText += chatRoomName.substring(9)
         sendToAll = await store.get("sendToAll_" + myName, true);
         if (debug) console.log("SendToAll: " + sendToAll)
-        numberOfChats = await store.get("numberOfChats_" + myName, 5);
+        numberOfChats = await store.get("numberOfChats_" + myName, 25);
         if (debug) console.log("NumberOfChats: " + numberOfChats)
         try {
             myPrivateKey = fs.readFileSync(require('path').join(__dirname,'../keys/PrivateKey_' + myName));
