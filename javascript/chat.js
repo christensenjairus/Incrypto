@@ -110,14 +110,14 @@ $(function() { // this syntax means it's a function that will be run once once d
                     else userArray.find(user => user.username == users[i].username).encryptForUser = false;
                     // console.log("adding "+ users[i].username + " to people array")
                 }
-                else if (userArray.find(user => user.username == myName) == null) { // if I'm not found on list, add me
+                else if (userArray.find(user => user.username == myName) == null) { // if I'm not found on list, add me. This should only happen once!
                     userArray.push(users[i]);
                     userArray.find(user => user.username == myName).encryptForUser = true;
                     users[i].chatRooms.forEach(chatRoom => {
                         myChatRoomNames.push(chatRoom.name)
                     })
                     if (debug) console.log("MyChatRoomNames: " + myChatRoomNames)
-                    setupUserRefreshes();
+                    await setupChatRefreshes();
                     // add options for switching chatrooms to Navbar
                     var dropdown = document.getElementById('chatRoomChangeDropdown');
                     myChatRoomNames.forEach(name => {
@@ -190,12 +190,23 @@ $(function() { // this syntax means it's a function that will be run once once d
         })
     }
 
-    async function setupUserRefreshes() {
-        // refresh every 3 seconds
+    async function setupChatRefreshes() {
+        // run it now
+        myChatRoomNames.forEach(async messageChatRoomName => {
+            if (messageChatRoomName != chatRoomName) {
+                await refreshChat("", messageChatRoomName, 5) // check last 5 messages every 3 seconds in other chatrooms
+            }
+            else {
+                await refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), messageChatRoomName, numberOfChats)
+                scroll();
+            }
+        })
+        if (debug) console.log("Done refreshing chat")
+        // set the same function to refresh every 3 seconds
         setInterval(function() {
             myChatRoomNames.forEach(messageChatRoomName => {
                 if (messageChatRoomName != chatRoomName) {
-                    refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), messageChatRoomName, 5)
+                    refreshChat("", messageChatRoomName, 5) // check last 5 messages every 3 seconds in other chatrooms
                 }
                 else {
                     refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), messageChatRoomName, numberOfChats)
@@ -285,7 +296,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     setTimeout(() => {
         if (debug) console.log("isStarting: " + false) // only show this once
         isStarting = false; // once chat is initially loaded, we are "not starting" anymore
-    }, 7000)
+    }, 2000) // do not get notifications for the first 2 seconds upon page load -> I'd like to decrease this
     
     async function appendChat(newJSON, messageChatRoomName) {
         for (var i=0; i < newJSON.length; i++) {
@@ -464,24 +475,26 @@ function addMessage(author, message, color, dt, guid, entireMessage, messageChat
 
     // --------------- NOTIFICATION LOGIC
 
-    if (document.hasFocus() == false) { // only get notifications if not clicked in the window
-        if ((isStarting == false) && (author != myName)) { // if I didn't write it && if the page is just barely loading
-            if (entireMessage.text.find(recipient => recipient.recipient == myName) != null) { // if it's to me
+    if (entireMessage.text.find(recipient => recipient.recipient == myName) != null) { // if it's to me
+        if (Custom_AES_REVERSE(entireMessage.text.find(recipient => recipient.recipient == myName).text) != message) { // if it was decrypted successfully
+            // if (debug) console.log("Searching message: " + Custom_AES_REVERSE(entireMessage.text.find(recipient => recipient.recipient == myName).text))
+            if ((isStarting == false) && (author != myName)) { // if I didn't write it && if the page is just barely loading
                 if (guidsOfNotificationMessages.find(messageguid => messageguid == guid) == null) { // if you haven't gotten the notification yet
-                    if (Custom_AES_REVERSE(entireMessage.text.find(recipient => recipient.recipient == myName).text) != message) { // if it was decrypted successfully
-                        if (messageChatRoomName == chatRoomName) { // Normal notification
+                    if (messageChatRoomName == chatRoomName) { // Normal notification
+                        if (document.hasFocus() == false) { // only get notifications if not clicked in the window
                             showNotification(author, Custom_AES_REVERSE(entireMessage.text.find(recipient => recipient.recipient == myName).text));
                         }
-                        else {
-                            showNotification(author + " (" + messageChatRoomName.substring(9) + ")", Custom_AES_REVERSE(entireMessage.text.find(recipient => recipient.recipient == myName).text));
-                        }
-                        guidsOfNotificationMessages.push(guid)
                     }
+                    else {
+                        showNotification(author + " (" + messageChatRoomName.substring(9) + ")", Custom_AES_REVERSE(entireMessage.text.find(recipient => recipient.recipient == myName).text));
+                    }
+                    guidsOfNotificationMessages.push(guid)
                 }
             }
-        }
-        else if (isStarting == true) { // add these old messages to the array so we don't get notified of them as soon as isStarting becomes false
-            guidsOfNotificationMessages.push(guid)
+            else if (isStarting == true) { // add these old messages to the array so we don't get notified of them as soon as isStarting becomes false
+                guidsOfNotificationMessages.push(guid)
+                // if (debug) console.log("Pushed notification for: " + Custom_AES_REVERSE(entireMessage.text.find(recipient => recipient.recipient == myName).text))
+            }
         }
     }
 

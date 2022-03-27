@@ -514,7 +514,7 @@ ipcMain.handle('alert', async (event, title, text, icon, showCancelButton) => {
     require('electron').dialog.showMessageBox({
         message: text,
         title: title,
-        type: icon
+        // type: icon
     })
 })
 
