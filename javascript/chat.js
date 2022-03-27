@@ -259,7 +259,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         if (debug) console.log("ServerName: " + serverName)
         chatRoomName = await store.get("chatRoomName_" + myName, "Chatroom_Global")
         if (debug) console.log("ChatRoomName: " + chatRoomName)
-        document.getElementById("brand").innerText += ": " + chatRoomName.substring(9)
+        document.getElementById("brand").innerText += chatRoomName.substring(9)
         sendToAll = await store.get("sendToAll_" + myName, true);
         if (debug) console.log("SendToAll: " + sendToAll)
         numberOfChats = await store.get("numberOfChats_" + myName, 5);

@@ -25,6 +25,11 @@ body {
     background: rgb(53, 1, 83)
 }
 
+#brand {
+    color: gray;
+    font-size: 15;
+}
+
 .wrapper {
     /* height: 91%; */
     width: 79%; 
@@ -37,8 +42,7 @@ body {
     position: fixed;
     top: 52px;
     bottom: 40px;
-    right: 0;
-    
+    right: 5px;
 }
 
 .row {
@@ -198,7 +202,7 @@ p {
 
 #input {
     width: 66%;
-} */ */
+} */ 
 
 #inputBox {
     margin: 5px;
@@ -209,6 +213,7 @@ p {
     /* position: absolute; */
     /* bottom: 0; */
     z-index: 6;
+    /* margin-right: 5px; */
 }
 #input { 
     border-radius:2px; 
@@ -226,6 +231,7 @@ p {
     background-color: black;  
     color: white;
     /* z-index: 3; */
+        /* margin-right: 15px; */
 }
 #status { 
     width: fit-content;
@@ -326,4 +332,34 @@ webview {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+.animate-character
+{
+/* margin: 0 auto; */
+text-transform: uppercase;
+background-image: linear-gradient(
+    -225deg,
+    #231557 0%,
+    #44107a 29%,
+    #ff1361 67%,
+    #fff800 100%
+);
+background-size: auto auto;
+background-clip: border-box;
+background-size: 200% auto;
+color: #fff;
+background-clip: text;
+text-fill-color: transparent;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+animation: textclip 5s linear infinite;
+/* display: inline-block; */
+justify-self: baseline;
+}
+
+@keyframes textclip {
+to {
+background-position: 200% center;
+}
 }
