@@ -107,6 +107,7 @@ $(function() { // this syntax means it's a function that will be run once once d
                     if (sendToAll == true) userArray.find(user => user.username == users[i].username).encryptForUser = true;
                     else userArray.find(user => user.username == users[i].username).encryptForUser = false;
                     // console.log("adding "+ users[i].username + " to people array")
+                    if (!isStarting) appendJoinedMessageToChat(users[i].username)
                 }
                 else if (userArray.find(user => user.username == myName) == null) { // if I'm not found on list, add me. This should only happen once!
                     userArray.push(users[i]);
@@ -213,6 +214,7 @@ $(function() { // this syntax means it's a function that will be run once once d
     
     async function refreshActiveUsers(response) {
             var chatRoomUsers = response.data
+            // logic for the active light next to a users name
             chatRoomUsers.forEach(user => {
                 if ((userArray.find(user => user.username == user.username) != null) && (user.username != myName)) {
                     if (user.chatRooms.find(chatRoom => chatRoom.name == chatRoomName) != null) {
@@ -224,6 +226,15 @@ $(function() { // this syntax means it's a function that will be run once once d
                             toggleActiveForUser(user.username, true)
                             // console.log(user.username + " is on")
                         }
+                    }
+                }
+            })
+            // logic for what to do if a user leaves the chat
+            userArray.forEach(user => {
+                if ((chatRoomUsers.find(chatRoomUser => chatRoomUser.username == user.username) == null) && (user.username != myName)) { // if the user isn't in the chat anymore
+                    if (document.getElementById(user.username) != null) { // if their box in the people box exists
+                        appendLeftMessageToChat(user.username);
+                        document.getElementById(user.username).remove()
                     }
                 }
             })
@@ -499,8 +510,32 @@ function addMessage(author, message, color, dt, guid, entireMessage, messageChat
     let UnencryptedMessage = Custom_AES_REVERSE(message);
     
     var peopleWhoCanUnencrypt = "";
-    if (entireMessage.text.length == userArray.length) {} // do nothing
-    else {
+    if (entireMessage.text.length == userArray.length) { // If sent to everyone, don't say who it's sent to, its not necessary
+        // if (debug) console.log("Everyone included")
+    } 
+    else if (entireMessage.text.length == userArray.length - 1) { // If one person is excluded
+        // if (debug) console.log("One person excluded")
+        // find the person who can't see your message
+        var recipients = [];
+        entireMessage.text.forEach(element => {
+            recipients.push(element.recipient) 
+            // if (debug) console.log("Message sent to " + element.recipient)
+        });
+        peopleWhoCanUnencrypt = " (Excluded";
+        userArray.forEach(user => {
+            if (recipients.find(recipient => recipient == user.username) == null) {
+                peopleWhoCanUnencrypt += " " + user.username + ",";
+                // if (debug) console.log("")
+            }    
+        })
+        
+        if (peopleWhoCanUnencrypt != " (Excluded") {
+            peopleWhoCanUnencrypt = peopleWhoCanUnencrypt.substring(0, peopleWhoCanUnencrypt.length - 1)
+            peopleWhoCanUnencrypt += ")"
+        }
+        else peopleWhoCanUnencrypt = "";
+    }
+    else { // list who can see it
         // count the people who can see your message
         peopleWhoCanUnencrypt = " (To";
         entireMessage.text.forEach(element => {
@@ -565,6 +600,14 @@ function addMessage(author, message, color, dt, guid, entireMessage, messageChat
         }
     }
     dtOfLastMessage = dt;
+}
+
+function appendJoinedMessageToChat(username) {
+    content.innerHTML += `<div class="text-center" style="color:green"><span class="between">` + username + ` joined the chat</span></div>`;
+}
+
+function appendLeftMessageToChat(username) {
+    content.innerHTML += `<div class="text-center" style="color:red"><span class="between">` + username + ` left the chat</span></div>`;
 }
 
 function toggleEncryptionForUser(id){
