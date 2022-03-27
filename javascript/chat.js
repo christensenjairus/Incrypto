@@ -181,12 +181,6 @@ $(function() { // this syntax means it's a function that will be run once once d
             // if (Decrypt(messages[i].author, messages[i].encryption) == myName) myColor = messages[i].color;
             
             await appendChat(newJSON, messageChatRoomName)
-            if (myColor) {
-                mystatus.text(myName).css('color', myColor);
-                document.getElementById('color').value = myColor;
-            }
-            else mystatus.text(myName).css('color', "#0000FF");
-            input.focus();
             scroll();
         })
     }
@@ -504,18 +498,22 @@ function addMessage(author, message, color, dt, guid, entireMessage, messageChat
     if (messageChatRoomName != chatRoomName) return;
     let UnencryptedMessage = Custom_AES_REVERSE(message);
     
-    // count the 
-    var peopleWhoCanUnencrypt = "(To";
-    entireMessage.text.forEach(element => {
-        if (element.recipient != myName && element.recipient != author) {
-            peopleWhoCanUnencrypt += " " + element.recipient + ","
+    var peopleWhoCanUnencrypt = "";
+    if (entireMessage.text.length == userArray.length) {} // do nothing
+    else {
+        // count the people who can see your message
+        peopleWhoCanUnencrypt = " (To";
+        entireMessage.text.forEach(element => {
+            if (element.recipient != myName && element.recipient != author) {
+                peopleWhoCanUnencrypt += " " + element.recipient + ","
+            }
+        });
+        if (peopleWhoCanUnencrypt != " (To") {
+            peopleWhoCanUnencrypt = peopleWhoCanUnencrypt.substring(0, peopleWhoCanUnencrypt.length - 1)
+            peopleWhoCanUnencrypt += ")"
         }
-    });
-    if (peopleWhoCanUnencrypt != "(To") {
-        peopleWhoCanUnencrypt = peopleWhoCanUnencrypt.substring(0, peopleWhoCanUnencrypt.length - 1)
-        peopleWhoCanUnencrypt += ")"
+        else peopleWhoCanUnencrypt = "";
     }
-    else peopleWhoCanUnencrypt = "";
     
     
     let purifiedMessage = DOMPurify.sanitize(UnencryptedMessage);
@@ -532,7 +530,7 @@ function addMessage(author, message, color, dt, guid, entireMessage, messageChat
         if (lightOrDark(color) == "dark") {
             if (author == myName) {
                 content.innerHTML += `<div class="d-flex align-items-center text-right justify-content-end" id="` + guid + `">
-                <div class="pr-2"> <span class="name">Me ` + peopleWhoCanUnencrypt + `</span>
+                <div class="pr-2"> <span class="name">Me` + peopleWhoCanUnencrypt + `</span>
                 <p class="msg bubbleright" style="background-color:` + color + `; color:white">` + message + `</p>
                 </div>
                 <div><img src="../icons/icons8-hacker-64.png" width="30" class="img1" /></div>
@@ -550,7 +548,7 @@ function addMessage(author, message, color, dt, guid, entireMessage, messageChat
         else {
             if (author == myName) {
                 content.innerHTML += `<div class="d-flex align-items-center text-right justify-content-end" id="` + guid + `">
-                <div class="pr-2"> <span class="name">Me ` + peopleWhoCanUnencrypt + `</span>
+                <div class="pr-2"> <span class="name">Me` + peopleWhoCanUnencrypt + `</span>
                 <p class="msg bubbleright" style="background-color:` + color + `; color:black">` + message + `</p>
                 </div>
                 <div><img src="../icons/icons8-hacker-64.png" width="30" class="img1" /></div>
