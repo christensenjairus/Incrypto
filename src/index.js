@@ -491,31 +491,31 @@ ipcMain.handle('promptForNumberOfChats', async (event) => {
 ipcMain.handle('alert', async (event, title, text, icon, showCancelButton) => {
 
     // ---------------- I REALLY LIKE THIS, but it doesn't work when compiled in windows!!!
-    const Alert = require('electron-alert');
-    let alert = new Alert();
+    // const Alert = require('electron-alert');
+    // let alert = new Alert();
 
-    let swalOptions = {
-        title: title,
-        text: text,
-        icon: icon,
-        showCancelButton: showCancelButton
-    };
-
-    let promise = alert.fireWithFrame(swalOptions, "Incrypto - Alert", null, false);
-    promise.then((result) => {
-        if (result.value) {
-            // confirmed
-        } else if (result.dismiss === Alert.DismissReason.cancel) {
-            // canceled
-        }
-    })
-
-    // // ------------------ SO I HAVE TO USE THIS
-    // require('electron').dialog.showMessageBox({
-    //     message: text,
+    // let swalOptions = {
     //     title: title,
-    //     // type: icon
+    //     text: text,
+    //     icon: icon,
+    //     showCancelButton: showCancelButton
+    // };
+
+    // let promise = alert.fireWithFrame(swalOptions, "Incrypto - Alert", null, false);
+    // promise.then((result) => {
+    //     if (result.value) {
+    //         // confirmed
+    //     } else if (result.dismiss === Alert.DismissReason.cancel) {
+    //         // canceled
+    //     }
     // })
+
+    // ------------------ SO I HAVE TO USE THIS
+    require('electron').dialog.showMessageBox({
+        message: text,
+        title: title,
+        // type: icon
+    })
 })
 
 ipcMain.handle('logout', (event) => {
