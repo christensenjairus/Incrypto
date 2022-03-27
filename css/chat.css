@@ -1,7 +1,8 @@
 body {
     /* background-color: #fff; */
     background-color: #000000;
-    background-image: linear-gradient(310deg, #050a7967 0%, #3110445b 74%);
+    background-image: linear-gradient(310deg, #8c00ff2c 0%,  #000cf111 94%);
+    /* background-image: linear-gradient(310deg, #310022 0%, #0f0018 74%); */
 }
 
 * {
@@ -270,8 +271,8 @@ webview {
 
 .navbar-collapse {
     padding: 12px;
-    background-color: #000000;
-    background-image: linear-gradient(310deg, #050a7967 0%, #3110445b 74%);
+    /* background-color: #000000; */
+    /* background-image: linear-gradient(310deg, #050a7967 0%, #3110445b 74%); */
     height: 100%;
     z-index: 4;
 }
@@ -311,8 +312,8 @@ webview {
 }
 
 .loader {
-    border: 16px solid #f3f3f3; /* Light grey */
-    border-top: 16px solid #3498db; /* Blue */
+    border: 16px solid #000000; 
+    border-top: 16px solid #db00db; 
     border-radius: 50%;
     width: 120px;
     height: 120px;

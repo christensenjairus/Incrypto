@@ -8,7 +8,7 @@ const crypto = require('crypto');
 
 async function login(username, password, serverName) {
     if (serverName === "") {
-        await ipcRenderer.invoke('alert','Can not connect without a server','Please enter a valid server name', "error", false);
+        ipcRenderer.invoke('alert','Can not connect without a server','Please enter a valid server name', "error", false);
         ipcRenderer.invoke('logout');
         return false;
     }
@@ -44,12 +44,12 @@ async function login(username, password, serverName) {
         }
         else {
             if (data.sessionID === "incorrect_credentials") {
-                await ipcRenderer.invoke('alert','','Incorrect Credentials', "error", false);
+                ipcRenderer.invoke('alert','','Incorrect Credentials', "error", false);
                 ipcRenderer.invoke('logout');
                 return false;
             }
             else {
-                await ipcRenderer.invoke('alert','We are not sure what happened','Please try again', "error", false);
+                ipcRenderer.invoke('alert','We are not sure what happened','Please try again', "error", false);
                 ipcRenderer.invoke('logout');
                 return false;
             }
@@ -58,7 +58,7 @@ async function login(username, password, serverName) {
         //     alert(e)
         // }
     }, async error => {
-        await ipcRenderer.invoke('alert',"Could not connect to server", error.message, "error", false);
+        ipcRenderer.invoke('alert',"Could not connect to server", error.message, "error", false);
         ipcRenderer.invoke('logout');
     })
 } catch (error) {
@@ -69,19 +69,19 @@ async function login(username, password, serverName) {
 
 async function register(username, password, password2, serverName) {
     if (username == "" || password == "") {
-        await ipcRenderer.invoke('alert',"", "Fill in all the boxes", "error", false);
+        ipcRenderer.invoke('alert',"", "Fill in all the boxes", "error", false);
         ipcRenderer.invoke('toregister');
         return false;
     }
     if (password != password2) {
-        await ipcRenderer.invoke('alert',"", "Passwords do not match", "error", false);
+        ipcRenderer.invoke('alert',"", "Passwords do not match", "error", false);
         ipcRenderer.invoke('toregister');
         return false;
     }
     password = crypto.createHash('sha256').update(password).digest('hex');
     var time = (new Date()).getTime();
     if (serverName === "") {
-        await ipcRenderer.invoke('alert',"", "Please enter a valid server name", "error", false);
+        ipcRenderer.invoke('alert',"", "Please enter a valid server name", "error", false);
         ipcRenderer.invoke('toregister');
         return false;
     }
@@ -109,12 +109,12 @@ async function register(username, password, password2, serverName) {
         }
         else {
             if (data.sessionID === "username_exists") {
-                await ipcRenderer.invoke('alert',"", "That username is taken. Please try another", "error", false);
+                ipcRenderer.invoke('alert',"", "That username is taken. Please try another", "error", false);
                 ipcRenderer.invoke('toregister');
                 return false;
             }
             else {
-                await ipcRenderer.invoke('alert',"", "We are not sure what happened. Please try again", "error", false);
+                ipcRenderer.invoke('alert',"", "We are not sure what happened. Please try again", "error", false);
                 ipcRenderer.invoke('toregister');
                 return false;
             }
@@ -124,7 +124,7 @@ async function register(username, password, password2, serverName) {
         //     alert(e);
         // }
     }, async error => {
-        await ipcRenderer.invoke('alert',"Could not connect to server", error.message, "error", false);
+        ipcRenderer.invoke('alert',"Could not connect to server", error.message, "error", false);
         ipcRenderer.invoke('toregister');
     })
 } catch (error) {
@@ -203,7 +203,7 @@ async function sendMessage(username, msg, color, chatRoomName, serverName, sessi
     })
     // console.log(message)
     if (successfulEncryptionCount == 0) {
-        await ipcRenderer.invoke('alert',"Incrypto is not encrypting messages correctly. This problem is usually experienced when the app is installed in a read-only mode. Please reinstall the app with more permissions.", "", false);
+        ipcRenderer.invoke('alert',"Incrypto is not encrypting messages correctly. This problem is usually experienced when the app is installed in a read-only mode. Please reinstall the app with more permissions.", "", false);
         return;
     }
     try {
@@ -319,7 +319,7 @@ async function generateSharedKey(username, serverName, sessionID) {
     if (debug) console.log("Starting Part 1 of Diffie Hellman...")
     var response = await negociate(username, serverName, sessionID)
     if (response.data == null || response.data.base == null || response.data.mod == null) {
-        alert("Unable to retrieve base and mod from server")
+        ipcRenderer.invoke('alert','','Unable to retrieve mod and base from server', "error", false);
         return;
     }
     var base = response.data.base;
@@ -379,7 +379,10 @@ async function sendGetKeys(username, serverName, sessionID) {
     await generateSharedKey(username, serverName, sessionID);
     // retrieve new keys from server
     var response = await getKeys(username, serverName, sessionID);
-    if (response.data == "Error") ipcRenderer.invoke('alert','Unable to get your keys',"You may want to log out and back in", "error", false);
+    if (response.data == "Error") {
+        ipcRenderer.invoke('alert','Unable to get your keys',"You may want to log out and back in", "error", false);
+        return;
+    }
     var data = response.data;
     const hashOfSharedKey = crypto.createHash('sha256', await store.get("sharedKey_" + username, "")).digest('hex');
     var decrypted = decrypt(data, hashOfSharedKey);
@@ -394,7 +397,10 @@ async function sendCreateKeys(username, serverName, sessionID) {
     await generateSharedKey(username, serverName, sessionID);
     // retrieve new keys from server
     var response = await createKeys(username, serverName, sessionID)
-    if (response.data == "Error") ipcRenderer.invoke('alert','Unable to get your keys',"You may want to log out and back in", "error", false);
+    if (response.data == "Error") {
+        ipcRenderer.invoke('alert','Unable to get your keys',"You may want to log out and back in", "error", false);
+        return;
+    }
     var data = response.data;
     const hashOfSharedKey = crypto.createHash('sha256', await store.get("sharedKey_" + username, "")).digest('hex');
     var decrypted = decrypt(data, hashOfSharedKey);

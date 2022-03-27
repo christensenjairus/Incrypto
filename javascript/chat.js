@@ -164,7 +164,7 @@ $(function() { // this syntax means it's a function that will be run once once d
         // var time = (new Date()).getTime();
         getNewMessages(myName, timeOfLastMessage, messageChatRoomName, serverName, sessionID, numberOfChatsToGrab).then(async response => {
             if (response.data.error == "incorrectSessionID") {
-                await ipcRenderer.invoke('alert','Logging you out...',"You've logged in somewhere else. You will be logged out here.", "", false);
+                ipcRenderer.invoke('alert','Logging you out...',"You've logged in somewhere else. You will be logged out here.", "", false);
                 ipcRenderer.invoke('logout');
                 return;
             }
@@ -364,7 +364,7 @@ $(function() { // this syntax means it's a function that will be run once once d
                     return;
                 }
                 else {
-                    await ipcRenderer.invoke('alert','',"There was an issue sending your message", "", false);
+                    ipcRenderer.invoke('alert','',"There was an issue sending your message", "", false);
                 }
             })
             

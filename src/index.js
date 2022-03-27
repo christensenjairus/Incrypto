@@ -3,7 +3,7 @@
     You can run functions in this file from other files using IpcRenderer. (see example at end where we log in)
 */
 
-const {app, BrowserWindow, Menu, MenuItem} = require('electron')
+const {app, BrowserWindow, Menu, MenuItem, nativeTheme} = require('electron')
 const shell = require('electron').shell
 const {dialog} = require('electron')
 const Store = require('electron-store')
@@ -42,6 +42,7 @@ if (!((process.execPath).includes("node_modules/electron-prebuilt-compile/node_m
 
 const url = require('url');
 const { isTypeParameterDeclaration } = require('typescript');
+const { electron } = require('process');
 app.setAppUserModelId("Incrypto");
 
 let codeEditor = store.get("codeEditor", "code"); // VS Code is the default
@@ -488,23 +489,32 @@ ipcMain.handle('promptForNumberOfChats', async (event) => {
 })
 
 ipcMain.handle('alert', async (event, title, text, icon, showCancelButton) => {
-    const Alert = require('electron-alert');
-    let alert = new Alert();
 
-    let swalOptions = {
+    // ---------------- I REALLY LIKE THIS, but it doesn't work when compiled in windows!!!
+    // const Alert = require('electron-alert');
+    // let alert = new Alert();
+
+    // let swalOptions = {
+    //     title: title,
+    //     text: text,
+    //     icon: icon,
+    //     showCancelButton: showCancelButton
+    // };
+
+    // let promise = alert.fireWithFrame(swalOptions, "Incrypto - Alert", null, false);
+    // promise.then((result) => {
+    //     if (result.value) {
+    //         // confirmed
+    //     } else if (result.dismiss === Alert.DismissReason.cancel) {
+    //         // canceled
+    //     }
+    // })
+
+    // ------------------ SO I HAVE TO USE THIS
+    require('electron').dialog.showMessageBox({
+        message: text,
         title: title,
-        text: text,
-        icon: icon,
-        showCancelButton: showCancelButton
-    };
-
-    let promise = alert.fireWithFrame(swalOptions, "Incrypto - Alert", null, false);
-    promise.then((result) => {
-        if (result.value) {
-            // confirmed
-        } else if (result.dismiss === Alert.DismissReason.cancel) {
-            // canceled
-        }
+        type: icon
     })
 })
 

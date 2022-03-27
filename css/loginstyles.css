@@ -2,20 +2,34 @@
     CSS FOR LOGIN AND REGISTER PAGES
 */
 
-
+* {
+    font-family: 'Gruppo';
+    background-color: black;
+    color:white;
+    background: rgba(76, 175, 79, 0);
+}
 /* Below line is used for online Google font */
 /* @import url(https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@700); */
 body{
     background-color: #000000;
-    background-image: linear-gradient(310deg, #050a7967 0%, #3110445b 74%);
+    background-image: linear-gradient(310deg, #310022 0%, #0f0018 74%);
 }
 h2{
     /* background-color: #FEFFED; */
     padding: 30px 35px;
     margin: -10px -50px;
-    text-align:center;
+    text-align: center;
     font-size: 35;
     border-radius: 10px 10px 0 0;
+    font-family: 'Gruppo';
+}
+h3 {
+    font-size: 35;
+    border-radius: 10px 10px 0 0;
+    font-family: 'Gruppo';
+    padding: 30px 35px;
+    margin: -10px -50px;
+    text-align: center;
 }
 hr{
     margin: 10px -50px;
@@ -34,38 +48,51 @@ center{
     font-size:32px;
 }
 div.container{
-    /* width: 900px;
-    height: 610px; */
-    margin:35px auto;
+    width: 600px; 
+    /* height: 910px;  */
+    margin: auto;
+    margin-top: 0px;
+    border: 5px solid black;
+    border-radius: 30px;
     font-family: 'Crimson Pro', sans-serif;
     color: white;
     /* background-color: #6f2232; */
+    background: rgba(3, 0, 3, 0.685);
 }
 div.main{
-    /* width: 300px; */
+    /* width: ; */
+    margin: 0 auto;
     padding: 10px 50px 25px;
-    border: 2px solid gray;
-    border-radius: 10px;
+    
     font-family: 'Crimson Pro';
     float:center;
-    margin-top:50px;
+    /* margin-top:50px; */
     /* background-color: #190061; background of login box */
-    background-color: #8503b90e;
+    /* background-color: #8503b90e; */
 }
+.incrypto {
+    display: flex;
+    justify-content: center;
+}
+label {
+    font-size: 22;
+}
+
 input[type=text],input[type=password]{
     width: 100%;
     height: 40px;
     padding: 5px;
     margin-bottom: 25px;
     margin-top: 5px;
-    border: 2px solid #ccc;
-    color: #4f4f4f;
-    font-size: 16px;
+    /* border: 2px solid #ccc; */
+    /* color: #4f4f4f; */
+    font-size: 25px;
     border-radius: 5px;
+    background: rgba(0, 0, 0, 0.726);
 }
 input[type=button]{
-    font-size: 16px;
-    background: linear-gradient(#202020 5%, #000000 100%);
+    font-size: 20px;
+    background: linear-gradient(#181818 5%, #000000 100%);
     border: 2px solid black;
     color: #ffffff;
     font-weight: bold;
@@ -76,13 +103,13 @@ input[type=button]{
     outline:none;
 }
 input[type=button]:hover{
-    background: linear-gradient(#4f4f4f 5%, #c0c0c0 100%);
+    background: linear-gradient(#333333 5%, #1a1919 100%);
     color: #000000;
 }
 
 .loader {
-    border: 16px solid #f3f3f3; /* Light grey */
-    border-top: 16px solid #3498db; /* Blue */
+    border: 16px solid #000000; 
+    border-top: 16px solid #db00db; 
     border-radius: 50%;
     width: 120px;
     height: 120px;
@@ -113,3 +140,33 @@ input[type=button]:hover{
     color: black;
 } */
 /* ^ */
+
+.animate-character
+{
+margin: 0 auto;
+text-transform: uppercase;
+background-image: linear-gradient(
+    -225deg,
+    #231557 0%,
+    #44107a 29%,
+    #ff1361 67%,
+    #fff800 100%
+);
+background-size: auto auto;
+background-clip: border-box;
+background-size: 200% auto;
+color: #fff;
+background-clip: text;
+text-fill-color: transparent;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+animation: textclip 5s linear infinite;
+display: inline-block;
+    font-size: 70px;
+}
+
+@keyframes textclip {
+to {
+background-position: 200% center;
+}
+}
