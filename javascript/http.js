@@ -294,36 +294,43 @@ function leaveChatRoom(username, serverName, sessionID, chatRoomName) {
 // ---------------- KEY EXCHANGE FUNCTIONS -------------------------------------------------------------
 
 async function negociate(username, serverName, sessionID) {
-    try {
+    // try {
         return await axios.post('http://' + serverName + "/api/keys/negociate", {
         username: username,
         sessionID: sessionID
     })
-    } catch (e) {
-        console.error(e);
-        return false;
-    }
+    // } catch (e) {
+    //     console.error(e);
+    //     ipcRenderer.invoke('alert','',"Server error. Please try again", "error", false);
+    //     // ipcRenderer.invoke('login')
+    //     return false;
+    // }
 }
 
 async function diffieHellman(username, clientPartial, serverName, sessionID) {
-    try {
+    // try {
         return await axios.post('http://' + serverName + "/api/keys/diffieHellman", {
             username: username,
             clientPartial: clientPartial,
             sessionID, sessionID
         })
-    } catch (error) {
-        console.error(error);
-        return false;
-    }
+    // } catch (error) {
+    //     console.error(error);
+    //     ipcRenderer.invoke('alert','',"Server error. Please try again", "error", false);
+    //     // ipcRenderer.invoke('login')
+    //     return false;
+    // }
 }
 
 async function generateSharedKey(username, serverName, sessionID) {
+    try {
     // retrieve from server new prime numbers for diffie-hellman math
     if (debug) console.log("Starting Part 1 of Diffie Hellman...")
     var response = await negociate(username, serverName, sessionID)
     if (response.data == null || response.data.base == null || response.data.mod == null) {
-        // ipcRenderer.invoke('alert','','Problem connecting to server. Please try again', "error", false);
+        console.error(error);
+        ipcRenderer.invoke('alert','',"Server error. Please try again", "error", false);
+        // ipcRenderer.invoke('login')
         return false;
     }
     var base = response.data.base;
@@ -340,16 +347,22 @@ async function generateSharedKey(username, serverName, sessionID) {
     if (debug) console.log("Starting Part 2 of Diffie Hellman...")
 
     response = await diffieHellman(username, clientPartial, serverName, sessionID)
-    if (response.data.serverPartial == null) {
-        ipcRenderer.invoke('alert','',"Server error. Please try again", "error", false);
-        ipcRenderer.invoke('logout')
-    }
+    // if (response.data.serverPartial == null) {
+    //     ipcRenderer.invoke('alert','',"Server error. Please try again", "error", false);
+    //     ipcRenderer.invoke('logout')
+    // }
 
     // generate Shared Key from server's diffie-hellman data
     var serverPartial = response.data.serverPartial;
     var sharedSecret = compute(serverPartial, clientExponent, mod);
     if (debug) console.log("SharedSecret: " + sharedSecret)
     store.set("sharedSecret_" + username, sharedSecret);
+    } catch (e) {
+        console.error(e);
+        ipcRenderer.invoke('alert','',"Server error. Please try again\n" + e.message, "error", false);
+        ipcRenderer.invoke('logout')
+        // return false;
+    }
 }
 
 async function getKeys(username, serverName, sessionID) {
@@ -359,7 +372,9 @@ async function getKeys(username, serverName, sessionID) {
         sessionID: sessionID
     })
 } catch (e) {
-    console.error(error);
+    console.error(e);
+    ipcRenderer.invoke('alert','',"Could not retrieve keys from server. Please try again\n" + e.message, "error", false);
+    ipcRenderer.invoke('logout')
     return false;
 }
 }
@@ -371,7 +386,9 @@ async function createKeys(username, serverName, sessionID) {
         sessionID: sessionID
     })
 } catch (e) {
-    console.error(error);
+    console.error(e);
+    ipcRenderer.invoke('alert','',"Could not retrieve keys from server. Please try again\n" + e.message, "error", false);
+    ipcRenderer.invoke('logout')
     return false;
 }
 }
