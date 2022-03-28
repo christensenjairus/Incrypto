@@ -336,6 +336,10 @@ async function generateSharedKey(username, serverName, sessionID) {
     if (debug) console.log("Starting Part 2 of Diffie Hellman...")
 
     response = await diffieHellman(username, clientPartial, serverName, sessionID)
+    if (response.data.error != null) {
+        ipcRenderer.invoke('alert','',"Server error. Please try again", "error", false);
+        ipcRenderer.invoke('logout')
+    }
 
     // generate Shared Key from server's diffie-hellman data
     var serverPartial = response.data.serverPartial;
@@ -370,7 +374,8 @@ async function createKeys(username, serverName, sessionID) {
 
 // ----------- Encryption / Decryption Functions -----------------------------------------
 
-const CryptoJS = require('crypto-js')
+const CryptoJS = require('crypto-js');
+const { ipcRenderer } = require('electron');
 const encrypt = (content, password) => CryptoJS.AES.encrypt(JSON.stringify({ content }), password).toString()
 const decrypt = (crypted, password) => JSON.parse(CryptoJS.AES.decrypt(crypted, password).toString(CryptoJS.enc.Utf8)).content
 

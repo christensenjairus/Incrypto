@@ -153,6 +153,7 @@ async function negociate(chunk) {
 }
 
 async function diffieHellman(chunk) {
+	try {
 	// retrieve prime numbers needed for diffie-hellman prime math
 	let user = await getUser(chunk);
 	let mod = user.mod;
@@ -175,6 +176,9 @@ async function diffieHellman(chunk) {
 	let serverPartial = compute(base, serverExponent, mod)
 	if (debug) logEvent("serverPartial for " + user.username + ": " + serverPartial)
 	return { serverPartial: serverPartial }
+	} catch (e) {
+		return { error: e }
+	}
 }
 
 const CryptoJS = require('crypto-js')
