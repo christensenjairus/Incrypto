@@ -23,48 +23,51 @@ async function login(username, password, serverName) {
             {name:"Chatroom_Global", lastActivity:time}
         ]
     }).then(async response => {
-        // try {
-        var data = response.data;
-        if (data.result === 'success') {
-            if (store.get("chatRoomName_" + username, "") == "") store.set("chatRoomName_" + username, "Chatroom_Global")
-            if (store.get("sendToAll_" + username, "") == "") store.set("sendToAll_" + username, true)
-            store.set(username + "_sessionID", data.sessionID);
-            ipcRenderer.invoke('setSessionID', data.sessionID);
-            store.set("lastUser", username);
-            ipcRenderer.invoke('setColor', data.color);
-            store.set("serverName", serverName);
-            try {
-                var myPrivateKey = fs.readFileSync(require('path').join(__dirname,'../keys/PrivateKey_' + username));
-            }
-            catch (e) {
-                await sendGetKeys(username, serverName, data.sessionID) // if private key is not found, get it before going to the chat page
-            }
-            ipcRenderer.invoke('login'); // switch to chat window
-            return;
-        }
-        else {
-            if (data.sessionID === "incorrect_credentials") {
-                ipcRenderer.invoke('alert','','Incorrect Credentials', "error", false);
-                ipcRenderer.invoke('logout');
-                return false;
+        try {
+            var data = response.data;
+            if (data.result === 'success') {
+                if (store.get("chatRoomName_" + username, "") == "") store.set("chatRoomName_" + username, "Chatroom_Global")
+                if (store.get("sendToAll_" + username, "") == "") store.set("sendToAll_" + username, true)
+                store.set(username + "_sessionID", data.sessionID);
+                ipcRenderer.invoke('setSessionID', data.sessionID);
+                store.set("lastUser", username);
+                ipcRenderer.invoke('setColor', data.color);
+                store.set("serverName", serverName);
+                try {
+                    var myPrivateKey = fs.readFileSync(require('path').join(__dirname,'../keys/PrivateKey_' + username));
+                }
+                catch (e) {
+                    await sendGetKeys(username, serverName, data.sessionID) // if private key is not found, get it before going to the chat page
+                }
+                ipcRenderer.invoke('login'); // switch to chat window
+                return;
             }
             else {
-                ipcRenderer.invoke('alert','We are not sure what happened','Please try again', "error", false);
-                ipcRenderer.invoke('logout');
-                return false;
+                if (data.sessionID === "incorrect_credentials") {
+                    ipcRenderer.invoke('alert','','Incorrect Credentials', "error", false);
+                    ipcRenderer.invoke('logout');
+                    return false;
+                }
+                else {
+                    ipcRenderer.invoke('alert','We are not sure what happened','Please try again', "error", false);
+                    ipcRenderer.invoke('logout');
+                    return false;
+                }
             }
+            return;
+        } catch (e) {
+            ipcRenderer.invoke('alert',"Problem occurred while connecting to server\n", "Problem occurred while connecting to server\n", "error", false);
+            ipcRenderer.invoke('logout');
         }
-        // } catch (e) {
-        //     alert(e)
-        // }
     }, async error => {
         ipcRenderer.invoke('alert',"Could not connect to server", error.message, "error", false);
         ipcRenderer.invoke('logout');
     })
-} catch (error) {
-    console.error(error);
-    ipcRenderer.invoke('logout');
-}
+    } catch (error) {
+        console.error(error);
+        ipcRenderer.invoke('alert',"Could not connect to server", error.message, "error", false);
+        ipcRenderer.invoke('logout');
+    }
 }
 
 async function register(username, password, password2, serverName) {
@@ -94,41 +97,42 @@ async function register(username, password, password2, serverName) {
             {name:"Chatroom_Global", lastActivity:time}
         ]
     }).then(async response => {
-        // try {
-        var data = response.data
-        if (data.result === 'success') {
-            store.set("chatRoomName_" + username, "Chatroom_Global")
-            store.set("sendToAll_" + username, true)
-            store.set(username + "_sessionID", data.sessionID);
-            ipcRenderer.invoke('setSessionID', data.sessionID);
-            store.set("lastUser", username);
-            ipcRenderer.invoke('setColor', data.color)
-            store.set("serverName", serverName);
-            await sendCreateKeys(username, serverName, data.sessionID)
-            ipcRenderer.invoke('login');
-        }
-        else {
-            if (data.sessionID === "username_exists") {
-                ipcRenderer.invoke('alert',"", "That username is taken. Please try another", "error", false);
-                ipcRenderer.invoke('toregister');
-                return false;
+        try {
+            var data = response.data
+            if (data.result === 'success') {
+                store.set("chatRoomName_" + username, "Chatroom_Global")
+                store.set("sendToAll_" + username, true)
+                store.set(username + "_sessionID", data.sessionID);
+                ipcRenderer.invoke('setSessionID', data.sessionID);
+                store.set("lastUser", username);
+                ipcRenderer.invoke('setColor', data.color)
+                store.set("serverName", serverName);
+                await sendCreateKeys(username, serverName, data.sessionID)
+                ipcRenderer.invoke('login');
             }
             else {
-                ipcRenderer.invoke('alert',"", "We are not sure what happened. Please try again", "error", false);
-                ipcRenderer.invoke('toregister');
-                return false;
+                if (data.sessionID === "username_exists") {
+                    ipcRenderer.invoke('alert',"", "That username is taken. Please try another", "error", false);
+                    ipcRenderer.invoke('toregister');
+                    return false;
+                }
+                else {
+                    ipcRenderer.invoke('alert',"", "We are not sure what happened. Please try again", "error", false);
+                    ipcRenderer.invoke('toregister');
+                    return false;
+                }
             }
-        }
-        return
-        // } catch (e) {
-        //     alert(e);
-        // }
+            return
+    } catch (e) {
+        ipcRenderer.invoke('alert',"Problem occurred while connecting to server","Problem occurred while connecting to server", "error", false);
+        ipcRenderer.invoke('logout');
+    }
     }, async error => {
         ipcRenderer.invoke('alert',"Could not connect to server", error.message, "error", false);
         ipcRenderer.invoke('toregister');
     })
 } catch (error) {
-    console.error(error);
+    ipcRenderer.invoke('alert',"Could not connect to server", error.message, "error", false);
     ipcRenderer.invoke('toregister');
 }
 }
@@ -144,7 +148,7 @@ function getNewMessages(username, timeOfLastMessage, chatRoomName, serverName, s
     })
 } catch (error) {
     console.error(error);
-    return "";
+    return false;
 }
 }
 
@@ -204,7 +208,7 @@ async function sendMessage(username, msg, color, chatRoomName, serverName, sessi
     // console.log(message)
     if (successfulEncryptionCount == 0) {
         ipcRenderer.invoke('alert',"Incrypto is not encrypting messages correctly. This problem is usually experienced when the app is installed in a read-only mode. Please reinstall the app with more permissions.", "", false);
-        return;
+        return false;
     }
     try {
         return axios.post('http://' + serverName + "/api/message", {
@@ -310,7 +314,7 @@ async function diffieHellman(username, clientPartial, serverName, sessionID) {
         })
     } catch (error) {
         console.error(error);
-        return;
+        return false;
     }
 }
 
@@ -319,8 +323,8 @@ async function generateSharedKey(username, serverName, sessionID) {
     if (debug) console.log("Starting Part 1 of Diffie Hellman...")
     var response = await negociate(username, serverName, sessionID)
     if (response.data == null || response.data.base == null || response.data.mod == null) {
-        ipcRenderer.invoke('alert','','Unable to retrieve mod and base from server', "error", false);
-        return;
+        // ipcRenderer.invoke('alert','','Problem connecting to server. Please try again', "error", false);
+        return false;
     }
     var base = response.data.base;
     var mod = response.data.mod;
@@ -336,7 +340,7 @@ async function generateSharedKey(username, serverName, sessionID) {
     if (debug) console.log("Starting Part 2 of Diffie Hellman...")
 
     response = await diffieHellman(username, clientPartial, serverName, sessionID)
-    if (response.data.error != null) {
+    if (response.data.serverPartial == null) {
         ipcRenderer.invoke('alert','',"Server error. Please try again", "error", false);
         ipcRenderer.invoke('logout')
     }

@@ -137,6 +137,7 @@ async function verifySessionID(chunk) {
 }
 
 async function negociate(chunk) {
+	try {
 	// generate base and mod prime numbers to use in diffie hellman exchange
 	const getlargePrime = require('get-large-prime');
 	let mod = await getlargePrime(1024);
@@ -149,7 +150,9 @@ async function negociate(chunk) {
 	// save to database for retrieval at diffieHellman()
 	await saveNegociateDataToMongo(chunk.username, base, mod)
 	return { base:base, mod:mod }
-
+	} catch (e) {
+		// return { error: e }
+	}
 }
 
 async function diffieHellman(chunk) {
@@ -177,7 +180,7 @@ async function diffieHellman(chunk) {
 	if (debug) logEvent("serverPartial for " + user.username + ": " + serverPartial)
 	return { serverPartial: serverPartial }
 	} catch (e) {
-		return { error: e }
+		// return { error: e }
 	}
 }
 
