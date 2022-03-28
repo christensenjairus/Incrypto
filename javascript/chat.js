@@ -28,6 +28,7 @@ var numberOfChats = 25;
 var isStarting = true;
 var guidsOfNotificationMessages = []; // store the guids of the messages that we've notified the user of. That way they are not notified of the same message later.
 var timesRecievedLogoutMessage = 0; // will be used to prevent double logout messages
+var doNotAutoScroll = false;
 // var path = require('path').join(process.cwd(),'keys')
 var path = require('path').join(__dirname,'../keys')
 // alert(path)
@@ -35,305 +36,87 @@ fs.mkdirSync(path, { recursive: true })
 
 let savedInputText = "";
 
-function logout() {
-    ipcRenderer.invoke('logout');
-}
-
-function refresh() {
-    ipcRenderer.invoke('login')
-}
-
-async function changeToChatRoom(name) {
-    await store.set('chatRoomName_' + myName, name)
-    refresh();
-}
-
-async function toggleDebugMode() {
-    if (debug == true) await store.set('debug_' + myName, false)
-    else await store.set('debug_' + myName, true)
-    refresh();
-}
-
-async function setNumberOfChats() {
-    var inputFromUser = await ipcRenderer.invoke('promptForNumberOfChats');
-    if (inputFromUser == null || inputFromUser == "") return;
-    if (isNaN(inputFromUser) == true) return;
-    await store.set("numberOfChats_" + myName, parseInt(inputFromUser))
-    refresh();
-}
-
-async function createNewChatRoom() {
-    var inputFromUser = await ipcRenderer.invoke('promptForNewChat');
-    if (inputFromUser == null || inputFromUser == "") return;
-    var newRoomName = "Chatroom_" + inputFromUser;
-    await createChatRoom(myName, serverName, sessionID, newRoomName)
-    await joinChatRoom(myName, serverName, sessionID, newRoomName)
-    changeToChatRoom(newRoomName);
-}
-
-async function leaveRoom() {
-    var result = await leaveChatRoom(myName, serverName, sessionID, chatRoomName)
-    if (result.data == false) {
-        if (chatRoomName == "Chatroom_Global") {
-            ipcRenderer.invoke('alert','',"'Global' is the default chatroom. Without it you could not find your new friends", "error", false);
-        }
-        else {
-            ipcRenderer.invoke('alert','',"We could not remove you from this chatroom", "error", false);
-        }
-        return;
-    }
-    changeToChatRoom("Chatroom_Global")
-}
-
 $(function() { // this syntax means it's a function that will be run once once document.ready is true
     "use strict";
     content = document.getElementById("chatbox");
     input = $('#input');
     mystatus = $('#status');
     
-    // -------------------------------------- USERS -----------------------------------------------------------
-    
-    async function refreshUsers(chatRoomName) {
-        getChatRoomUsers(myName, chatRoomName, serverName, sessionID).then(async response => {
-            if (response.data.error == "incorrectSessionID") {
-                return;
-            }
-            var users = response.data;
-            for (var i = 0; i < users.length; ++i) {
-                if (document.getElementById(users[i].username) == null && myName != users[i].username) { // if this user just joined or is unknown to us
-                    if (sendToAll == true) document.getElementById("peoplebox").innerHTML += `<div style="background-color:`+ green + `; color:white" onclick="toggleEncryptionForUser('`+ users[i].username+`')" id="` + users[i].username + `"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /><span class="dot" id="`+users[i].username + `_dot"></span>  ` + users[i].username +`</div>`
-                    else document.getElementById("peoplebox").innerHTML += `<div style="background-color:`+ red + `; color:white" onclick="toggleEncryptionForUser('`+ users[i].username+`')" id="` + users[i].username + `"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /><span class="dot" id="`+users[i].username + `_dot"></span>  ` + users[i].username +`</div>`
-                    userArray.push(users[i]);
-                    if (sendToAll == true) userArray.find(user => user.username == users[i].username).encryptForUser = true;
-                    else userArray.find(user => user.username == users[i].username).encryptForUser = false;
-                    // console.log("adding "+ users[i].username + " to people array")
-                    if (!isStarting) appendJoinedMessageToChat(users[i].username)
-                }
-                else if (userArray.find(user => user.username == myName) == null) { // if I'm not found on list, add me. This should only happen once!
-                    userArray.push(users[i]);
-                    userArray.find(user => user.username == myName).encryptForUser = true;
-                    users[i].chatRooms.forEach(chatRoom => {
-                        myChatRoomNames.push(chatRoom.name)
-                    })
-                    if (debug) console.log("MyChatRoomNames: " + myChatRoomNames)
-                    await setupChatRefreshes();
-                    // add options for switching chatrooms to Navbar
-                    var dropdown = document.getElementById('chatRoomChangeDropdown');
-                    myChatRoomNames.forEach(name => {
-                        if (name != chatRoomName) {
-                            dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="changeToChatRoom('` + name + `')">` + name.substring(9) + `</a>`
-                        }
-                    })
-                    if (chatRoomName != "Chatroom_Global") dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="leaveRoom()" style="color:red">Leave this chatroom</a>`
-                    dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="createNewChatRoom()" style="color:green">Create or join a chatroom</a>`
-                }
-                if (users[i].pubKey != null) { // check everyones public key every time
-                    try {
-                        // console.log("checking " + users[i].username + " public key")
-                        if (fs.existsSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username))) {
-                            // console.log("public key exists")
-                            var pubkey = fs.readFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username))
-                            if (pubkey != users[i].pubKey) { // file exists but is not correct
-                                fs.writeFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username), users[i].pubKey)
-                                // console.log("is not correct")
-                            }
-                            else {
-                                // console.log("is correct")
-                            }
-                        }
-                        else {
-                            // create the file
-                            fs.writeFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username), users[i].pubKey)
-                            // console.log("public key did not exist, create it")
-                        }
-                    } catch (e) {
-                        console.log("Keys files unable to save. Creating new keys directory...")
-                        var path = require('path').join(__dirname,'../keys')
-                        fs.mkdirSync(path, { recursive: true })
-                    }
-                }
-            }
-            refreshActiveUsers(response);
-        })
-    }
-    
-    // ---------------------------------------- CHATS -------------------------------------------------------
-    
-    async function refreshChat(timeOfLastMessage, messageChatRoomName, numberOfChatsToGrab) {
-        // var time = (new Date()).getTime();
-        getNewMessages(myName, timeOfLastMessage, messageChatRoomName, serverName, sessionID, numberOfChatsToGrab).then(async response => {
-            if (response.data.error == "incorrectSessionID") {
-                if (timesRecievedLogoutMessage == 0) {
-                    ipcRenderer.invoke('alert','Logging you out...',"You've logged in somewhere else. You will be logged out here.", "", false);
-                    timesRecievedLogoutMessage++;
-                }
-                ipcRenderer.invoke('logout');
-                return;
-            }
-            // console.log("RESPONSE: " + response.data)
-            var messages = response.data;
-            if (messages.length > 0) store.set("timeOfLastMessage_" + sessionID, messages[messages.length - 1].time); // use time from right before we asked last time
-            let newJSON = [];
-            for (var i = messages.length - 1; i >= 0; --i) {
-                // if (document.getElementById(messages[i].guid) == null) { // only if not already added! (sometimes two messages come through)
-                newJSON.push(messages[i])
-            }
-            // }
-            // if (Decrypt(messages[i].author, messages[i].encryption) == myName) myColor = messages[i].color;
-            
-            await appendChat(newJSON, messageChatRoomName)
-            scroll();
-        })
-    }
-
-    async function setupChatRefreshes() {
-        // run it now
-        myChatRoomNames.forEach(async messageChatRoomName => {
-            if (messageChatRoomName != chatRoomName) {
-                await refreshChat("", messageChatRoomName, 5) // check last 5 messages every 3 seconds in other chatrooms
-            }
-            else {
-                await refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), messageChatRoomName, numberOfChats)
-                scroll();
-            }
-        })
-        if (debug) console.log("Done refreshing chat")
-        // set the same function to refresh every 3 seconds
-        setInterval(function() {
-            myChatRoomNames.forEach(messageChatRoomName => {
-                if (messageChatRoomName != chatRoomName) {
-                    refreshChat("", messageChatRoomName, 5) // check last 5 messages every 3 seconds in other chatrooms
-                }
-                else {
-                    refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), messageChatRoomName, numberOfChats)
-                    scroll();
-                }
-            })
-        }, 3000)
-    }
-    
-    async function refreshActiveUsers(response) {
-            var chatRoomUsers = response.data
-            // logic for the active light next to a users name
-            chatRoomUsers.forEach(user => {
-                if ((userArray.find(user => user.username == user.username) != null) && (user.username != myName)) {
-                    if (user.chatRooms.find(chatRoom => chatRoom.name == chatRoomName) != null) {
-                        if (user.chatRooms.find(chatRoom => chatRoom.name == chatRoomName).lastActivity < ((new Date).getTime() - 11000)) {
-                            toggleActiveForUser(user.username, false)
-                            // console.log(user.username + " is off")
-                        }
-                        else {
-                            toggleActiveForUser(user.username, true)
-                            // console.log(user.username + " is on")
-                        }
-                    }
-                }
-            })
-            // logic for what to do if a user leaves the chat
-            userArray.forEach(user => {
-                if ((chatRoomUsers.find(chatRoomUser => chatRoomUser.username == user.username) == null) && (user.username != myName)) { // if the user isn't in the chat anymore
-                    if (document.getElementById(user.username) != null) { // if their box in the people box exists
-                        appendLeftMessageToChat(user.username);
-                        document.getElementById(user.username).remove()
-                    }
-                }
-            })
-    }
-    
-    function toggleActiveForUser (username, activeBoolean) {
-        let element;
-        if ((element = document.getElementById(username+"_dot")) != null && element.style != null) {
-            if (activeBoolean == true) {
-                element.style.backgroundColor = active;
-                // console.log("making " + username + " active")
-            }
-            else {
-                element.style.backgroundColor = notActive;
-                // console.log("making " + username + " not active")
-            }
-        }
-        else {
-            // console.log("dot not found")
-        }
-    }
-    
-    async function prepareChat() {
-        // SET ALL VARIABLES NEEDED FOR CHAT
-        myName = await ipcRenderer.invoke('getName')
-        debug = await store.get('debug_' + myName, false);
-        if (debug) console.log("isStarting: " + isStarting);
-        if (debug) console.log("MyName: " + myName)
-        if (debug == true) console.log("Debug: enabled")
-        displayAll = await ipcRenderer.invoke('getSeeAllMessages');
-        if (debug) console.log("DisplayAll: " + displayAll)
-        myColor = await ipcRenderer.invoke('getColor')
-        if (debug) console.log("MyColor: " + myColor)
-        mystatus.text(myName).css('color', myColor);
-        document.getElementById('color').value = myColor;
-        sessionID = await ipcRenderer.invoke('getSessionID')
-        if (debug) console.log("SessionID: " + sessionID)
-        serverName = await ipcRenderer.invoke('getServerName')
-        if (debug) console.log("ServerName: " + serverName)
-        chatRoomName = await store.get("chatRoomName_" + myName, "Chatroom_Global")
-        if (debug) console.log("ChatRoomName: " + chatRoomName)
-        document.getElementById("brand").innerText += chatRoomName.substring(9)
-        sendToAll = await store.get("sendToAll_" + myName, true);
-        if (debug) console.log("SendToAll: " + sendToAll)
-        numberOfChats = await store.get("numberOfChats_" + myName, 25);
-        if (debug) console.log("NumberOfChats: " + numberOfChats)
-        try {
-            myPrivateKey = fs.readFileSync(require('path').join(__dirname,'../keys/PrivateKey_' + myName));
-        }
-        catch (e) {
-            if (debug) console.log("No shared secret is found. Creating shared secret with server...")
-            myPrivateKey = await sendGetKeys(myName, serverName, sessionID);
-        }
-        
-        // initialize chat & users
-        refreshUsers(chatRoomName) // populate the people initially
-        refreshChat("", chatRoomName, numberOfChats) // populate the chat initially
-        
-        // refresh users every 10 seconds
-        setInterval(function() {
-            refreshUsers(chatRoomName)
-        }, 10000)
-    }
     prepareChat();
     setTimeout(() => {
         if (debug) console.log("isStarting: " + false) // only show this once
         isStarting = false; // once chat is initially loaded, we are "not starting" anymore
     }, 2000) // do not get notifications for the first 2 seconds upon page load -> I'd like to decrease this
     
-    async function appendChat(newJSON, messageChatRoomName) {
-        for (var i=0; i < newJSON.length; i++) {
-            if (newJSON[i].text.find(message => message.recipient == myName) != null) {
-                addMessage(newJSON[i].username, newJSON[i].text.find(message => message.recipient == myName).text, newJSON[i].color, newJSON[i].time, newJSON[i].guid, newJSON[i], messageChatRoomName); 
-            }
-            else {
-                addMessage(newJSON[i].username, newJSON[i].text[0].text, newJSON[i].color, newJSON[i].time, newJSON[i].guid, newJSON[i], messageChatRoomName); // just take the first encrypted part and send it
-            }
-            dtOfLastMessage = newJSON[i].time;
+    // create various document elements and listeners
+    var dropdown = document.getElementById('dropdownOptions');
+    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayAllMessages">Display all messages</a>'
+    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayOnlyUnencryptedMessages">Display readable messages</a>'
+    dropdown.innerHTML += `<div class="dropdown-item" href="#" onclick="setNumberOfChats()">Set number of chats loaded</div>`
+    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToAllButton" style="color:green">Send to All</a>'
+    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToNoneButton" style="color:red">Send to None</a>'
+    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="remakeKeys">Get New Keys</a>'
+    dropdown.innerHTML += `<div class="dropdown-item" href="#" onclick="toggleDebugMode()">Toggle debug mode</div>`
+    dropdown.innerHTML += `<div class="dropdown-item" href="#" id="logoutButton">Logout</div>`
+    document.getElementById("displayAllMessages").addEventListener('click', () => {
+        ipcRenderer.invoke('setSeeAllMessages', true);
+        ipcRenderer.invoke('login');
+    });
+    document.getElementById("displayOnlyUnencryptedMessages").addEventListener('click', () => {
+        ipcRenderer.invoke('setSeeAllMessages', false);
+        ipcRenderer.invoke('login')
+    });
+    document.getElementById('remakeKeys').addEventListener('click', async () => {
+        document.getElementById('body').innerHTML = ' <div class="loader" id="loader"></div> ' // add loading bar
+        var path = require('path').join(__dirname,'../keys/PrivateKey_' + myName);
+        var path2 = require('path').join(__dirname,'../keys/PublicKey_' + myName);
+        try {
+            fs.unlinkSync(path);
+            fs.unlinkSync(path2)
+            console.log("Files removed:", path + ", " + path2);
+        } catch (err) {
+            console.log(err);
         }
+        // console.log("Remaking key at button\nserverName is: " + serverName)
+        await sendCreateKeys(myName, serverName, sessionID);
         
-        if (chatRoom.length > 1) chatRoom.concat(newJSON);
-        else chatRoom = newJSON;
-        newJSON = [];
-    }
-    
-    function scroll() {
-        var div = $('#chatbox');
-        div.animate({
-            scrollTop: div[0].scrollHeight
-        }, 100);
+        ipcRenderer.invoke('login')
+    })
+    document.getElementById('sendToAllButton').addEventListener('click', async () => {
+        await store.set("sendToAll_" + myName, true);
+        ipcRenderer.invoke('login')
+    })
+    document.getElementById('sendToNoneButton').addEventListener('click', async () => {
+        await store.set("sendToAll_" + myName, false);
+        ipcRenderer.invoke('login')
+    })
+    document.getElementById('logoutButton').addEventListener('click', () => {
+        logout();
+    })
+    var colorPicker = document.getElementById('color')
+    colorPicker.addEventListener("change", watchColorPicker, false);
+    document.getElementById('status').addEventListener('click', async () => {
+        // console.log("Color was " + myColor)
+        myColor = getRandomColor(); // generate random color
+        // console.log("Color is now " + myColor)
+        mystatus.text(myName).css('color', myColor);
+        ipcRenderer.invoke('setColor', myColor);
         document.getElementById('input').focus();
-    }
-    
-    function jump() {
-        var div = $('#chatbox');
-        div.scrollTop = div.scrollHeight;
+        var result = changeColor(myName, myColor, serverName, sessionID);
+        document.getElementById('color').value = myColor
+    });
+    content.addEventListener('click', async () => {
         document.getElementById('input').focus();
-    }
-    
+    });
+    // set scroll listener to make autoscroll turn off until someone sends another message
+    document.getElementById('chatbox').addEventListener('scroll', function(event) {
+        var element = event.target;
+        if (element.scrollHeight - element.scrollTop === element.clientHeight)
+        {
+            // console.log('scrolled');
+            doNotAutoScroll = true;
+        }
+    });
     /**
     * Send message when user presses Enter key
     */
@@ -397,89 +180,235 @@ $(function() { // this syntax means it's a function that will be run once once d
             } 
         }
     });
-    
-    var colorPicker = document.getElementById('color')
-    // colorPicker.addEventListener("input", watchColorPicker, false);
-    colorPicker.addEventListener("change", watchColorPicker, false);
-    
-    function watchColorPicker(event) {
-        // document.querySelectorAll("p").forEach(function(p) {
-        //     p.style.color = event.target.value;
-        // });
-        myColor = event.target.value;
-        mystatus.text(myName).css('color', myColor);
-        ipcRenderer.invoke('setColor', myColor);
-        document.getElementById('input').focus();
-        var result = changeColor(myName, myColor, serverName, sessionID);
+});
+
+
+// --------------------------------------------------- FUNCTIONS ----------------------------------------------------------
+
+async function prepareChat() {
+    // SET ALL VARIABLES NEEDED FOR CHAT
+    myName = await ipcRenderer.invoke('getName')
+    debug = await store.get('debug_' + myName, false);
+    if (debug) console.log("isStarting: " + isStarting);
+    if (debug) console.log("MyName: " + myName)
+    if (debug == true) console.log("Debug: enabled")
+    displayAll = await ipcRenderer.invoke('getSeeAllMessages');
+    if (debug) console.log("DisplayAll: " + displayAll)
+    myColor = await ipcRenderer.invoke('getColor')
+    if (debug) console.log("MyColor: " + myColor)
+    mystatus.text(myName).css('color', myColor);
+    document.getElementById('color').value = myColor;
+    sessionID = await ipcRenderer.invoke('getSessionID')
+    if (debug) console.log("SessionID: " + sessionID)
+    serverName = await ipcRenderer.invoke('getServerName')
+    if (debug) console.log("ServerName: " + serverName)
+    chatRoomName = await store.get("chatRoomName_" + myName, "Chatroom_Global")
+    if (debug) console.log("ChatRoomName: " + chatRoomName)
+    document.getElementById("brand").innerText += chatRoomName.substring(9)
+    sendToAll = await store.get("sendToAll_" + myName, true);
+    if (debug) console.log("SendToAll: " + sendToAll)
+    numberOfChats = await store.get("numberOfChats_" + myName, 25);
+    if (debug) console.log("NumberOfChats: " + numberOfChats)
+    try {
+        myPrivateKey = fs.readFileSync(require('path').join(__dirname,'../keys/PrivateKey_' + myName));
+    }
+    catch (e) {
+        if (debug) console.log("No shared secret is found. Creating shared secret with server...")
+        myPrivateKey = await sendGetKeys(myName, serverName, sessionID);
     }
     
-    document.getElementById('status').addEventListener('click', async () => {
-        // console.log("Color was " + myColor)
-        myColor = getRandomColor(); // generate random color
-        // console.log("Color is now " + myColor)
-        mystatus.text(myName).css('color', myColor);
-        ipcRenderer.invoke('setColor', myColor);
-        document.getElementById('input').focus();
-        var result = changeColor(myName, myColor, serverName, sessionID);
-        document.getElementById('color').value = myColor
-    });
-    content.addEventListener('click', async () => {
-        document.getElementById('input').focus();
-    });
+    // initialize chat & users
+    refreshUsers(chatRoomName) // populate the people initially
+    refreshChat("", chatRoomName, numberOfChats) // populate the chat initially
     
-    var dropdown = document.getElementById('dropdownOptions');
-    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayAllMessages">Display all messages</a>'
-    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="displayOnlyUnencryptedMessages">Display readable messages</a>'
-    dropdown.innerHTML += `<div class="dropdown-item" href="#" onclick="setNumberOfChats()">Set number of chats loaded</div>`
-    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToAllButton" style="color:green">Send to All</a>'
-    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToNoneButton" style="color:red">Send to None</a>'
-    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="remakeKeys">Get New Keys</a>'
-    dropdown.innerHTML += `<div class="dropdown-item" href="#" onclick="toggleDebugMode()">Toggle debug mode</div>`
-    dropdown.innerHTML += `<div class="dropdown-item" href="#" id="logoutButton">Logout</div>`
-    document.getElementById("displayAllMessages").addEventListener('click', () => {
-        ipcRenderer.invoke('setSeeAllMessages', true);
-        ipcRenderer.invoke('login');
-    });
-    document.getElementById("displayOnlyUnencryptedMessages").addEventListener('click', () => {
-        ipcRenderer.invoke('setSeeAllMessages', false);
-        ipcRenderer.invoke('login')
-    });
-    document.getElementById('remakeKeys').addEventListener('click', async () => {
-        document.getElementById('body').innerHTML = ' <div class="loader" id="loader"></div> ' // add loading bar
-        var path = require('path').join(__dirname,'../keys/PrivateKey_' + myName);
-        var path2 = require('path').join(__dirname,'../keys/PublicKey_' + myName);
-        try {
-            fs.unlinkSync(path);
-            fs.unlinkSync(path2)
-            console.log("Files removed:", path + ", " + path2);
-        } catch (err) {
-            console.log(err);
+    // refresh users every 10 seconds
+    setInterval(function() {
+        refreshUsers(chatRoomName)
+    }, 10000)
+}
+
+async function refreshUsers(chatRoomName) {
+    getChatRoomUsers(myName, chatRoomName, serverName, sessionID).then(async response => {
+        if (response.data.error == "incorrectSessionID") {
+            return;
         }
-        // console.log("Remaking key at button\nserverName is: " + serverName)
-        await sendCreateKeys(myName, serverName, sessionID);
+        var users = response.data;
+        for (var i = 0; i < users.length; ++i) {
+            if (document.getElementById(users[i].username) == null && myName != users[i].username) { // if this user just joined or is unknown to us
+                if (sendToAll == true) document.getElementById("peoplebox").innerHTML += `<div style="background-color:`+ green + `; color:white" onclick="toggleEncryptionForUser('`+ users[i].username+`')" id="` + users[i].username + `"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /><span class="dot" id="`+users[i].username + `_dot"></span>  ` + users[i].username +`</div>`
+                else document.getElementById("peoplebox").innerHTML += `<div style="background-color:`+ red + `; color:white" onclick="toggleEncryptionForUser('`+ users[i].username+`')" id="` + users[i].username + `"><img src="../icons/icons8-hacker-60.png" width="30" class="img1" /><span class="dot" id="`+users[i].username + `_dot"></span>  ` + users[i].username +`</div>`
+                userArray.push(users[i]);
+                if (sendToAll == true) userArray.find(user => user.username == users[i].username).encryptForUser = true;
+                else userArray.find(user => user.username == users[i].username).encryptForUser = false;
+                // console.log("adding "+ users[i].username + " to people array")
+                if (!isStarting) appendJoinedMessageToChat(users[i].username)
+            }
+            else if (userArray.find(user => user.username == myName) == null) { // if I'm not found on list, add me. This should only happen once!
+                userArray.push(users[i]);
+                userArray.find(user => user.username == myName).encryptForUser = true;
+                users[i].chatRooms.forEach(chatRoom => {
+                    myChatRoomNames.push(chatRoom.name)
+                })
+                if (debug) console.log("MyChatRoomNames: " + myChatRoomNames)
+                await setupChatRefreshes();
+                // add options for switching chatrooms to Navbar
+                var dropdown = document.getElementById('chatRoomChangeDropdown');
+                myChatRoomNames.forEach(name => {
+                    if (name != chatRoomName) {
+                        dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="changeToChatRoom('` + name + `')">` + name.substring(9) + `</a>`
+                    }
+                })
+                if (chatRoomName != "Chatroom_Global") dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="leaveRoom()" style="color:red">Leave this chatroom</a>`
+                dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="createNewChatRoom()" style="color:green">Create or join a chatroom</a>`
+            }
+            if (users[i].pubKey != null) { // check everyones public key every time
+                try {
+                    // console.log("checking " + users[i].username + " public key")
+                    if (fs.existsSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username))) {
+                        // console.log("public key exists")
+                        var pubkey = fs.readFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username))
+                        if (pubkey != users[i].pubKey) { // file exists but is not correct
+                            fs.writeFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username), users[i].pubKey)
+                            // console.log("is not correct")
+                        }
+                        else {
+                            // console.log("is correct")
+                        }
+                    }
+                    else {
+                        // create the file
+                        fs.writeFileSync(require('path').join(__dirname,'../keys/PublicKey_' + users[i].username), users[i].pubKey)
+                        // console.log("public key did not exist, create it")
+                    }
+                } catch (e) {
+                    console.log("Keys files unable to save. Creating new keys directory...")
+                    var path = require('path').join(__dirname,'../keys')
+                    fs.mkdirSync(path, { recursive: true })
+                }
+            }
+        }
+        refreshActiveUsers(response);
+    })
+}
+
+// ---------------------------------------- CHATS -------------------------------------------------------
+
+async function refreshChat(timeOfLastMessage, messageChatRoomName, numberOfChatsToGrab) {
+    // var time = (new Date()).getTime();
+    getNewMessages(myName, timeOfLastMessage, messageChatRoomName, serverName, sessionID, numberOfChatsToGrab).then(async response => {
+        if (response.data.error == "incorrectSessionID") {
+            if (timesRecievedLogoutMessage == 0) {
+                ipcRenderer.invoke('alert','Logging you out...',"You've logged in somewhere else. You will be logged out here.", "", false);
+                timesRecievedLogoutMessage++;
+            }
+            ipcRenderer.invoke('logout');
+            return;
+        }
+        // console.log("RESPONSE: " + response.data)
+        var messages = response.data;
+        if (messages.length > 0) store.set("timeOfLastMessage_" + sessionID, messages[messages.length - 1].time); // use time from right before we asked last time
+        let newJSON = [];
+        for (var i = messages.length - 1; i >= 0; --i) {
+            // if (document.getElementById(messages[i].guid) == null) { // only if not already added! (sometimes two messages come through)
+            newJSON.push(messages[i])
+        }
+        // }
+        // if (Decrypt(messages[i].author, messages[i].encryption) == myName) myColor = messages[i].color;
         
-        ipcRenderer.invoke('login')
+        await appendChat(newJSON, messageChatRoomName)
     })
-    document.getElementById('sendToAllButton').addEventListener('click', async () => {
-        await store.set("sendToAll_" + myName, true);
-        ipcRenderer.invoke('login')
+}
+
+async function setupChatRefreshes() {
+    // run it now
+    myChatRoomNames.forEach(async messageChatRoomName => {
+        if (messageChatRoomName != chatRoomName) {
+            await refreshChat("", messageChatRoomName, 5) // check last 5 messages every 3 seconds in other chatrooms
+        }
+        else {
+            await refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), messageChatRoomName, numberOfChats)
+        }
     })
-    document.getElementById('sendToNoneButton').addEventListener('click', async () => {
-        await store.set("sendToAll_" + myName, false);
-        ipcRenderer.invoke('login')
+    if (debug) console.log("Done refreshing chat")
+    // set the same function to refresh every 3 seconds
+    setInterval(function() {
+        myChatRoomNames.forEach(messageChatRoomName => {
+            if (messageChatRoomName != chatRoomName) {
+                refreshChat("", messageChatRoomName, 5) // check last 5 messages every 3 seconds in other chatrooms
+            }
+            else {
+                refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), messageChatRoomName, numberOfChats)
+            }
+        })
+    }, 3000)
+}
+
+async function refreshActiveUsers(response) {
+    var chatRoomUsers = response.data
+    // logic for the active light next to a users name
+    chatRoomUsers.forEach(user => {
+        if ((userArray.find(user => user.username == user.username) != null) && (user.username != myName)) {
+            if (user.chatRooms.find(chatRoom => chatRoom.name == chatRoomName) != null) {
+                if (user.chatRooms.find(chatRoom => chatRoom.name == chatRoomName).lastActivity < ((new Date).getTime() - 11000)) {
+                    toggleActiveForUser(user.username, false)
+                    // console.log(user.username + " is off")
+                }
+                else {
+                    toggleActiveForUser(user.username, true)
+                    // console.log(user.username + " is on")
+                }
+            }
+        }
     })
-    document.getElementById('logoutButton').addEventListener('click', () => {
-        logout();
+    // logic for what to do if a user leaves the chat
+    userArray.forEach(user => {
+        if ((chatRoomUsers.find(chatRoomUser => chatRoomUser.username == user.username) == null) && (user.username != myName)) { // if the user isn't in the chat anymore
+            if (document.getElementById(user.username) != null) { // if their box in the people box exists
+                appendLeftMessageToChat(user.username);
+                document.getElementById(user.username).remove()
+            }
+        }
     })
-});
+}
+
+function toggleActiveForUser (username, activeBoolean) {
+let element;
+if ((element = document.getElementById(username+"_dot")) != null && element.style != null) {
+    if (activeBoolean == true) {
+        element.style.backgroundColor = active;
+        // console.log("making " + username + " active")
+    }
+    else {
+        element.style.backgroundColor = notActive;
+        // console.log("making " + username + " not active")
+    }
+}
+else {
+    // console.log("dot not found")
+}
+}
+
+async function appendChat(newJSON, messageChatRoomName) {
+    for (var i=0; i < newJSON.length; i++) {
+        if (newJSON[i].text.find(message => message.recipient == myName) != null) {
+            addMessage(newJSON[i].username, newJSON[i].text.find(message => message.recipient == myName).text, newJSON[i].color, newJSON[i].time, newJSON[i].guid, newJSON[i], messageChatRoomName); 
+        }
+        else {
+            addMessage(newJSON[i].username, newJSON[i].text[0].text, newJSON[i].color, newJSON[i].time, newJSON[i].guid, newJSON[i], messageChatRoomName); // just take the first encrypted part and send it
+        }
+        dtOfLastMessage = newJSON[i].time;
+    }
+    
+    if (chatRoom.length > 1) chatRoom.concat(newJSON);
+    else chatRoom = newJSON;
+    newJSON = [];
+}
 
 /*
 * Add message to the chat window
 */
 function addMessage(author, message, color, dt, guid, entireMessage, messageChatRoomName) {
     if (document.getElementById(guid) != null) return; // end now if this message is already in the chat
-
-    // --------------- NOTIFICATION LOGIC
 
     if (entireMessage.text.find(recipient => recipient.recipient == myName) != null) { // if it's to me
         if (Custom_AES_REVERSE(entireMessage.text.find(recipient => recipient.recipient == myName).text) != message) { // if it was decrypted successfully
@@ -598,6 +527,15 @@ function addMessage(author, message, color, dt, guid, entireMessage, messageChat
                 </div>`;
             };
         }
+        if (isStarting == false) {
+            doNotAutoScroll = false;
+            scrollChat();
+            // console.log("scrollChat")
+        }
+        else {
+            jumpChat();
+            // console.log("jumpChat")
+        }
     }
     dtOfLastMessage = dt;
 }
@@ -639,6 +577,85 @@ var sanitizeHTML = function (str) {
         return '&#' + c.charCodeAt(0) + ';';
     });
 };
+
+function watchColorPicker(event) {
+    // document.querySelectorAll("p").forEach(function(p) {
+    //     p.style.color = event.target.value;
+    // });
+    myColor = event.target.value;
+    mystatus.text(myName).css('color', myColor);
+    ipcRenderer.invoke('setColor', myColor);
+    document.getElementById('input').focus();
+    var result = changeColor(myName, myColor, serverName, sessionID);
+}
+
+function logout() {
+    ipcRenderer.invoke('logout');
+}
+
+function refresh() {
+    ipcRenderer.invoke('login')
+}
+
+async function changeToChatRoom(name) {
+    await store.set('chatRoomName_' + myName, name)
+    refresh();
+}
+
+async function toggleDebugMode() {
+    if (debug == true) await store.set('debug_' + myName, false)
+    else await store.set('debug_' + myName, true)
+    refresh();
+}
+
+async function setNumberOfChats() {
+    var inputFromUser = await ipcRenderer.invoke('promptForNumberOfChats');
+    if (inputFromUser == null || inputFromUser == "") return;
+    if (isNaN(inputFromUser) == true) return;
+    await store.set("numberOfChats_" + myName, parseInt(inputFromUser))
+    refresh();
+}
+
+async function createNewChatRoom() {
+    var inputFromUser = await ipcRenderer.invoke('promptForNewChat');
+    if (inputFromUser == null || inputFromUser == "") return;
+    var newRoomName = "Chatroom_" + inputFromUser;
+    await createChatRoom(myName, serverName, sessionID, newRoomName)
+    await joinChatRoom(myName, serverName, sessionID, newRoomName)
+    changeToChatRoom(newRoomName);
+}
+
+async function leaveRoom() {
+    var result = await leaveChatRoom(myName, serverName, sessionID, chatRoomName)
+    if (result.data == false) {
+        if (chatRoomName == "Chatroom_Global") {
+            ipcRenderer.invoke('alert','',"'Global' is the default chatroom. Without it you could not find your new friends", "error", false);
+        }
+        else {
+            ipcRenderer.invoke('alert','',"We could not remove you from this chatroom", "error", false);
+        }
+        return;
+    }
+    changeToChatRoom("Chatroom_Global")
+}
+
+// ----------------------- SCROLL LOGIC ------------------------------
+    
+function scrollChat() {
+    var div = $('#chatbox');
+    if (doNotAutoScroll == false) {
+        div.animate({
+            scrollTop: div[0].scrollHeight
+        }, 100);
+        document.getElementById('input').focus();
+    }
+}
+
+function jumpChat() {
+    var div = $('#chatbox');
+    div.scrollTop(div[0].scrollHeight);
+    document.getElementById('input').focus();
+}
 
 function lightOrDark(color) {
     // Variables for red, green, blue values
