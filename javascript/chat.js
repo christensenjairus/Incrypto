@@ -69,9 +69,9 @@ $(function() { // this syntax means it's a function that will be run once once d
     dropdown.innerHTML += `<div class="dropdown-item" href="#" onclick="setNumberOfChats()">Set number of chats loaded</div>`
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToAllButton" style="color:green">Send to All</a>'
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToNoneButton" style="color:red">Send to None</a>'
-    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="remakeKeys">Get New Keys</a>'
+    dropdown.innerHTML += '<a class="dropdown-item" href="#" id="remakeKeys">Get new keys</a>'
     dropdown.innerHTML += `<div class="dropdown-item" href="#" onclick="toggleDebugMode()">Toggle debug mode</div>`
-    dropdown.innerHTML += `<div class="dropdown-item" href="#" onclick="refresh()">Refresh Chat</div>`
+    dropdown.innerHTML += `<div class="dropdown-item" href="#" onclick="refresh()">Refresh chat</div>`
     dropdown.innerHTML += `<div class="dropdown-item" href="#" id="logoutButton">Logout</div>`
     document.getElementById("displayAllMessages").addEventListener('click', () => {
         // ipcRenderer.invoke('setSeeAllMessages', true);
@@ -613,7 +613,7 @@ function appendLeftMessageToChat(username) {
 
 function addNewMessageBanner() {
     if (document.getElementById('newBanner') == null && isStarting) {
-        content.innerHTML += `<div class="text-center" style="color:Orange" id="newBanner"><span class="between">-----------NEW-----------</span></div>`;
+        content.innerHTML += `<div class="text-center" style="color:Orange" id="newBanner"><span class="newBanner">NEW</span></div>`;
     }
 }
 

@@ -298,6 +298,15 @@ webview {
     font-size: 11px;
 }
 
+.newBanner {
+    display:block;
+    width:100%; /*or whatever width you want the effect of <hr>*/
+    border-top: 1px solid orange;
+    align-items: right;
+    justify-content: right;
+    text-align: right;
+}
+
 .form-control {
     box-shadow: none;
     overflow: visible;
