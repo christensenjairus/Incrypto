@@ -165,22 +165,22 @@ ipcMain.handle('getColor', (event) => {
 `index.js` saves data in a `config.json` file stored in another part of the computer (`~/.config/Incrypto/` in Linux or %AppData%\Incrypto\ on Windows). This data is used for standard operation of the app and can be acquired through interprocess communication (see last section).
 
 Data here keeps track of...
-For everyone:
-* Who was last logged in
-* Their color
-* Stored window size
-For each user:
-* Debug mode selection
-* Number of chats to display on load
-* Their shared secret with the server
-* Their session ID with the server
-For each user and chatroom:
-* If the user wants to see all messages
-* Typed (but not sent) messages
-* Time that the last message was retrieved
-* Guid of the last seen message by the user
-* Time of the last message displayed onscreen
-* If a message will send to everyone or to noone by default
+* For everyone:
+	* Who was last logged in
+	* Their color
+	* Stored window size
+* For each user:
+	* Debug mode selection
+	* Number of chats to display on load
+	* Their shared secret with the server
+	* Their session ID with the server
+* For each user and chatroom:
+	* If the user wants to see all messages
+	* Typed (but not sent) messages
+	* Time that the last message was retrieved
+	* Guid of the last seen message by the user
+	* Time of the last message displayed onscreen
+	* If a message will send to everyone or to noone by default
 
 ```JSON
 {
@@ -227,12 +227,17 @@ The server works with a Mongo Database to give the clients their requested data 
 * POST `/api/login`: 
 	* Requires: 
 ```JSON
-
+{
+    "username": "Eric1",
+    "password": "Eric1"
+}
 ```
+
 	* Returns: 
 		* `{ type:'AuthResponse', color:user.color, result: "success", sessionID:sessionID }`
 		* `{ type:'AuthResponse', result: "failure", sessionID:"server_error" }`
 		* `{ type:'AuthResponse', result: "failure", sessionID:"incorrect_credentials" }`
+		
 * POST `/api/register`:
 	* Requires: 
 ```JSON
@@ -243,6 +248,7 @@ The server works with a Mongo Database to give the clients their requested data 
     "chatRooms": [{"name":"Chatroom_00000_Global", "lastActivity": ""}]
 }
 ```
+
 	* Returns:
 		*  `{ type:'AuthResponse', color:"#0000FF", result: "success", sessionID:sessionID }`
 		*  `{ type:'AuthResponse', result: "failure", sessionID:"no username" }`
@@ -261,6 +267,7 @@ The server works with a Mongo Database to give the clients their requested data 
     "guid": "someguid_here"
 }
 ```
+
 	* Returns:
 		* `{"error":"incorrectSessionID"}`
 		* "Recieved"
@@ -276,6 +283,7 @@ The server works with a Mongo Database to give the clients their requested data 
     "numberOfChats": 2
 }
 ```
+
 	* Returns: 
 		* direct JSON of chatroom messages from the database
 ```JSON
