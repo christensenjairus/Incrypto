@@ -1,6 +1,10 @@
 # Incrypto
 
-Incrypto is a cross-platform Electron-based messaging app (both server and client) that allows you to make and use your own encryption algorithms. It's built using electron, Bootstrap, JavaScript, CSS, HTML, Node, and websockets that communicate with JSON.
+Incrypto is a cross-platform Electron-based encrypted messaging app (both server and client). It is designed to be anonymous and secure. The encryption is based on a public-key model and uses symmetric encryption to distribute the public/private keys of each user. Once obtained, the public keys can then be used to encrypt messages that only one user could read while the private keys decrypt the messages sent to the user. Incrypto also has chatrooms that can be set with a pin.
+
+Incrypto Server is an HTTP server with various API endpoints. Incrypto uses a Mongo database to store messages and user information. All database information needed for the client to function are, of course, run through the server endpoints. A description of the endpoints and database schema are given below.
+
+Incryto is built using Electron, JavaScript, and Node.
 
 **Supported platforms: Windows, Linux, MacOS.**
 
@@ -95,36 +99,19 @@ While in a terminal (or powershell), navigate into the Incrypto folder using `cd
 node ./Server_Standalone/server.js
 ```
 You may need to run this as `sudo` or as an Administrator.
+This will create a .env file for you that you WILL NEED TO EDIT to connect to your Mongo Database. The .env created assumes that you'll be using a local database, use the standard port number (27017), and be running version 1.3.1 of mongosh. 
+Change this file as needed, then run the above command again.
 
 * * *
 # Things to Know as a User
 ### Connecting to Server
-Incrypto server needs to be running on a computer that's within network reach of your computer. This means that if you ping it, it will respond. The "Server Name" on the Incrypto login and registration pages can take both the network hostname of that computer or it's IP address. If the server is running on your own computer, "localhost" will work.
-### Basic Navigation
-Accounts - The "File" or "Electron" (on Mac) menu item on the top left-hand corner of the app has options to move around. It's here that you can go to "Login" from "Account Registration" and vice versa.
+Verify that you can connect to the server by opening a web browser and inputing either the DNS name or IP address. Know that Incrypto Server runs on port 5050, so unless your administrator intentionally routed that port elsewhere, you will need to include the port number. You'll know it works when you see "Incrypto Server is Running" in the browser. Input this data into the "Server Name" box in the login or registration pages.
+Examples: `localhost:5050`, `yourDomain.com:5050` or, if you've routed the server to port 80 or 443, you can exclude the port number `incrypto.christensencloud.us`.
+### User Fundamentals
+* If the background of a user in the left-hand column is green, the client will encrypt your message to that user. If red, it will not encrypt your text for that user, but they'll recieve the ciphertext of the message anyway if they have "See all messages" enabled. 
+* `Options > Get new keys` will create a new public/private key pair on the server, then send the client the private key to save. Because the client does not save old private keys, all your old messages will become ciphertext in the chat window. This is to be expected. The messages you've sent to others, however, are still readable by them, because their keys have not changed.
+* If you send a message, and it appears as ciphertext to you, you must either reaquire your old keys with `File > Clear All Local Data` and log in again, or generate new keys with `Options > Get new keys`.
 
-![image](https://user-images.githubusercontent.com/58751387/144778297-13e3edc9-3194-4a4a-9bd0-14637e8fc9eb.png)
-
-### Changing chat color
-Simply click on your username at the top right-hand corner of the app.
-
-![image](https://user-images.githubusercontent.com/58751387/144778261-2230553f-510f-4bea-ab0c-a8576cfca68f.png)
-
-### Encryption File and Rules
-This file exists so that you as the user can add and manipulate encryption algorithms of your own. You could say this is the most important concept of a make-your-own-encryption app like Incrypto. There are two algorithms for every encryption type - one to encrypt and one to decrypt.
-
-The `Encryption.js` file has multiple rules that you should know before manipulating it. These rules go as follows:
-1. Decryption algorithm name must be idential (in case as well) to encryption the name, but with '_REVERSE' appended to the end.
-   * Thus, if my new encryption type is a function titled "Example" then there must be another function titled "Example_REVERSE".
-
-2. Encryption_Types is an array holding the names of all the encryption algorithms so they can be selected from the chat page. The encryption name in this array should be identical to the encryption function name. (not the decryption name)
-
-Thus, the steps to add an encryption type would be, 
-1. add name to Encryption_Types array, 
-2. create encryption function with the very same name, 
-3. create decryption function with your name and "_REVERSE" added onto the end. 
-
-See Encryption.js for an example.
 * * *
 # Things to Know as a Developer
 ### Electron backbone
@@ -149,7 +136,7 @@ Because the individual webpages can't switch windows, they need to communicate s
 
 For example, in frontend.js, there's this code: 
 ```js
-// frontend.js
+// chat.js
 ipcRenderer.invoke('logout');
 ```
 Which will call this function in `index.js`
@@ -175,99 +162,297 @@ ipcMain.handle('getColor', (event) => {
 ```
 
 ### App local storage
-`index.js` saves data in a `config.json` file stored in another part of the computer (`~/.config/Incrypto/` in Linux). This data is used for standard operation of the app and can be acquired through interprocess communication (see last section).
+`index.js` saves data in a `config.json` file stored in another part of the computer (`~/.config/Incrypto/` in Linux or %AppData%\Incrypto\ on Windows). This data is used for standard operation of the app and can be acquired through interprocess communication (see last section).
 
 Data here keeps track of...
+For everyone:
 * Who was last logged in
 * Their color
-* Last encryption type used
-* Selected code editor
-* Stored Window Size
+* Stored window size
+For each user:
+* Debug mode selection
+* Number of chats to display on load
+* Their shared secret with the server
+* Their session ID with the server
+For each user and chatroom:
+* If the user wants to see all messages
+* Typed (but not sent) messages
+* Time that the last message was retrieved
+* Guid of the last seen message by the user
+* Time of the last message displayed onscreen
+* If a message will send to everyone or to noone by default
+
 ```JSON
 {
+	"chatRoomName_line6": "Chatroom_99897_The Cyber Boys",
+	"line6_sessionID": "d7e4a492-bdd7-c65c-dd36-336e1e3570fd",
 	"lastUser": "line6",
-	"serverName": "jrcb-jairus.byu.edu",
-	"windowWidth": 1280,
-	"windowHeight": 1440,
-	"line6_Color": "#3F9CA3",
-	"encryptionType": "Default_Encryption",
-	"codeEditor": "atom"
-}              
+	"serverName": "incrypto.christensencloud.us",
+	"windowWidth": 1161,
+	"windowHeight": 800,
+	"sharedSecret_line6": "98832800053402946017112990209023788728467865289641864316384135405322941423563750469131352354437772894810223924123675616798896099316726709446713945512543601062542169545171599880694069728751736918677598543014133772056074007193712172029080687700580818551315928029224424772855748535566741808340892276244385951439",
+	"timeOfLastMessage_line6_Chatroom_00000_Global": 1648583553985,
+	"savedInput_line6_Chatroom_00000_Global": "C6IQugnnEeK2vQzLo4Udzxihs9TSzMl/AO7hIa/IIYg8OEXd/C/J3BdDOyMvH+LTgAx7z2/y73JbzTVk0ioOxemzJUCSoy6ETZki+nKAdMKu2ZWlMKZIbgCFLrvlV6ZTZiAGCOe0s1/QXDeNtfkYXiQuvq8wK+PcsgK1/4Z3pONU/PT7Zw1FkldKnd8oMjglQ5enZC0IX3n6B4AEtUIQabq7c2sMZ+SDwkyD8Pt9j7Jedqajrz667MrMXNQXHE1bc+1G/IVYl6ccbfFch/KpSGNylNZGflK/tx4a/6srLbO0ObEqfgzWypdfKE6SvBdqIBjw6HBVzgVPRZdEOyfuDg==",
+	"guidOfLastSeenMessage_line6_Chatroom_00000_Global": "af72ca7a-2afb-84d9-43d7-9d8c3f56b8ac",
+	"timeOfLastMessage_line6_Chatroom_12345_Cyber Den": 1648581311606,
+	"savedInput_line6_Chatroom_12345_Cyber Den": "XMaC9tpXwmFgFIHK1SM1ee5qc/1VOrsVe5RBGrdKOb/Eiv2c5d015HOekAi9G1rEUhJpJa16yQRw67TswhpyQyx1CDsIFWk2RmvXb3S0WWMwO19NslKt9xzEYzxnvVhy7EtqE9MgvQleoBTO5rdaNGCs2Kc100mHkV+uBrfSV5lqZUdrAd/2DAqpleL8Zx3bXfbqnC1bXpmGHJ/Cr6GwE7Pt474MEcJeKElJTwWP86m1QGHF78OMSNdtETI8aOcbZwkM9C6zd7GQ1b845Jlp/IeRSjJ3KeRAYUH1Zffdtmh81C/A2C53DbC0k+uheEXmhc513jbTjZi0PJlHs2mQ5w==",
+	"guidOfLastSeenMessage_line6_Chatroom_12345_Cyber Den": "7e8450f8-4b51-6f6f-95b2-4f4063a1797a",
+	"timeOfLastMessage_line6_Chatroom_99897_The Cyber Boys": 1648583553985,
+	"savedInput_line6_Chatroom_99897_The Cyber Boys": "RU9pJxWM2/CpmaObHz3uRMqmVaK4Vq0/k5PBxWLJnqbD6eGSn//WfZy2GdMjVwZCRL2xT/1e/lHjV6HBC7Brk/9LtqU+MkcP3tdaKsGXV+2pJEmzgOHt16pV15ceonTxE+iZmUkxv+CW0W1jKSUPqI3oNZfirjoIISIkngJnoy/PCzgd5SxxhlER+u3TdO6TstPJ/7LE+Ayd2ZFY3YbjNn9gTrt7Tojx8fHDBeQ9zWXkBmZliO59KMmQAyVFJ5IoqLuQ7fMwIUuyCsZ07f0WClam68zxLk6zOWhqnuYhHrAyAYD7glZrwRvDsFqXH0SBUDfdCI7rG3RkAcOgAZRviA==",
+	"guidOfLastSeenMessage_line6_Chatroom_99897_The Cyber Boys": "",
+	"displayAll_line6_Chatroom_99897_The Cyber Boys": true,
+	"numberOfChats_line6": 155,
+	"sendToAll_line6_Chatroom_99897_The Cyber Boys": true,
+	"debug_line6": true
+}          
 ```
-### Frontend.js and its functions
-'frontend.js` is the main brains behind the chat functions of the app. It (like `login.js`) opens a websocket and passes JSON through that socket. It then manipulates the DOM to account for the data it receives from the server.
+### Chat.js and its functions
+'chat.js` is the main brains behind the chat functions of the app. It (like `login.js`) uses HTTP requests to the server to get chat information. It then manipulates the DOM to account for the data it receives from the server.
 It takes care of...
 * Navbar functionality
-* Adding encryption types to the "Encryption Types" navbar dropdown
-* Sending ping messages / recieving pong messages (every 100ms) in order to know that the websocket is still open (and changing DOM if websocket closed)
-* Opening a connection to the server
-* Recieving messages whenever they're received from the websocket
+* Adding options and chatrooms to the Navbar dropdowns
 * Adding HTML to `chat.html` to add messages to DOM
 * Showing notifications to the user when a message is recieved
-* Logging the user out if the server sends a "logout" message (the user is logged in somewhere else)
+* Logging the user out if the server sends an "invalid Session ID" message (the user is logged in somewhere else)
 * Encrypting messages sent by the user
 * Decrypting the messages sent by other users
-* Ask the server for a full message refresh (every 30 seconds)
-* Sending a "color change" request to the server whenever the user clicks their username to change their chat color.
-
-### Socket communication and JSON
-When the user logs in, `login.js` sends JSON with this format (Registration has a similar format)
-```JSON
-{"type":"AuthRequest","user":"line6","passwordHash":-1234153003,"encryption":"plain_text","time":1638759642869}
-```
-To which the server responds (with this format) - **The key is randomly generated upon each login**
-```JSON
-{"type":"AuthResponse","color":"#FB811A","result":"success","key":"6d73ab1b-e990-4b2e-eac9-a4dcc2b84983"}
-```
-When the user sends a message, `frontend.js` sends JSON with this format
-```JSON
-{"type":"message","user":"line6","userEnc":"006c0069006e00650036","msg":"0074006500730074","userColor":"#FB811A","encryption":"Default_Encryption","key":"none","time":1638759480542}
-```
-Every time someone sends a message, everyone receives JSON with this format
-```JSON
-{"type":"message","user":"line6","userEnc":"006c0069006e00650036","msg":"0074006500730074","userColor":"#FB811A","encryption":"Default_Encryption","key":"none","time":1638759480542}
-```
-Every 30 seconds, the client will ask for a full history refresh in which it will send
-```JSON
-{"type":"historyRequest","user":"line6","color":"#FB811A","encryption":"plain_text","key":"none","time":1638759772046}
-```
-The server sends the entire chat in JSON format
-```JSON
-{"type":"history","data":[{"time":1638460329819,"text":"00200020","author":"0062006c0061006b0065007000320032","color":"#2F74E9","encryption":"Default_Encryption"},{"time":1638603330171,"text":"0069006e0074006500720065007300740069006e00670020006c006f006c","author":"006c0069006e00650036","color":"#FB811A","encryption":"Default_Encryption"}]}
-```
-In a color change request, frontend.js will send an array of all the possible encrypted usernames of that user. The server changes all the colors of the messages associated with that username and sends an entire history refresh to every client once its done.
+* Asks the server for new messages in the chatroom (every 3 seconds)
+* Asks the server for new messages in the other chatrooms (every 3 seconds)
+* Asks the server for the users in the chatroom and their public keys (every 10 seconds)
 
 ### Server structure
-The server has a similar structure to `frontend.js` in that it runs on as websocket completely based on events. Those events are listed below. For reference, the server stores the chat and each message in a file called `chat.json` which is stored in the `Incrypto` folder. Remember that the server will only store what each client sends it. Since the chat has only encrypted usernames and encrypted text, an intruder would need to know your decryption algorithm in order to read your chat messages. The server stores user data (including usernames, hashed passwords, and user's colors) in a `config.json` that's stored elsewhere on the computer, much like the `config.json` for each client. 
+The server works with a Mongo Database to give the clients their requested data through various API endpoints. The endpoints are in the `server.js` file. The logical functions for the API endpoints and the MongoDB queries, however, are stored in the `logic_server.js` file. Thus, the server is split between two files for logical separation. The API endpoints and their requirements will be listed below.
+* GET `/`: has no requirements. Will return `Incrypto Server is Running` so that connectivity can be verified in a web browser.
+* GET `/api/ping`: has no requirements. Will return `PONG!`.
+* POST `/api/login`: 
+	* Requires: 
+```JSON
 
-The server is programmed to **delete any chats older than 3 days** every 24 hours from the last time the server was started. Thus, if we start the server at 2:05pm on Friday then on Saturday at 2:05pm it should delete all messages that are from before 2:05pm on Wednesday.
-
-#### Server Events
-Upon receiving a message, it will sort through what type of message it is and act accordingly.
-
-| Message Type | Server Action and Response |
-| --- | --- |
-| ping | send a pong message back |
-| colorChange | All the messages associated with that user change to the new specified color then send out the entire chat to everyone so that they're chats are refreshed, reflecting the color change |
-| historyRequest | (every client sends a historyRequest every 30 seconds so that their chats are refreshed) Send the entire chat back to that one user |
-| AuthRequest | Check its own `config.json` file to know if the user logging in is valid. Send a response either telling the client that their credentials are incorrect, or sending them a new randomly generated key upon a successful login |
-| RegistrationRequest | similar to an AuthRequest, but make sure no users have the same hashed password before returning a randomly generated key |
-| message | Add text to the chat and the server will send out that (and only that one) message to everyone |
+```
+	* Returns: 
+		* `{ type:'AuthResponse', color:user.color, result: "success", sessionID:sessionID }`
+		* `{ type:'AuthResponse', result: "failure", sessionID:"server_error" }`
+		* `{ type:'AuthResponse', result: "failure", sessionID:"incorrect_credentials" }`
+* POST `/api/register`:
+	* Requires: 
+```JSON
+{
+    "username": "Eric1",
+    "password": "hashed password here",
+    "time": "",
+    "chatRooms": [{"name":"Chatroom_00000_Global", "lastActivity": ""}]
+}
+```
+	* Returns:
+		*  `{ type:'AuthResponse', color:"#0000FF", result: "success", sessionID:sessionID }`
+		*  `{ type:'AuthResponse', result: "failure", sessionID:"no username" }`
+		*  `{ type:'AuthResponse', result: "failure", sessionID:"no password" }`
+		*  `{ type:'AuthResponse', result: "failure", sessionID:"username_exists" }`
+* POST `/api/message/`:
+	* Requires: 
+```JSON
+{
+    "username": "Eric1",
+    "sessionID": "8cef4c3c-735c-0f77-a82e-88af42217332",
+    "msg": "ciphertext_here",
+    "color": "blue",
+    "time": null,
+    "chatRoomName": "Chatroom_00000_Global",
+    "guid": "someguid_here"
+}
+```
+	* Returns:
+		* `{"error":"incorrectSessionID"}`
+		* "Recieved"
+		* "Error"
+* POST `/api/message/new`:
+	* Requires: 
+```JSON
+{
+    "chatRoomName": "Chatroom_00000_Global",
+    "username": "Eric1",
+    "sessionID": "8cef4c3c-735c-0f77-a82e-88af42217332",
+    "timeOfLastMessage": "",
+    "numberOfChats": 2
+}
+```
+	* Returns: 
+		* direct JSON of chatroom messages from the database
+```JSON
+[
+    {
+        "_id": "6243860cd8a9cd524b36e3f0",
+        "time": 1648592396093,
+        "text": [
+            {
+                "recipient": "line6",
+                "text": "ZkNmPuph0XDvLzOkozhAhIrXTbu2vkB2Yj8W6cGk3VsHSydyGuamF5TmqnOuCMgwY9WJL/2MR8Fg8sporkdYLskhsnN3Aij+NNJLgcERGvodadSenrJmLkqDGq4GU9x7iUvsXA/OxVEXVp6L+ZYFvDOrWNBpzLfRbneawdwFK2wZdHdj2EkzD7O2dRMWmUeSh8mW6J3awDRpwRNUiIWFhvfBIRBxMf6mtC/YD6JmJxLmptwSQwSr5zInpTAghy3Wi+alBryJqVKn80iw+Ogpi3uRmCydheMw1I1f/2vOddCbKPq3lOp9RTDxbPvEc+Enh+ABLIt1lP8uwCkaFUB64w=="
+            },
+            {
+                "recipient": "Adam",
+                "text": "Vyd0956j2TL2OaocWpDlay2M5CICrGB1kOJmoYE/mmVhfy18O8onxBEXC2B8UFTroYE+uAnTnG2NgOgZ24NtOT2efhZPdhNYybyDlVcGKGtIJt/5Jm+nCSFCnPa36YjBmz8IAtJhMuB2Mi9NpPnpDitwk4eehyViWMEIEGp7XCVlrxn5OxgyndVJYHtXQiuB2a3XV2cIVaSUN1spdNqgpf3TKTEvPcSbdtnqnw1VqLkyxJYy3CzAlW+0bsXIkxdhZ18lNIvcuYxUkp4irQquBQPcWhZOJMmZn7hH4ExAvJoiVWqMjhQWqnMTgs+ODMP5wC9a5w76oJiJuAP1azyJVw=="
+            }
+        ],
+        "username": "line6",
+        "color": "#0000FF",
+        "guid": "fd54e483-7d1d-e61f-b4ce-5269bcea72ea"
+    },
+    ...
+]
+```
+		* `{"error":"incorrectSessionID"}`
+* POST `/api/users/chatroom`:
+	* Requires:
+```JSON
+{
+    "username": "Eric1",
+    "sessionID": "8cef4c3c-735c-0f77-a82e-88af42217332",
+    "chatRoomName": "Chatroom_00000_Global"
+}
+```
+	* Returns:
+		* direct JSON of chatroom users from the database
+```JSON
+[
+    {
+        "username": "Eric1",
+        "chatRooms": [
+            {
+                "name": "Chatroom_00000_Global",
+                "lastActivity": ""
+            }
+        ],
+        "pubKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqBM/RblCk9FguiwEfQje\nrH94vPLyGOH1Tr+QIK/ETcAXj6aJqDFwK/Q/AAxIcD//ambHkhw+NeF5ylrkuAbU\nWxoxQaZN8r7C2hfj7381SgXOXGce6jXDvsz4/DI4u3mB4GOz2FkrBZ+59w2b7a1e\nev3L4ulmlW/I9FOyLMB5GB5DU6cjnc4Gq/YZDwxmGk/d3Xi0YvoBilkm00Me/kFK\nkQzZQ9vL2emMVIK1vdC3BxhtSotpt2Sxyh0uDGGZ0fKZs1EKj5TR8ItPVtnbJlgM\nHq3VYG1VQXnjHK6N50ibfbw3FxPemoYygSz9kFh8PpmyBHJ9I6nKJYPiTHNUHaYM\nsQIDAQAB\n-----END PUBLIC KEY-----\n"
+    },
+    ...
+]
+```
+		* `{"error":"incorrectSessionID"}`
+* POST `/api/message/new`:
+	* Requires: 
+```JSON
+{
+    "chatRoomName": "Chatroom_00000_Global",
+    "username": "Eric1",
+    "sessionID": "8cef4c3c-735c-0f77-a82e-88af42217332",
+    "timeOfLastMessage": "",
+    "numberOfChats": 2
+}
+```
+	* Returns: 
+		* direct JSON of chatroom messages from the database
+```JSON
+[
+    {
+        "_id": "6243860cd8a9cd524b36e3f0",
+        "time": 1648592396093,
+        "text": [
+            {
+                "recipient": "line6",
+                "text": "ZkNmPuph0XDvLzOkozhAhIrXTbu2vkB2Yj8W6cGk3VsHSydyGuamF5TmqnOuCMgwY9WJL/2MR8Fg8sporkdYLskhsnN3Aij+NNJLgcERGvodadSenrJmLkqDGq4GU9x7iUvsXA/OxVEXVp6L+ZYFvDOrWNBpzLfRbneawdwFK2wZdHdj2EkzD7O2dRMWmUeSh8mW6J3awDRpwRNUiIWFhvfBIRBxMf6mtC/YD6JmJxLmptwSQwSr5zInpTAghy3Wi+alBryJqVKn80iw+Ogpi3uRmCydheMw1I1f/2vOddCbKPq3lOp9RTDxbPvEc+Enh+ABLIt1lP8uwCkaFUB64w=="
+            },
+            {
+                "recipient": "Adam",
+                "text": "Vyd0956j2TL2OaocWpDlay2M5CICrGB1kOJmoYE/mmVhfy18O8onxBEXC2B8UFTroYE+uAnTnG2NgOgZ24NtOT2efhZPdhNYybyDlVcGKGtIJt/5Jm+nCSFCnPa36YjBmz8IAtJhMuB2Mi9NpPnpDitwk4eehyViWMEIEGp7XCVlrxn5OxgyndVJYHtXQiuB2a3XV2cIVaSUN1spdNqgpf3TKTEvPcSbdtnqnw1VqLkyxJYy3CzAlW+0bsXIkxdhZ18lNIvcuYxUkp4irQquBQPcWhZOJMmZn7hH4ExAvJoiVWqMjhQWqnMTgs+ODMP5wC9a5w76oJiJuAP1azyJVw=="
+            }
+        ],
+        "username": "line6",
+        "color": "#0000FF",
+        "guid": "fd54e483-7d1d-e61f-b4ce-5269bcea72ea"
+    },
+    ...
+]
+```
+		* `{"error":"incorrectSessionID"}`
+* POST `/api/color`:
+	* Requires: 
+```JSON
+{
+    "username": "Eric1",
+    "sessionID": "8cef4c3c-735c-0f77-a82e-88af42217332",
+    "color": "pink"
+}
+```
+	* Returns: 
+		* `Recieved`
+		* `{"error":"incorrectSessionID"}`
+		* `Error`
+* POST `/api/users/chatroom/join`:
+	* Requires: 
+```JSON
+{
+    "username": "Eric1",
+    "sessionID": "8cef4c3c-735c-0f77-a82e-88af42217332",
+    "chatRoomName": "Chatroom_00000_Testing"
+}
+```
+	* Returns: 
+		* `true`
+		* `{"error":"incorrectSessionID"}`
+		* `false`
+* POST `/api/users/chatroom/create` and `/api/users/chatroom/join:
+	* Requires: 
+```JSON
+{
+    "username": "Eric1",
+    "sessionID": "8cef4c3c-735c-0f77-a82e-88af42217332",
+    "chatRoomName": "Chatroom_00001_Testing"
+}
+```
+	* Returns: 
+		* `true`
+		* `{"error":"incorrectSessionID"}`
+		* `false`
+* POST `/api/keys/getKeys` and `/api/createKeys`:
+	* Requires: 
+```JSON
+{
+    "username": "Eric1",
+    "sessionID": "8cef4c3c-735c-0f77-a82e-88af42217332"
+}
+```
+	* Returns: 
+		* The literal encoded private key of the user (to be decoded with a hash of the shared key)
+		* `{"error":"incorrectSessionID"}`
+* POST `/api/keys/negociate`:
+	* Requires: 
+```JSON
+{
+    "username": "Eric1",
+    "sessionID": "8cef4c3c-735c-0f77-a82e-88af42217332"
+}
+```
+	* Returns: 
+		* "mod" and "base" numbers that are both 1024 digits in length
+```JSON
+{
+    "base": "160607009132274210864679289234916530719611964260360771605330257536473420217737163749838999318902130907937198072960458541951666323154114061655745457961124517287540955603694045646658435315299155839508207823382672761687083733668273842699849158843409120550621782770557270860891563810931666068470587893076549763999",
+    "mod": "169495612686488769837916190766250950561548849167585132632916352449643076529971575728048189019550040457384239125130179767033080585782059701641272451247609586447742868302988835736359812967319087489461038721877980536715362852489126541422543966642938531687114498939108084927184714633794319825947540235595897148919"
+}
+```
+		* `{"error":"incorrectSessionID"}`
+* POST `/api/keys/diffieHellman`:
+	* Requires: 
+```JSON
+{
+    "username": "Eric1",
+    "sessionID": "8cef4c3c-735c-0f77-a82e-88af42217332",
+    "clientPartial": "352021"
+}
+```
+	* Returns: 
+		* "serverPartial" number used by the client to generate the shared key
+```JSON
+{
+    "serverPartial": "118514740694891343797541083335979228348129452643039422878988268439266489159851495914763829646000128822105194648414963617818855160397637730006865588792643009801845261060790207380703007081349714393382483613388571793635194878282988641085258355835275047329828165339461581692950665794824784383374963904762413118364"
+}
+```
+		* `{"error":"incorrectSessionID"}`
 
 * * *
 # Things for our Dev Team to know
 #### TODO:
-* Generate some kind of key upon login in the client and send it so that the server can detect when someone replays the packet and not let them log in as another user.
 * Find a way to remove out and dist directories from all compilation options
-* Login/register buttons on login/register pages
-* Long messages without spaces will overflow from sides of screen instead of wrapping
 * MacOS `npm start` displays text strangely
 * Linux AppImage and Snap icon needs to be set
-* Implement keys and key validation
-* BUG: Windows requires that you click outside the chat at times
 * https://phoenixnap.com/kb/update-node-js-version
-* Edit this file to reflect changes in the app thus far
-	* Creating a MongoDB, env file
-	* Endpoints on the server
-	* Changes in json communication
-	* Polling the server for new messages
