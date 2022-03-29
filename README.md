@@ -6,6 +6,12 @@ Incrypto Server is an HTTP server with various API endpoints. Incrypto uses a Mo
 
 Incryto is built using Electron, JavaScript, and Node.
 
+![image](https://user-images.githubusercontent.com/58751387/160722726-163aa6cc-2ed0-4f6d-8ae7-1b2e35d8948e.png)
+![image](https://user-images.githubusercontent.com/58751387/160723078-8009889b-0cee-476b-befc-4ee1aa2210d2.png)
+![image](https://user-images.githubusercontent.com/58751387/160723416-a2661fc6-04a1-4e95-b354-f06a848471a4.png)
+![image](https://user-images.githubusercontent.com/58751387/160723451-f2c5b318-7658-456b-88f3-3f5c199c76c8.png)
+![image](https://user-images.githubusercontent.com/58751387/160723474-9e98fe1c-22b4-44f6-bbe7-b25f085af3b3.png)
+
 **Supported platforms: Windows, Linux, MacOS.**
 
 ## Getting Started
@@ -94,13 +100,14 @@ More details and instructions on compilation are given below
    * To compile, run `electron-forge make` while in the `Incrypto` directory and `Incrypto_Setup.exe` will be in `out\make\squirrel.windows\x64\`
 
 ## Run Incrypto Server
-While in a terminal (or powershell), navigate into the Incrypto folder using `cd` (as done previously)
+You will need to setup MongoDB on either your local server or on Mongo Atlas. The Community Edition is enough. Once installed, get the connection string, as we'll be putting it in the `.env` file.
+Once you have the connection string, while in a terminal (or powershell), navigate into the Incrypto folder using `cd` (as done previously) and run...
 ```bash
 node ./Server_Standalone/server.js
 ```
 You may need to run this as `sudo` or as an Administrator.
-This will create a .env file for you that you WILL NEED TO EDIT to connect to your Mongo Database. The .env created assumes that you'll be using a local database, use the standard port number (27017), and be running version 1.3.1 of mongosh. 
-Change this file as needed, then run the above command again.
+This will create a .env file for you that you will need to edit to connect to your Mongo Database. The .env created assumes that you'll be using a local database, use the standard port number (27017), and be running version 1.3.1 of mongosh. 
+Change this file as needed, entering your connection string, then run the above command again.
 
 * * *
 # Things to Know as a User
