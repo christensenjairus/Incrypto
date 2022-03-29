@@ -411,6 +411,7 @@ async function getChatRoomUsersFromMongo(chatRoomName) {
 }
 
 async function getNewMessagesFromMongo(timeOfLastMessage, chatRoomName, numberOfChats) {
+	try {
 	_db = await getDbConnection();
 	var data = "";
 	if (timeOfLastMessage == "") {
@@ -423,6 +424,9 @@ async function getNewMessagesFromMongo(timeOfLastMessage, chatRoomName, numberOf
 	}
 	// console.log(data)
 	return data;
+	} catch (e) {
+		return "Error"
+	}
 }
 
 async function createUser(chunk) {

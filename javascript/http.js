@@ -27,7 +27,7 @@ async function login(username, password, serverName) {
             var data = response.data;
             if (data.result === 'success') {
                 if (store.get("chatRoomName_" + username, "") == "") store.set("chatRoomName_" + username, "Chatroom_00000_Global")
-                if (store.get("sendToAll_" + username, "") == "") store.set("sendToAll_" + username, true)
+                // if (store.get("sendToAll_" + username, "") == "") store.set("sendToAll_" + username, true)
                 store.set(username + "_sessionID", data.sessionID);
                 ipcRenderer.invoke('setSessionID', data.sessionID);
                 store.set("lastUser", username);
@@ -101,7 +101,7 @@ async function register(username, password, password2, serverName) {
             var data = response.data
             if (data.result === 'success') {
                 store.set("chatRoomName_" + username, "Chatroom_00000_Global")
-                store.set("sendToAll_" + username, true)
+                // store.set("sendToAll_" + username, true)
                 store.set(username + "_sessionID", data.sessionID);
                 ipcRenderer.invoke('setSessionID', data.sessionID);
                 store.set("lastUser", username);

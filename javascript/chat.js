@@ -177,7 +177,7 @@ $(function() { // this syntax means it's a function that will be run once once d
             
             await sendMessage(myName, msg, myColor, chatRoomName, serverName, sessionID).then(async response => {
                 if (response.data == 'Recieved') {
-                    await refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, numberOfChats)
+                    await refreshChat(store.get("timeOfLastMessage_" + myName + "_" + chatRoomName, ""), chatRoomName, numberOfChats)
                     scroll();
                     savedInputText = "";
                     store.set("savedInput_" + myName + "_" + chatRoomName, "")
@@ -339,7 +339,7 @@ async function refreshChat(timeOfLastMessage, messageChatRoomName, numberOfChats
         }
         // console.log("RESPONSE: " + response.data)
         var messages = response.data;
-        if (messages.length > 0) store.set("timeOfLastMessage_" + sessionID, messages[messages.length - 1].time); // use time from right before we asked last time
+        if (messages.length > 0) store.set("timeOfLastMessage_" + myName + "_" + chatRoomName, messages[messages.length - 1].time); // use time from right before we asked last time
         let newJSON = [];
         for (var i = messages.length - 1; i >= 0; --i) {
             // if (document.getElementById(messages[i].guid) == null) { // only if not already added! (sometimes two messages come through)
@@ -363,7 +363,7 @@ async function setupChatRefreshes() {
             await refreshChat("", messageChatRoomName, 5) // check last 5 messages every 3 seconds in other chatrooms
         }
         else {
-            await refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), messageChatRoomName, numberOfChats)
+            await refreshChat(store.get("timeOfLastMessage_" + myName + "_" + chatRoomName, ""), messageChatRoomName, numberOfChats)
         }
     })
     if (debug) console.log("Done refreshing chat")
@@ -374,7 +374,7 @@ async function setupChatRefreshes() {
                 refreshChat("", messageChatRoomName, 5) // check last 5 messages every 3 seconds in other chatrooms
             }
             else {
-                refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), messageChatRoomName, numberOfChats)
+                refreshChat(store.get("timeOfLastMessage_" + myName + "_" + chatRoomName, ""), messageChatRoomName, numberOfChats)
             }
         })
     }, 3000)
