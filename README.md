@@ -221,7 +221,11 @@ It takes care of...
 * Asks the server for the users in the chatroom and their public keys (every 10 seconds)
 
 ### Server structure
-The server works with a Mongo Database to give the clients their requested data through various API endpoints. The endpoints are in the `server.js` file. The logical functions for the API endpoints and the MongoDB queries, however, are stored in the `logic_server.js` file. Thus, the server is split between two files for logical separation. The API endpoints and their requirements will be listed below.
+The server works with a Mongo Database to give the clients their requested data through various API endpoints. The endpoints are in the `server.js` file. The logical functions for the API endpoints and the MongoDB queries, however, are stored in the `logic_server.js` file. Thus, the server is split between two files for logical separation. 
+
+To see and use my Postman project, use this link: https://go.postman.co/workspace/Incrypto~b22136e5-8a73-4e28-be76-dd53bca80d72/collection/13394027-091be813-1183-44ed-a6d2-e3e6ca060d74?action=share&creator=13394027
+
+The API endpoints and their requirements will be listed below.
 * GET `/`: has no requirements. Will return `Incrypto Server is Running` so that connectivity can be verified in a web browser.
 * GET `/api/ping`: has no requirements. Will return `PONG!`.
 * POST `/api/login`: 
