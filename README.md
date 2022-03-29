@@ -8,9 +8,9 @@ Incryto is built using Electron, JavaScript, and Node.
 
 ![image](https://user-images.githubusercontent.com/58751387/160722726-163aa6cc-2ed0-4f6d-8ae7-1b2e35d8948e.png)
 ![image](https://user-images.githubusercontent.com/58751387/160723078-8009889b-0cee-476b-befc-4ee1aa2210d2.png)
-![image](https://user-images.githubusercontent.com/58751387/160723416-a2661fc6-04a1-4e95-b354-f06a848471a4.png)
-![image](https://user-images.githubusercontent.com/58751387/160723451-f2c5b318-7658-456b-88f3-3f5c199c76c8.png)
-![image](https://user-images.githubusercontent.com/58751387/160723474-9e98fe1c-22b4-44f6-bbe7-b25f085af3b3.png)
+![image](https://user-images.githubusercontent.com/58751387/160723786-c869dbaf-e7a2-42c1-a0f0-29edf1b06357.png)
+![image](https://user-images.githubusercontent.com/58751387/160724149-804ba67e-bab6-4b9d-a906-1656b76350eb.png)
+![image](https://user-images.githubusercontent.com/58751387/160724188-c79c0b20-d442-4dd1-a658-aa0ea2b01f51.png)
 
 **Supported platforms: Windows, Linux, MacOS.**
 
