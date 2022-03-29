@@ -203,7 +203,7 @@ exists(directoryToRunFrom + '/.env', (e) => {
 		})
 		
 	} else { // create the .env file
-		writeFile(directoryToRunFrom + '/.env', "DATABASE_NAME=Incrypto\nCONN_STRING=<enter mongo connection string here>", (err) => {
+		writeFile(directoryToRunFrom + '/.env', "DATABASE_NAME=Incrypto\nCONN_STRING=<enter mongo connection string here>\n# Depending on the version, the CONN_STRING should look similar to...\n#    CONN_STRING=mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.3.1\n# if using a local instance, or something like...\n#   CONN_STRING=mongodb+srv://<username here>:<password here>@cluster0.4ndu7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority\n# if using Mongo Atlas", (err) => {
 			logic.logEvent(".env file created")
 		})
 		logic.logEvent("IMPORTANT: Please input a CONN_STRING for your Mongo Database in the .env file")
