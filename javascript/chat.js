@@ -29,12 +29,15 @@ var isStarting = true;
 var guidsOfNotificationMessages = []; // store the guids of the messages that we've notified the user of. That way they are not notified of the same message later.
 var timesRecievedLogoutMessage = 0; // will be used to prevent double logout messages
 var doNotAutoScroll = false;
+let savedInputText = "";
+let guidOfLastSeenMessage = "";
+let guidOfLastMessage = "";
+let isNewMessage = false;
 // var path = require('path').join(process.cwd(),'keys')
 var path = require('path').join(__dirname,'../keys')
 // alert(path)
 fs.mkdirSync(path, { recursive: true })
 
-let savedInputText = "";
 
 $(function() { // this syntax means it's a function that will be run once once document.ready is true
     "use strict";
@@ -46,7 +49,18 @@ $(function() { // this syntax means it's a function that will be run once once d
     setTimeout(() => {
         if (debug) console.log("isStarting: " + false) // only show this once
         isStarting = false; // once chat is initially loaded, we are "not starting" anymore
+        isNewMessage = true;
+        guidOfLastSeenMessage = guidOfLastMessage;
+        store.set("guidOfLastSeenMessage_" + myName + "_" + chatRoomName, guidOfLastMessage)
     }, 2000) // do not get notifications for the first 2 seconds upon page load -> I'd like to decrease this
+
+    setInterval(() => {
+        // save typed message
+        savedInputText = document.getElementById('input').value
+        savedInputText = Custom_AES(savedInputText, myName)
+        store.set("savedInput_" + myName + "_" + chatRoomName, savedInputText)
+        // if (debug) console.log("Saved Text: " + savedInputText)
+    }, 1000)
     
     // create various document elements and listeners
     var dropdown = document.getElementById('dropdownOptions');
@@ -57,13 +71,18 @@ $(function() { // this syntax means it's a function that will be run once once d
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="sendToNoneButton" style="color:red">Send to None</a>'
     dropdown.innerHTML += '<a class="dropdown-item" href="#" id="remakeKeys">Get New Keys</a>'
     dropdown.innerHTML += `<div class="dropdown-item" href="#" onclick="toggleDebugMode()">Toggle debug mode</div>`
+    dropdown.innerHTML += `<div class="dropdown-item" href="#" onclick="refresh()">Refresh Chat</div>`
     dropdown.innerHTML += `<div class="dropdown-item" href="#" id="logoutButton">Logout</div>`
     document.getElementById("displayAllMessages").addEventListener('click', () => {
-        ipcRenderer.invoke('setSeeAllMessages', true);
+        // ipcRenderer.invoke('setSeeAllMessages', true);
+        store.set("displayAll_" + myName + "_" + chatRoomName, true)
+        displayAll = true;
         ipcRenderer.invoke('login');
     });
     document.getElementById("displayOnlyUnencryptedMessages").addEventListener('click', () => {
-        ipcRenderer.invoke('setSeeAllMessages', false);
+        // ipcRenderer.invoke('setSeeAllMessages', false);
+        store.set("displayAll_" + myName + "_" + chatRoomName, false)
+        displayAll = false;
         ipcRenderer.invoke('login')
     });
     document.getElementById('remakeKeys').addEventListener('click', async () => {
@@ -83,12 +102,14 @@ $(function() { // this syntax means it's a function that will be run once once d
         ipcRenderer.invoke('login')
     })
     document.getElementById('sendToAllButton').addEventListener('click', async () => {
-        await store.set("sendToAll_" + myName, true);
-        ipcRenderer.invoke('login')
+        await store.set("sendToAll_" + myName + "_" + chatRoomName, true);
+        toggleEncryptionForAllUsers(true)
+        // ipcRenderer.invoke('login')
     })
     document.getElementById('sendToNoneButton').addEventListener('click', async () => {
-        await store.set("sendToAll_" + myName, false);
-        ipcRenderer.invoke('login')
+        await store.set("sendToAll_" + myName + "_" + chatRoomName, false);
+        toggleEncryptionForAllUsers(false)
+        // ipcRenderer.invoke('login')
     })
     document.getElementById('logoutButton').addEventListener('click', () => {
         logout();
@@ -159,6 +180,7 @@ $(function() { // this syntax means it's a function that will be run once once d
                     await refreshChat(store.get("timeOfLastMessage_" + sessionID, ""), chatRoomName, numberOfChats)
                     scroll();
                     savedInputText = "";
+                    store.set("savedInput_" + myName + "_" + chatRoomName, "")
                     document.getElementById('input').value = "";
                     ipcRenderer.invoke('setBadgeCnt', 0);
                     return;
@@ -171,17 +193,15 @@ $(function() { // this syntax means it's a function that will be run once once d
             document.getElementById('input').focus();
         }
         else {
+            // check it's length
             var count = $(this).val().length;
-            // console.log("count is: " + count)
             var remaining = 213 - count;
             if(remaining <= 0) {
-                // document.getElementById('charcount_text').innerHTML = '4000 character limit reached.' ;
                 document.getElementById('input').value = document.getElementById('input').value.substring(0, 213);
             } 
         }
     });
 });
-
 
 // --------------------------------------------------- FUNCTIONS ----------------------------------------------------------
 
@@ -192,8 +212,6 @@ async function prepareChat() {
     if (debug) console.log("isStarting: " + isStarting);
     if (debug) console.log("MyName: " + myName)
     if (debug == true) console.log("Debug: enabled")
-    displayAll = await ipcRenderer.invoke('getSeeAllMessages');
-    if (debug) console.log("DisplayAll: " + displayAll)
     myColor = await ipcRenderer.invoke('getColor')
     if (debug) console.log("MyColor: " + myColor)
     mystatus.text(myName).css('color', myColor);
@@ -205,9 +223,18 @@ async function prepareChat() {
     chatRoomName = await store.get("chatRoomName_" + myName, "Chatroom_Global")
     if (debug) console.log("ChatRoomName: " + chatRoomName)
     document.getElementById("brand").innerText += chatRoomName.substring(9)
-    sendToAll = await store.get("sendToAll_" + myName, true);
+    displayAll = await store.get("displayAll_" + myName + "_" + chatRoomName, false)
+    if (debug) console.log("DisplayAll: " + displayAll)
+    sendToAll = await store.get("sendToAll_" + myName + "_" + chatRoomName, true); // any chatroom except global should have everyone in green
+    if (chatRoomName == "Chatroom_Global") sendToAll = false; // always have everyone be in red in the global chat.
     if (debug) console.log("SendToAll: " + sendToAll)
+    savedInputText = await store.get("savedInput_" + myName + "_" + chatRoomName, "")
+    savedInputText = Custom_AES_REVERSE(savedInputText)
+    if (await store.get("savedInput_" + myName + "_" + chatRoomName, "") == savedInputText) savedInputText = ""; // if it doesn't decrypt right, don't have any saved text at all
+    document.getElementById("input").value = savedInputText
+    if (debug) console.log("Restored Text from input box: " + savedInputText)
     numberOfChats = await store.get("numberOfChats_" + myName, 25);
+    guidOfLastSeenMessage = await store.get("guidOfLastSeenMessage_" + myName + "_" + chatRoomName, "");
     if (debug) console.log("NumberOfChats: " + numberOfChats)
     try {
         myPrivateKey = fs.readFileSync(require('path').join(__dirname,'../keys/PrivateKey_' + myName));
@@ -371,6 +398,19 @@ async function refreshActiveUsers(response) {
     })
 }
 
+async function toggleEncryptionForAllUsers(booleanToChange) {
+    userArray.forEach(user => {
+        if ((userArray.find(user => user.username == user.username) != null) && (user.username != myName)) {
+            if (user.encryptForUser != booleanToChange) {
+                toggleEncryptionForUser(user.username);
+            }
+            else {
+                // do nothing
+            }
+        }
+    })
+}
+
 function toggleActiveForUser (username, activeBoolean) {
 let element;
 if ((element = document.getElementById(username+"_dot")) != null && element.style != null) {
@@ -488,7 +528,21 @@ function addMessage(author, message, color, dt, guid, entireMessage, messageChat
     let difference = time - lastTime;
     if ((UnencryptedMessage !== message) || displayAll === true) { // either we've decypted the message, or displayAll is toggled
         message = purifiedMessage;
-        if (difference > 20000) {
+        console.log("GUID OF LAST SEEN MESSAGE:" + guidOfLastSeenMessage)
+        if (isNewMessage == true) {
+            addNewMessageBanner();
+            isNewMessage = false;
+            console.log("GUID OF LAST SEEN MESSAGE:" + guidOfLastSeenMessage)
+        }
+        if (!isStarting) store.set("guidOfLastSeenMessage_" + myName + "_" + chatRoomName, entireMessage.guid)
+        guidOfLastMessage = entireMessage.guid;
+        if (entireMessage.guid == guidOfLastSeenMessage) {
+            isNewMessage = true;
+            guidOfLastMessage = entireMessage.guid;
+            // store.set("guidOfLastSeenMessage_" + myName + "_" + chatRoomName)
+            if (debug) console.log("Last seen message by user: " + message)
+        }
+        if (difference > 40000) { // raised this from 20000
             content.innerHTML += `<div class="text-center"><span class="between">` + time.toLocaleString() + `</span></div>`;
         }
         if (lightOrDark(color) == "dark") {
@@ -548,6 +602,12 @@ function appendLeftMessageToChat(username) {
     content.innerHTML += `<div class="text-center" style="color:red"><span class="between">` + username + ` left the chat</span></div>`;
 }
 
+function addNewMessageBanner() {
+    if (document.getElementById('newBanner') == null && isStarting) {
+        content.innerHTML += `<div class="text-center" style="color:Orange" id="newBanner"><span class="between">-----------NEW-----------</span></div>`;
+    }
+}
+
 function toggleEncryptionForUser(id){
     // console.log("toggling user "+ id)
     if (userArray.find(user => user.username == id).encryptForUser == false) {
@@ -605,7 +665,7 @@ async function changeToChatRoom(name) {
 async function toggleDebugMode() {
     if (debug == true) await store.set('debug_' + myName, false)
     else await store.set('debug_' + myName, true)
-    refresh();
+    // refresh(); // don't need to refresh!
 }
 
 async function setNumberOfChats() {
@@ -613,7 +673,7 @@ async function setNumberOfChats() {
     if (inputFromUser == null || inputFromUser == "") return;
     if (isNaN(inputFromUser) == true) return;
     await store.set("numberOfChats_" + myName, parseInt(inputFromUser))
-    refresh();
+    // refresh(); // don't need to refresh!
 }
 
 async function createNewChatRoom() {

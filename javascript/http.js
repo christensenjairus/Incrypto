@@ -246,7 +246,7 @@ async function getActiveUsers(username, serverName, sessionID) {
         username: username,
         sessionID: sessionID
     })
-    } catch (e) {
+    } catch (error) {
         console.error(error);
         return false;
     }
@@ -357,9 +357,9 @@ async function generateSharedKey(username, serverName, sessionID) {
     var sharedSecret = compute(serverPartial, clientExponent, mod);
     if (debug) console.log("SharedSecret: " + sharedSecret)
     store.set("sharedSecret_" + username, sharedSecret);
-    } catch (e) {
-        console.error(e);
-        ipcRenderer.invoke('alert','',"Server error. Please try again\n" + e.message, "error", false);
+    } catch (error) {
+        console.error(error);
+        ipcRenderer.invoke('alert','',"Server error. Please try again\n" + error.message, "error", false);
         ipcRenderer.invoke('logout')
         // return false;
     }
@@ -371,9 +371,9 @@ async function getKeys(username, serverName, sessionID) {
         username: username,
         sessionID: sessionID
     })
-} catch (e) {
-    console.error(e);
-    ipcRenderer.invoke('alert','',"Could not retrieve keys from server. Please try again\n" + e.message, "error", false);
+} catch (error) {
+    console.error(error);
+    ipcRenderer.invoke('alert','',"Could not retrieve keys from server. Please try again\n" + error.message, "error", false);
     ipcRenderer.invoke('logout')
     return false;
 }
@@ -385,9 +385,9 @@ async function createKeys(username, serverName, sessionID) {
         username: username,
         sessionID: sessionID
     })
-} catch (e) {
-    console.error(e);
-    ipcRenderer.invoke('alert','',"Could not retrieve keys from server. Please try again\n" + e.message, "error", false);
+} catch (error) {
+    console.error(error);
+    ipcRenderer.invoke('alert','',"Could not retrieve keys from server. Please try again\n" + error.message, "error", false);
     ipcRenderer.invoke('logout')
     return false;
 }
