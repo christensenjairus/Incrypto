@@ -314,7 +314,12 @@ async function refreshUsers(chatRoomName) {
                 }
             }
         }
+        mystatus.css('color', myColor).text(myName);
         refreshActiveUsers(response);
+    }).catch(async error => {
+        // mystatus.css('color', "red")
+        mystatus.css('color', "red").text("Connecting to server...")
+        // console.log("ERROR: " + error)
     })
 }
 
@@ -341,8 +346,12 @@ async function refreshChat(timeOfLastMessage, messageChatRoomName, numberOfChats
         }
         // }
         // if (Decrypt(messages[i].author, messages[i].encryption) == myName) myColor = messages[i].color;
-        
+        mystatus.css('color', myColor).text(myName);
         await appendChat(newJSON, messageChatRoomName)
+    }).catch(async error => {
+        // console.log("ERROR: " + error)
+        // document.getElementById('status').innerText = "Connecting to server..."
+        mystatus.css('color', "red").text("Connecting to server...")
     })
 }
 
@@ -528,11 +537,10 @@ function addMessage(author, message, color, dt, guid, entireMessage, messageChat
     let difference = time - lastTime;
     if ((UnencryptedMessage !== message) || displayAll === true) { // either we've decypted the message, or displayAll is toggled
         message = purifiedMessage;
-        console.log("GUID OF LAST SEEN MESSAGE:" + guidOfLastSeenMessage)
         if (isNewMessage == true) {
             addNewMessageBanner();
             isNewMessage = false;
-            console.log("GUID OF LAST SEEN MESSAGE:" + guidOfLastSeenMessage)
+            // console.log("GUID OF LAST SEEN MESSAGE:" + guidOfLastSeenMessage)
         }
         if (!isStarting) store.set("guidOfLastSeenMessage_" + myName + "_" + chatRoomName, entireMessage.guid)
         guidOfLastMessage = entireMessage.guid;

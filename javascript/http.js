@@ -60,12 +60,12 @@ async function login(username, password, serverName) {
             ipcRenderer.invoke('logout');
         }
     }, async error => {
-        ipcRenderer.invoke('alert',"Could not connect to server", error.message, "error", false);
+        ipcRenderer.invoke('alert',"Could not connect to server", "Could not connect to server\n" + error.message, "error", false);
         ipcRenderer.invoke('logout');
     })
     } catch (error) {
         console.error(error);
-        ipcRenderer.invoke('alert',"Could not connect to server", error.message, "error", false);
+        ipcRenderer.invoke('alert',"Could not connect to server", "Could not connect to server\n" + error.message, "error", false);
         ipcRenderer.invoke('logout');
     }
 }
@@ -128,11 +128,11 @@ async function register(username, password, password2, serverName) {
         ipcRenderer.invoke('logout');
     }
     }, async error => {
-        ipcRenderer.invoke('alert',"Could not connect to server", error.message, "error", false);
+        ipcRenderer.invoke('alert',"Could not connect to server", "Could not connect to server\n" + error.message, "error", false);
         ipcRenderer.invoke('toregister');
     })
 } catch (error) {
-    ipcRenderer.invoke('alert',"Could not connect to server", error.message, "error", false);
+    ipcRenderer.invoke('alert',"Could not connect to server", "Could not connect to server\n" + error.message, "error", false);
     ipcRenderer.invoke('toregister');
 }
 }
@@ -147,45 +147,47 @@ function getNewMessages(username, timeOfLastMessage, chatRoomName, serverName, s
         numberOfChats: numberOfChats
     })
 } catch (error) {
-    console.error(error);
+    // console.error(error)        
     return false;
 }
 }
 
-function getAllMessages(username, chatRoomName, serverName, sessionID) {
-    try {
-        return axios.post('http://' + serverName + "/api/message/all", {
-        chatRoomName: chatRoomName,
-        username: username,
-        sessionID: sessionID
-    })
-} catch (error) {
-    console.error(error);
-    return false;
-}
-}
+// function getAllMessages(username, chatRoomName, serverName, sessionID) {
+//     try {
+//         return axios.post('http://' + serverName + "/api/message/all", {
+//         chatRoomName: chatRoomName,
+//         username: username,
+//         sessionID: sessionID
+//     })
+// } catch (error) {
+//     console.error(error);
+//     document.getElementById('status').value = "Connecting to server..."
+//     return false;
+// }
+// }
 
-function getAllUsers(username, serverName, sessionID) {
-    try {
-        return axios.post('http://' + serverName + "/api/users/all", {
-            username: username,
-            sessionID: sessionID
-        })
-    } catch (error) {
-        console.error(error);
-        return false;
-    }
-}
+// function getAllUsers(username, serverName, sessionID) {
+//     try {
+//         return axios.post('http://' + serverName + "/api/users/all", {
+//             username: username,
+//             sessionID: sessionID
+//         })
+//     } catch (error) {
+//         console.error(error);
+//         document.getElementById('status').value = "Connecting to server..."
+//         return false;
+//     }
+// }
 
-function getChatRoomUsers(username, chatRoomName, serverName, sessionID) {
+async function getChatRoomUsers(username, chatRoomName, serverName, sessionID) {
     try {
-        return axios.post('http://' + serverName + "/api/users/chatroom", {
+        return await axios.post('http://' + serverName + "/api/users/chatroom", {
             chatRoomName: chatRoomName,
             username: username,
             sessionID: sessionID
         })
     } catch (error) {
-        console.error(error);
+        // console.error(error);
         return false;
     }
 }
@@ -240,17 +242,18 @@ async function changeColor(username, color, serverName, sessionID) {
 }
 }
 
-async function getActiveUsers(username, serverName, sessionID) {
-    try {
-        return axios.post('http://' + serverName + "/api/users/active", {
-        username: username,
-        sessionID: sessionID
-    })
-    } catch (error) {
-        console.error(error);
-        return false;
-    }
-}
+// async function getActiveUsers(username, serverName, sessionID) {
+//     try {
+//         return axios.post('http://' + serverName + "/api/users/active", {
+//         username: username,
+//         sessionID: sessionID
+//     })
+//     } catch (error) {
+//         // console.error(error);
+//         document.getElementById('status').value = "Connecting to server..."
+//         return false;
+//     }
+// }
 
 function createChatRoom(username, serverName, sessionID, chatRoomName) {
     try {
