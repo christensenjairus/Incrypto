@@ -225,7 +225,8 @@ The server works with a Mongo Database to give the clients their requested data 
 * GET `/`: has no requirements. Will return `Incrypto Server is Running` so that connectivity can be verified in a web browser.
 * GET `/api/ping`: has no requirements. Will return `PONG!`.
 * POST `/api/login`: 
-	* Requires: 
+
+Requires: 
 ```JSON
 {
     "username": "Eric1",
@@ -233,13 +234,33 @@ The server works with a Mongo Database to give the clients their requested data 
 }
 ```
 
-	* Returns: 
-		* `{ type:'AuthResponse', color:user.color, result: "success", sessionID:sessionID }`
-		* `{ type:'AuthResponse', result: "failure", sessionID:"server_error" }`
-		* `{ type:'AuthResponse', result: "failure", sessionID:"incorrect_credentials" }`
+Returns: 
+```JSON
+{
+    "type": "AuthResponse",
+    "color": "pink",
+    "result": "success",
+    "sessionID": "ea64445f-7d48-6ad9-adb4-e0756c867778"
+}
+```
+```JSON
+{ 
+    "type": "AuthResponse", 
+    "result": "failure", 
+    "sessionID": "server_error" 
+}
+```
+```JSON
+{
+    "type": "AuthResponse",
+    "result": "failure",
+    "sessionID": "incorrect_credentials"
+}
+```
 		
 * POST `/api/register`:
-	* Requires: 
+
+Requires: 
 ```JSON
 {
     "username": "Eric1",
@@ -249,13 +270,40 @@ The server works with a Mongo Database to give the clients their requested data 
 }
 ```
 
-	* Returns:
-		*  `{ type:'AuthResponse', color:"#0000FF", result: "success", sessionID:sessionID }`
-		*  `{ type:'AuthResponse', result: "failure", sessionID:"no username" }`
-		*  `{ type:'AuthResponse', result: "failure", sessionID:"no password" }`
-		*  `{ type:'AuthResponse', result: "failure", sessionID:"username_exists" }`
+Returns:
+```JSON
+{
+    "type": "AuthResponse",
+    "color": "#0000FF",
+    "result": "success",
+    "sessionID": "d1e73467-a326-aa4c-8b85-43f22bcd2606"
+}
+```
+```JSON
+{
+    "type": "AuthResponse",
+    "result": "failure",
+    "sessionID": "no username"
+}
+```
+```JSON
+{
+    "type": "AuthResponse",
+    "result": "failure",
+    "sessionID": "no password"
+}
+```
+```JSON
+{
+    "type": "AuthResponse",
+    "result": "failure",
+    "sessionID": "username_exists"
+}
+```
+
 * POST `/api/message/`:
-	* Requires: 
+
+Requires: 
 ```JSON
 {
     "username": "Eric1",
@@ -268,12 +316,22 @@ The server works with a Mongo Database to give the clients their requested data 
 }
 ```
 
-	* Returns:
-		* `{"error":"incorrectSessionID"}`
-		* "Recieved"
-		* "Error"
+Returns:
+```JSON
+{
+    "error":"incorrectSessionID"
+}
+```
+```
+Recieved
+```
+```
+Error
+```
+
 * POST `/api/message/new`:
-	* Requires: 
+
+Requires: 
 ```JSON
 {
     "chatRoomName": "Chatroom_00000_Global",
@@ -284,8 +342,7 @@ The server works with a Mongo Database to give the clients their requested data 
 }
 ```
 
-	* Returns: 
-		* direct JSON of chatroom messages from the database
+Returns: 
 ```JSON
 [
     {
@@ -308,9 +365,15 @@ The server works with a Mongo Database to give the clients their requested data 
     ...
 ]
 ```
-		* `{"error":"incorrectSessionID"}`
+```JSON
+{
+    "error":"incorrectSessionID"
+}
+```
+
 * POST `/api/users/chatroom`:
-	* Requires:
+
+Requires:
 ```JSON
 {
     "username": "Eric1",
@@ -318,8 +381,8 @@ The server works with a Mongo Database to give the clients their requested data 
     "chatRoomName": "Chatroom_00000_Global"
 }
 ```
-	* Returns:
-		* direct JSON of chatroom users from the database
+
+Returns:
 ```JSON
 [
     {
@@ -335,9 +398,15 @@ The server works with a Mongo Database to give the clients their requested data 
     ...
 ]
 ```
-		* `{"error":"incorrectSessionID"}`
+```JSON
+{
+    "error":"incorrectSessionID"
+}
+```
+
 * POST `/api/message/new`:
-	* Requires: 
+
+Requires: 
 ```JSON
 {
     "chatRoomName": "Chatroom_00000_Global",
@@ -347,8 +416,8 @@ The server works with a Mongo Database to give the clients their requested data 
     "numberOfChats": 2
 }
 ```
-	* Returns: 
-		* direct JSON of chatroom messages from the database
+
+Returns: 
 ```JSON
 [
     {
@@ -371,9 +440,15 @@ The server works with a Mongo Database to give the clients their requested data 
     ...
 ]
 ```
-		* `{"error":"incorrectSessionID"}`
+```JSON
+{
+    "error":"incorrectSessionID"
+}
+```
+
 * POST `/api/color`:
-	* Requires: 
+
+Requires: 
 ```JSON
 {
     "username": "Eric1",
@@ -381,25 +456,23 @@ The server works with a Mongo Database to give the clients their requested data 
     "color": "pink"
 }
 ```
-	* Returns: 
-		* `Recieved`
-		* `{"error":"incorrectSessionID"}`
-		* `Error`
-* POST `/api/users/chatroom/join`:
-	* Requires: 
+
+Returns: 
 ```JSON
 {
-    "username": "Eric1",
-    "sessionID": "8cef4c3c-735c-0f77-a82e-88af42217332",
-    "chatRoomName": "Chatroom_00000_Testing"
+    "error":"incorrectSessionID"
 }
 ```
-	* Returns: 
-		* `true`
-		* `{"error":"incorrectSessionID"}`
-		* `false`
+```
+Recieved
+```
+```
+Error
+```
+
 * POST `/api/users/chatroom/create` and `/api/users/chatroom/join:
-	* Requires: 
+
+Requires: 
 ```JSON
 {
     "username": "Eric1",
@@ -407,40 +480,66 @@ The server works with a Mongo Database to give the clients their requested data 
     "chatRoomName": "Chatroom_00001_Testing"
 }
 ```
-	* Returns: 
-		* `true`
-		* `{"error":"incorrectSessionID"}`
-		* `false`
+
+Returns: 
+```JSON
+{
+    "error":"incorrectSessionID"
+}
+```
+```
+true
+```
+```
+false
+```
+
 * POST `/api/keys/getKeys` and `/api/createKeys`:
-	* Requires: 
+
+Requires: 
 ```JSON
 {
     "username": "Eric1",
     "sessionID": "8cef4c3c-735c-0f77-a82e-88af42217332"
 }
 ```
-	* Returns: 
-		* The literal encoded private key of the user (to be decoded with a hash of the shared key)
-		* `{"error":"incorrectSessionID"}`
+
+Returns: 
+```
+<The literal encoded private key of the user (to be decoded with a hash of the shared key)>
+```
+```JSON
+{
+    "error":"incorrectSessionID"
+}
+```
+
 * POST `/api/keys/negociate`:
-	* Requires: 
+
+Requires: 
 ```JSON
 {
     "username": "Eric1",
     "sessionID": "8cef4c3c-735c-0f77-a82e-88af42217332"
 }
 ```
-	* Returns: 
-		* "mod" and "base" numbers that are both 1024 digits in length
+
+Returns: 
 ```JSON
 {
     "base": "160607009132274210864679289234916530719611964260360771605330257536473420217737163749838999318902130907937198072960458541951666323154114061655745457961124517287540955603694045646658435315299155839508207823382672761687083733668273842699849158843409120550621782770557270860891563810931666068470587893076549763999",
     "mod": "169495612686488769837916190766250950561548849167585132632916352449643076529971575728048189019550040457384239125130179767033080585782059701641272451247609586447742868302988835736359812967319087489461038721877980536715362852489126541422543966642938531687114498939108084927184714633794319825947540235595897148919"
 }
 ```
-		* `{"error":"incorrectSessionID"}`
+```JSON
+{
+    "error":"incorrectSessionID"
+}
+```
+
 * POST `/api/keys/diffieHellman`:
-	* Requires: 
+
+Requires: 
 ```JSON
 {
     "username": "Eric1",
@@ -448,14 +547,18 @@ The server works with a Mongo Database to give the clients their requested data 
     "clientPartial": "352021"
 }
 ```
-	* Returns: 
-		* "serverPartial" number used by the client to generate the shared key
+
+Returns: 
 ```JSON
 {
     "serverPartial": "118514740694891343797541083335979228348129452643039422878988268439266489159851495914763829646000128822105194648414963617818855160397637730006865588792643009801845261060790207380703007081349714393382483613388571793635194878282988641085258355835275047329828165339461581692950665794824784383374963904762413118364"
 }
 ```
-		* `{"error":"incorrectSessionID"}`
+```JSON
+{
+    "error":"incorrectSessionID"
+}
+```
 
 * * *
 # Things for our Dev Team to know
