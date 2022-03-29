@@ -467,7 +467,8 @@ ipcMain.handle('promptForNewChat', async (event) => {
         label: 'Chatroom Name:',
         value: '',
         inputAttrs: {
-            type: 'text'
+            type: 'text',
+            requred: 'true'
         },
         type: 'input'
     })
@@ -481,11 +482,35 @@ ipcMain.handle('promptForNumberOfChats', async (event) => {
         label: 'Enter the number of chats to load',
         value: '',
         inputAttrs: {
-            type: 'number'
+            type: 'number',
+            requred: 'true'
         },
         type: 'input'
     })
     return r;
+})
+
+ipcMain.handle('promptForPin', async (event) => {
+    const prompt = require('electron-prompt');
+    var r = await prompt({
+        title: 'Pin number for chat?',
+        label: 'Enter the 5-digit pin number for this chat',
+        value: '00000',
+        inputAttrs: {
+            type: 'number',
+            requred: 'true',
+        },
+        type: 'input'
+    })
+    return r;
+})
+
+ipcMain.handle('showPin', async (event, title, text) => {
+    require('electron').dialog.showMessageBox({
+    message: text,
+    title: title,
+    // type: icon
+})
 })
 
 ipcMain.handle('alert', async (event, title, text, icon, showCancelButton) => {
@@ -498,6 +523,8 @@ ipcMain.handle('alert', async (event, title, text, icon, showCancelButton) => {
     //     title: title,
     //     text: text,
     //     icon: icon,
+    
+   //      requred: 'true',
     //     showCancelButton: showCancelButton
     // };
 

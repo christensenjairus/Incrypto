@@ -220,13 +220,13 @@ async function prepareChat() {
     if (debug) console.log("SessionID: " + sessionID)
     serverName = await ipcRenderer.invoke('getServerName')
     if (debug) console.log("ServerName: " + serverName)
-    chatRoomName = await store.get("chatRoomName_" + myName, "Chatroom_Global")
+    chatRoomName = await store.get("chatRoomName_" + myName, "Chatroom_00000_Global")
     if (debug) console.log("ChatRoomName: " + chatRoomName)
-    document.getElementById("brand").innerText += chatRoomName.substring(9)
+    document.getElementById("brand").innerText += chatRoomName.substring(15)
     displayAll = await store.get("displayAll_" + myName + "_" + chatRoomName, false)
     if (debug) console.log("DisplayAll: " + displayAll)
     sendToAll = await store.get("sendToAll_" + myName + "_" + chatRoomName, true); // any chatroom except global should have everyone in green
-    if (chatRoomName == "Chatroom_Global") sendToAll = false; // always have everyone be in red in the global chat.
+    if (chatRoomName == "Chatroom_00000_Global") sendToAll = false; // always have everyone be in red in the global chat.
     if (debug) console.log("SendToAll: " + sendToAll)
     savedInputText = await store.get("savedInput_" + myName + "_" + chatRoomName, "")
     savedInputText = Custom_AES_REVERSE(savedInputText)
@@ -282,10 +282,11 @@ async function refreshUsers(chatRoomName) {
                 var dropdown = document.getElementById('chatRoomChangeDropdown');
                 myChatRoomNames.forEach(name => {
                     if (name != chatRoomName) {
-                        dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="changeToChatRoom('` + name + `')">` + name.substring(9) + `</a>`
+                        dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="changeToChatRoom('` + name + `')">` + name.substring(15) + `</a>`
                     }
                 })
-                if (chatRoomName != "Chatroom_Global") dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="leaveRoom()" style="color:red">Leave this chatroom</a>`
+                if (chatRoomName != "Chatroom_00000_Global") dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="showPin()" style="color:orange">Show pin for chatroom</a>`
+                if (chatRoomName != "Chatroom_00000_Global") dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="leaveRoom()" style="color:red">Leave this chatroom</a>`
                 dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="createNewChatRoom()" style="color:green">Create or join a chatroom</a>`
             }
             if (users[i].pubKey != null) { // check everyones public key every time
@@ -470,7 +471,7 @@ function addMessage(author, message, color, dt, guid, entireMessage, messageChat
                         }
                     }
                     else {
-                        showNotification(author + " (" + messageChatRoomName.substring(9) + ")", Custom_AES_REVERSE(entireMessage.text.find(recipient => recipient.recipient == myName).text));
+                        showNotification(author + " (" + messageChatRoomName.substring(15) + ")", Custom_AES_REVERSE(entireMessage.text.find(recipient => recipient.recipient == myName).text));
                     }
                     guidsOfNotificationMessages.push(guid)
                 }
@@ -686,17 +687,31 @@ async function setNumberOfChats() {
 
 async function createNewChatRoom() {
     var inputFromUser = await ipcRenderer.invoke('promptForNewChat');
-    if (inputFromUser == null || inputFromUser == "") return;
-    var newRoomName = "Chatroom_" + inputFromUser;
+    if (inputFromUser == null) return
+    if (inputFromUser == "") {
+        ipcRenderer.invoke('alert','',"Chatroom name cannot be blank", "error", false);
+        return;
+    }
+    var pin = await ipcRenderer.invoke('promptForPin');
+    if (pin == null) return;
+    if (pin == "" || isNaN(pin) == true || pin.length != 5) {
+        ipcRenderer.invoke('alert','',"Pin number must be a 5 digit number", "error", false);
+        return;
+    }
+    var newRoomName = "Chatroom_" + pin + "_" + inputFromUser;
     await createChatRoom(myName, serverName, sessionID, newRoomName)
     await joinChatRoom(myName, serverName, sessionID, newRoomName)
     changeToChatRoom(newRoomName);
 }
 
+async function showPin() {
+    ipcRenderer.invoke('showPin', "Pin number for chatroom: " + chatRoomName.substring(15), "Pin number is: "+chatRoomName.substring(9,14))
+}
+
 async function leaveRoom() {
     var result = await leaveChatRoom(myName, serverName, sessionID, chatRoomName)
     if (result.data == false) {
-        if (chatRoomName == "Chatroom_Global") {
+        if (chatRoomName == "Chatroom_00000_Global") {
             ipcRenderer.invoke('alert','',"'Global' is the default chatroom. Without it you could not find your new friends", "error", false);
         }
         else {
@@ -704,7 +719,7 @@ async function leaveRoom() {
         }
         return;
     }
-    changeToChatRoom("Chatroom_Global")
+    changeToChatRoom("Chatroom_00000_Global")
 }
 
 // ----------------------- SCROLL LOGIC ------------------------------
@@ -772,7 +787,6 @@ function lightOrDark(color) {
         
         function showNotification(author, text) {
             const NOTIFICATION_TITLE = author
-            // text =  chatRoomName.substring(9) + ": " + text
             const notification = {
                 title: author,
                 body: text,

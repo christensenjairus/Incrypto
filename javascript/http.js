@@ -20,13 +20,13 @@ async function login(username, password, serverName) {
         password: password,
         time: time,
         chatRooms: [
-            {name:"Chatroom_Global", lastActivity:time}
+            {name:"Chatroom_00000_Global", lastActivity:time}
         ]
     }).then(async response => {
         try {
             var data = response.data;
             if (data.result === 'success') {
-                if (store.get("chatRoomName_" + username, "") == "") store.set("chatRoomName_" + username, "Chatroom_Global")
+                if (store.get("chatRoomName_" + username, "") == "") store.set("chatRoomName_" + username, "Chatroom_00000_Global")
                 if (store.get("sendToAll_" + username, "") == "") store.set("sendToAll_" + username, true)
                 store.set(username + "_sessionID", data.sessionID);
                 ipcRenderer.invoke('setSessionID', data.sessionID);
@@ -94,13 +94,13 @@ async function register(username, password, password2, serverName) {
         password: password,
         time: time,
         chatRooms: [
-            {name:"Chatroom_Global", lastActivity:time}
+            {name:"Chatroom_00000_Global", lastActivity:time}
         ]
     }).then(async response => {
         try {
             var data = response.data
             if (data.result === 'success') {
-                store.set("chatRoomName_" + username, "Chatroom_Global")
+                store.set("chatRoomName_" + username, "Chatroom_00000_Global")
                 store.set("sendToAll_" + username, true)
                 store.set(username + "_sessionID", data.sessionID);
                 ipcRenderer.invoke('setSessionID', data.sessionID);
