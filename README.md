@@ -584,7 +584,4 @@ This database will be shown in the following state:
 * * *
 # Things for our Dev Team to know
 #### TODO:
-* Find a way to remove out and dist directories from all compilation options
-* MacOS `npm start` displays text strangely
 * Linux AppImage and Snap icon needs to be set
-* https://phoenixnap.com/kb/update-node-js-version
