@@ -6,6 +6,12 @@ Incrypto Server is an HTTP server with various API endpoints. Incrypto uses a Mo
 
 Incryto is built using Electron, JavaScript, and Node.
 
+![image](https://user-images.githubusercontent.com/58751387/160722726-163aa6cc-2ed0-4f6d-8ae7-1b2e35d8948e.png)
+![image](https://user-images.githubusercontent.com/58751387/160723078-8009889b-0cee-476b-befc-4ee1aa2210d2.png)
+![image](https://user-images.githubusercontent.com/58751387/160723786-c869dbaf-e7a2-42c1-a0f0-29edf1b06357.png)
+![image](https://user-images.githubusercontent.com/58751387/160724149-804ba67e-bab6-4b9d-a906-1656b76350eb.png)
+![image](https://user-images.githubusercontent.com/58751387/160724188-c79c0b20-d442-4dd1-a658-aa0ea2b01f51.png)
+
 **Supported platforms: Windows, Linux, MacOS.**
 
 ## Getting Started
@@ -94,13 +100,14 @@ More details and instructions on compilation are given below
    * To compile, run `electron-forge make` while in the `Incrypto` directory and `Incrypto_Setup.exe` will be in `out\make\squirrel.windows\x64\`
 
 ## Run Incrypto Server
-While in a terminal (or powershell), navigate into the Incrypto folder using `cd` (as done previously)
+You will need to setup MongoDB on either your local server or on Mongo Atlas. The Community Edition is enough. Once installed, get the connection string, as we'll be putting it in the `.env` file.
+Once you have the connection string, while in a terminal (or powershell), navigate into the Incrypto folder using `cd` (as done previously) and run...
 ```bash
 node ./Server_Standalone/server.js
 ```
 You may need to run this as `sudo` or as an Administrator.
-This will create a .env file for you that you WILL NEED TO EDIT to connect to your Mongo Database. The .env created assumes that you'll be using a local database, use the standard port number (27017), and be running version 1.3.1 of mongosh. 
-Change this file as needed, then run the above command again.
+This will create a .env file for you that you will need to edit to connect to your Mongo Database. The .env created assumes that you'll be using a local database, use the standard port number (27017), and be running version 1.3.1 of mongosh. 
+Change this file as needed, entering your connection string, then run the above command again.
 
 * * *
 # Things to Know as a User
@@ -220,7 +227,7 @@ It takes care of...
 * Asks the server for new messages in the other chatrooms (every 3 seconds)
 * Asks the server for the users in the chatroom and their public keys (every 10 seconds)
 
-### Server structure
+# Server structure
 The server works with a Mongo Database to give the clients their requested data through various API endpoints. The endpoints are in the `server.js` file. The logical functions for the API endpoints and the MongoDB queries, however, are stored in the `logic_server.js` file. Thus, the server is split between two files for logical separation. 
 
 To see and use my Postman project, use this link: https://go.postman.co/workspace/Incrypto~b22136e5-8a73-4e28-be76-dd53bca80d72/collection/13394027-091be813-1183-44ed-a6d2-e3e6ca060d74?action=share&creator=13394027
@@ -563,6 +570,16 @@ Returns:
     "error":"incorrectSessionID"
 }
 ```
+# Database Schema
+This database will be shown in the following state:
+* Two messages sent to the Global chatroom
+* Two users in the users table
+
+![image](https://user-images.githubusercontent.com/58751387/160726169-b3ad145a-5311-481c-bcba-e2b8b7510581.png)
+## Users Collection:
+![image](https://user-images.githubusercontent.com/58751387/160726298-7002d7fe-e63a-4569-8b1e-a48c6591baf0.png)
+## Chat Collection:
+![image](https://user-images.githubusercontent.com/58751387/160726347-e32e066d-9896-4e00-9a74-b189d563b3d5.png)
 
 * * *
 # Things for our Dev Team to know
