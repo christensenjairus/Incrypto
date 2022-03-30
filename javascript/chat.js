@@ -282,7 +282,11 @@ async function refreshUsers(chatRoomName) {
                 var dropdown = document.getElementById('chatRoomChangeDropdown');
                 myChatRoomNames.forEach(name => {
                     if (name != chatRoomName) {
-                        dropdown.innerHTML += '<a class="dropdown-item" href="#" onclick="changeToChatRoom(`' + name + '`)">' + name.substring(15) + `</a>`
+                        dropdown.innerHTML += '<a class="dropdown-item" href="#" onclick="changeToChatRoom(`' + name + '`)" id="' + name + '">' + name.substring(15) + `</a>` 
+                        setNotificationCounter(name);
+                    }
+                    else {
+                        resetNotificationCounter(name);
                     }
                 })
                 if (chatRoomName != "Chatroom_00000_Global") dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="showPin()" style="color:orange">Show pin for chatroom</a>`
@@ -472,6 +476,8 @@ function addMessage(author, message, color, dt, guid, entireMessage, messageChat
                     }
                     else {
                         showNotification(author + " (" + messageChatRoomName.substring(15) + ")", Custom_AES_REVERSE(entireMessage.text.find(recipient => recipient.recipient == myName).text));
+                        incrementNotificationCounter(messageChatRoomName);
+                        blink();
                     }
                     guidsOfNotificationMessages.push(guid)
                 }
@@ -601,6 +607,55 @@ function addMessage(author, message, color, dt, guid, entireMessage, messageChat
         }
     }
     dtOfLastMessage = dt;
+}
+
+function incrementNotificationCounter(messageChatRoomName) {
+    if (document.getElementById(messageChatRoomName) != null) {
+        var numNotificationsForChatroom = store.get("numNotificationsForChatroom_" + myName + "_" + messageChatRoomName, 0);
+        ++numNotificationsForChatroom;
+        // console.log(numNotificationsForChatroom)
+        if (document.getElementById(messageChatRoomName + "_number") != null) document.getElementById(messageChatRoomName + "_number").remove()
+        document.getElementById(messageChatRoomName).innerHTML += `<div class="circle" id="`+messageChatRoomName+`_number" style="background:orange">`+numNotificationsForChatroom+`</div>`
+        store.set("numNotificationsForChatroom_" + myName + "_" + messageChatRoomName, numNotificationsForChatroom);
+    }
+    // else{
+    //     console.log("DID NOT DO IT")
+    // }
+}
+
+function setNotificationCounter(messageChatRoomName) {
+    if (document.getElementById(messageChatRoomName) != null) {
+        var numNotificationsForChatroom = store.get("numNotificationsForChatroom_" + myName + "_" + messageChatRoomName, 0);
+        if (numNotificationsForChatroom == 0) return;
+        // console.log(numNotificationsForChatroom)
+        if (document.getElementById(messageChatRoomName + "_number") != null) document.getElementById(messageChatRoomName + "_number").remove()
+        document.getElementById(messageChatRoomName).innerHTML += `<div class="circle" id="`+messageChatRoomName+`_number" style="background:orange">`+numNotificationsForChatroom+`</div>`
+        store.set("numNotificationsForChatroom_" + myName + "_" + messageChatRoomName, numNotificationsForChatroom);
+    }
+}
+
+function resetNotificationCounter(messageChatRoomName) {
+    store.set("numNotificationsForChatroom_" + myName + "_" + messageChatRoomName, 0);
+}
+
+function blink() { // will blink chatroom dropdown and leave it orange
+    var f = document.getElementById('navbarDropdownMenuLink');
+    setTimeout(function() {
+        f.style.color = (f.style.color == 'orange' ? 'grey' : 'orange');
+    }, 250);
+    setTimeout(function() {
+        f.style.color = (f.style.color == 'orange' ? 'grey' : 'orange');
+    }, 500);
+    setTimeout(function() {
+        f.style.color = (f.style.color == 'orange' ? 'grey' : 'orange');
+    }, 750);
+    setTimeout(function() {
+        f.style.color = (f.style.color == 'orange' ? 'grey' : 'orange');
+    }, 1000);
+    setTimeout(function() {
+        f.style.color = (f.style.color == 'orange' ? 'grey' : 'orange');
+    }, 1250);
+    // console.log("BLINK")
 }
 
 function appendJoinedMessageToChat(username) {

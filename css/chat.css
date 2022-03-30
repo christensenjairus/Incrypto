@@ -372,3 +372,20 @@ to {
 background-position: 200% center;
 }
 }
+
+.circle {
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    padding: 0px;
+    /* background: orangered; */
+    /* border: 3px solid #000; */
+    color: #000;
+    /* margin-top: -15px; */
+    text-align: center;
+    font: 15px Arial, sans-serif;
+    font-weight: 1000;
+    display: inline;
+    float: right;
+}
+
