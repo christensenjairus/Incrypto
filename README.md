@@ -99,6 +99,17 @@ More details and instructions on compilation are given below
 * **On Windows**
    * To compile, run `electron-forge make` while in the `Incrypto` directory and `Incrypto_Setup.exe` will be in `out\make\squirrel.windows\x64\`
 
+* * *
+# Things to Know as a User
+### Connecting to Server
+Verify that you can connect to the server by opening a web browser and inputing either the DNS name or IP address. Know that Incrypto Server runs on port 5050, so unless your administrator intentionally routed that port elsewhere, you will need to include the port number. You'll know it works when you see "Incrypto Server is Running" in the browser. Input this data into the "Server Name" box in the login or registration pages.
+Examples: `localhost:5050`, `yourDomain.com:5050` or, if you've routed the server to port 80 or 443, you can exclude the port number `incrypto.christensencloud.us`.
+### User Fundamentals
+* If the background of a user in the left-hand column is green, the client will encrypt your message to that user. If red, it will not encrypt your text for that user, but they'll recieve the ciphertext of the message anyway if they have "See all messages" enabled. 
+* `Options > Get new keys` will create a new public/private key pair on the server, then send the client the private key to save. Because the client does not save old private keys, all your old messages will become ciphertext in the chat window. This is to be expected. The messages you've sent to others, however, are still readable by them, because their keys have not changed.
+* Upon any problems with the app, click `File > Clear All Local Data` and log in again. This will delete the old key files and grab the updated ones from the server.
+* If you send a message, and it appears as ciphertext to you, it's because your private key is outdated. You must either acquire the updated keys with `File > Clear All Local Data` and log in again, or generate a brand new set of keys with `Options > Get new keys`.
+
 ## Run Incrypto Server
 You will need to setup MongoDB on either your local server or on Mongo Atlas. The Community Edition is enough. Once installed, get the connection string, as we'll be putting it in the `.env` file.
 Once you have the connection string, while in a terminal (or powershell), navigate into the Incrypto folder using `cd` (as done previously) and run...
@@ -108,16 +119,6 @@ node ./Server_Standalone/server.js
 You may need to run this as `sudo` or as an Administrator.
 This will create a .env file for you that you will need to edit to connect to your Mongo Database. The .env created assumes that you'll be using a local database, use the standard port number (27017), and be running version 1.3.1 of mongosh. 
 Change this file as needed, entering your connection string, then run the above command again.
-
-* * *
-# Things to Know as a User
-### Connecting to Server
-Verify that you can connect to the server by opening a web browser and inputing either the DNS name or IP address. Know that Incrypto Server runs on port 5050, so unless your administrator intentionally routed that port elsewhere, you will need to include the port number. You'll know it works when you see "Incrypto Server is Running" in the browser. Input this data into the "Server Name" box in the login or registration pages.
-Examples: `localhost:5050`, `yourDomain.com:5050` or, if you've routed the server to port 80 or 443, you can exclude the port number `incrypto.christensencloud.us`.
-### User Fundamentals
-* If the background of a user in the left-hand column is green, the client will encrypt your message to that user. If red, it will not encrypt your text for that user, but they'll recieve the ciphertext of the message anyway if they have "See all messages" enabled. 
-* `Options > Get new keys` will create a new public/private key pair on the server, then send the client the private key to save. Because the client does not save old private keys, all your old messages will become ciphertext in the chat window. This is to be expected. The messages you've sent to others, however, are still readable by them, because their keys have not changed.
-* If you send a message, and it appears as ciphertext to you, you must either reaquire your old keys with `File > Clear All Local Data` and log in again, or generate new keys with `Options > Get new keys`.
 
 * * *
 # Things to Know as a Developer
