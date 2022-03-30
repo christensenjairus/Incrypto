@@ -15,14 +15,12 @@ Incryto is built using Electron, JavaScript, and Node.
 **Supported platforms: Windows, Linux, MacOS.**
 
 ## Getting Started
-### Incrypto can be used in two ways.
-1. **Quick**: Run it from the terminal. This is great for making and debugging encryption algorithms.
-2. **Recommended**: *Ease of use long-term.* Run the app but eventually make your own installer. *You should recompile it* ***after*** *you edit* `encryption.js`.
-   * This is recommended because it offers the full flexibility of Incrypto, including being able to run like any other app (Desktop Icons, Start Menu, etc)
-   * It also enables you to distrubute your custom compiled packages so that your friends can easily have your encryption/decryption algorithms without having to go through the trouble of copying and pasting from `encryption.js` (which they will be able to see if they look for it, in most cases)
+### Incrypto can be used in two ways. 
+1. **Quick**: Run it from the terminal using `npm start` or `electron .` . 
+2. **Recommended**: *Ease of use long-term.* Make your own installer and use Incrypto like any other desktop app! (Desktop Icons, Start Menu, etc). This method will create an .exe, .dmg, .zip, .deb, .rpm, snap, or an AppImage to be used natively in your operating system.
 
 ### Prerequisite packages
-You'll need Node.js and NPM in order to run the app. Git is optional (for cloning this repository, not downloading it)
+You'll need Node.js and NPM in order to run the app. Git will be required for cloning this repository, but not if you download it directly, of course.
 
 **Remember to run the following commands in order of appearance**
 
