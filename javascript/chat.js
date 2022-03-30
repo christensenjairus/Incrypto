@@ -688,10 +688,10 @@ async function setNumberOfChats() {
 async function createNewChatRoom() {
     var inputFromUser = await ipcRenderer.invoke('promptForNewChat');
     if (inputFromUser == null) return
-    inputFromUser = inputFromUser.replaceAll("`",'') // we use `, ", ' for the html, so we can't have a user use them in the chatroom name.
-    inputFromUser = inputFromUser.replaceAll("'",'')
-    inputFromUser = inputFromUser.replaceAll('"','')
-    // inputFromUser = DOMPurify.sanitize(inputFromUser)
+    inputFromUser = inputFromUser.replace(/`/g,'') // we use `, ", ' for the html, so we can't have a user use them in the chatroom name.
+    inputFromUser = inputFromUser.replace(/"/g,'')
+    inputFromUser = inputFromUser.replace(/'/g,'')
+    inputFromUser = DOMPurify.sanitize(inputFromUser)
     if (inputFromUser == "") {
         ipcRenderer.invoke('alert','',"Chatroom name cannot be blank", "error", false);
         return;
