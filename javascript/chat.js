@@ -282,7 +282,7 @@ async function refreshUsers(chatRoomName) {
                 var dropdown = document.getElementById('chatRoomChangeDropdown');
                 myChatRoomNames.forEach(name => {
                     if (name != chatRoomName) {
-                        dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="changeToChatRoom('` + name + `')">` + name.substring(15) + `</a>`
+                        dropdown.innerHTML += '<a class="dropdown-item" href="#" onclick="changeToChatRoom(`' + name + '`)">' + name.substring(15) + `</a>`
                     }
                 })
                 if (chatRoomName != "Chatroom_00000_Global") dropdown.innerHTML += `<a class="dropdown-item" href="#" onclick="showPin()" style="color:orange">Show pin for chatroom</a>`
@@ -688,7 +688,10 @@ async function setNumberOfChats() {
 async function createNewChatRoom() {
     var inputFromUser = await ipcRenderer.invoke('promptForNewChat');
     if (inputFromUser == null) return
-    inputFromUser = DOMPurify.sanitize(inputFromUser)
+    inputFromUser = inputFromUser.replaceAll("`",'') // we use `, ", ' for the html, so we can't have a user use them in the chatroom name.
+    inputFromUser = inputFromUser.replaceAll("'",'')
+    inputFromUser = inputFromUser.replaceAll('"','')
+    // inputFromUser = DOMPurify.sanitize(inputFromUser)
     if (inputFromUser == "") {
         ipcRenderer.invoke('alert','',"Chatroom name cannot be blank", "error", false);
         return;
