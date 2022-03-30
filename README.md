@@ -227,7 +227,7 @@ It takes care of...
 * Asks the server for new messages in the other chatrooms (every 3 seconds)
 * Asks the server for the users in the chatroom and their public keys (every 10 seconds)
 
-### Server structure
+# Server structure
 The server works with a Mongo Database to give the clients their requested data through various API endpoints. The endpoints are in the `server.js` file. The logical functions for the API endpoints and the MongoDB queries, however, are stored in the `logic_server.js` file. Thus, the server is split between two files for logical separation. 
 
 To see and use my Postman project, use this link: https://go.postman.co/workspace/Incrypto~b22136e5-8a73-4e28-be76-dd53bca80d72/collection/13394027-091be813-1183-44ed-a6d2-e3e6ca060d74?action=share&creator=13394027
