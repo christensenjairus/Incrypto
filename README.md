@@ -574,6 +574,7 @@ Returns:
 This database will be shown in the following state:
 * Two messages sent to the Global chatroom
 * Two users in the users table
+
 ![image](https://user-images.githubusercontent.com/58751387/160726169-b3ad145a-5311-481c-bcba-e2b8b7510581.png)
 ## Users Collection:
 ![image](https://user-images.githubusercontent.com/58751387/160726298-7002d7fe-e63a-4569-8b1e-a48c6591baf0.png)
