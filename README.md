@@ -570,6 +570,15 @@ Returns:
     "error":"incorrectSessionID"
 }
 ```
+# Database Schema
+This database will be shown in the following state:
+* Two messages sent to the Global chatroom
+* Two users in the users table
+![image](https://user-images.githubusercontent.com/58751387/160726169-b3ad145a-5311-481c-bcba-e2b8b7510581.png)
+## Users Collection:
+![image](https://user-images.githubusercontent.com/58751387/160726298-7002d7fe-e63a-4569-8b1e-a48c6591baf0.png)
+## Chat Collection:
+![image](https://user-images.githubusercontent.com/58751387/160726347-e32e066d-9896-4e00-9a74-b189d563b3d5.png)
 
 * * *
 # Things for our Dev Team to know
