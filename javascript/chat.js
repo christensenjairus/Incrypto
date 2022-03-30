@@ -660,10 +660,12 @@ function blink() { // will blink chatroom dropdown and leave it orange
 
 function appendJoinedMessageToChat(username) {
     content.innerHTML += `<div class="text-center" style="color:green"><span class="between">` + username + ` joined the chat</span></div>`;
+    scrollChat();
 }
 
 function appendLeftMessageToChat(username) {
     content.innerHTML += `<div class="text-center" style="color:red"><span class="between">` + username + ` left the chat</span></div>`;
+    scrollChat();
 }
 
 function addNewMessageBanner() {
