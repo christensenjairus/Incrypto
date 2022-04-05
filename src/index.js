@@ -343,36 +343,36 @@ function createWindow(width, height) {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-function openEncryptionFileForEditing() {
-    var editor = openInEditor.configure({
-        editor: codeEditor
-    });
-    try {
-        editor.open('./javascript/Encryption.js:52:4').then(function() {
-            // console.log('Success!');
-        }, function(err) {
-            // console.error('Something went wrong: ' + err);
-            const options = {
-                type: 'question',
-                buttons: ['I understand'],
-                defaultId: 0,
-                title: "Can't open that editor",
-                message: "There's been an error with using this application. Try another one."
-            }
-            console.log(dialog.showMessageBox(null, options, (response) => {
-            //can do something here with the response
-            }))
-        });
-    } catch (e) {
-        dialog.showMessageBox("This must be done before compilation (can't be done if already compiled)")
-    }
-}
+// function openEncryptionFileForEditing() {
+//     var editor = openInEditor.configure({
+//         editor: codeEditor
+//     });
+//     try {
+//         editor.open('./javascript/Encryption.js:52:4').then(function() {
+//             // console.log('Success!');
+//         }, function(err) {
+//             // console.error('Something went wrong: ' + err);
+//             const options = {
+//                 type: 'question',
+//                 buttons: ['I understand'],
+//                 defaultId: 0,
+//                 title: "Can't open that editor",
+//                 message: "There's been an error with using this application. Try another one."
+//             }
+//             console.log(dialog.showMessageBox(null, options, (response) => {
+//             //can do something here with the response
+//             }))
+//         });
+//     } catch (e) {
+//         dialog.showMessageBox("This must be done before compilation (can't be done if already compiled)")
+//     }
+// }
 
-function changeMessageEncryptionType(type) {
-    store.set("encryptionType", type);
-    EncryptionType = type;
-    switchToChatPage();
-}
+// function changeMessageEncryptionType(type) {
+//     store.set("encryptionType", type);
+//     EncryptionType = type;
+//     switchToChatPage();
+// }
 
 function switchToLoginPage() {
     replaceCurrentWindow("login.html")
@@ -516,34 +516,38 @@ ipcMain.handle('showPin', async (event, title, text) => {
 
 ipcMain.handle('alert', async (event, title, text, icon, showCancelButton) => {
 
-    // ---------------- I REALLY LIKE THIS, but it doesn't work when compiled in windows!!!
-    // const Alert = require('electron-alert');
-    // let alert = new Alert();
+    // if (process.platform != "win32") {
+    // // ---------------- I REALLY LIKE THIS, but it doesn't work when compiled in windows!!!
+    //     const Alert = require('electron-alert');
+    //     let alert = new Alert();
 
-    // let swalOptions = {
-    //     title: title,
-    //     text: text,
-    //     icon: icon,
-    
-   //      requred: 'true',
-    //     showCancelButton: showCancelButton
-    // };
+    //     let swalOptions = {
+    //         title: title,
+    //         text: text,
+    //         icon: icon,
+        
+    //     requred: 'true',
+    //         showCancelButton: showCancelButton
+    //     };
 
-    // let promise = alert.fireWithFrame(swalOptions, "Incrypto - Alert", null, false);
-    // promise.then((result) => {
-    //     if (result.value) {
-    //         // confirmed
-    //     } else if (result.dismiss === Alert.DismissReason.cancel) {
-    //         // canceled
-    //     }
-    // })
-
-    // ------------------ SO I HAVE TO USE THIS
-    require('electron').dialog.showMessageBox({
-        message: text,
-        title: title,
-        // type: icon
-    })
+    //     let promise = alert.fireWithFrame(swalOptions, "Incrypto - Alert", null, false);
+    //     promise.then((result) => {
+    //         if (result.value) {
+    //             // confirmed
+    //         } else if (result.dismiss === Alert.DismissReason.cancel) {
+    //             // canceled
+    //         }
+    //     })
+    // }
+    // else { // only use this on Windows. 
+        // ------------------ SO I HAVE TO USE THIS
+        require('electron').dialog.showMessageBox({
+            message: text,
+            title: title,
+            // type: icon
+            buttons: ['Ok']
+        })
+    // }
 })
 
 ipcMain.handle('logout', (event) => {
