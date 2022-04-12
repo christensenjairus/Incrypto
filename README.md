@@ -588,3 +588,4 @@ This database will be shown in the following state:
 * Linux AppImage and Snap package icon needs to be set
 * NEW line pops up until you send a message...
 * Always throws a 404 on the first login or register after install
+* Sometimes active lights don't work, or turn off occasionally. Raise the timeout time.

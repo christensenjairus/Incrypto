@@ -510,6 +510,7 @@ ipcMain.handle('showPin', async (event, title, text) => {
     require('electron').dialog.showMessageBox({
     message: text,
     title: title,
+    buttons: ['Ok']
     // type: icon
 })
 })
