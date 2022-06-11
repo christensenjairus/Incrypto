@@ -653,7 +653,7 @@ function blink() { // will blink chatroom dropdown and leave it orange
         f.style.color = (f.style.color == 'orange' ? 'grey' : 'orange');
     }, 1000);
     setTimeout(function() {
-        f.style.color = (f.style.color == 'orange' ? 'grey' : 'orange');
+        f.style.color = 'orange';
     }, 1250);
     // console.log("BLINK")
 }
