@@ -570,14 +570,35 @@ Returns:
 }
 ```
 # Database Schema
-This database will be shown in the following state:
-* Two messages sent to the Global chatroom
-* Two users in the users table
-
-![image](https://user-images.githubusercontent.com/58751387/160726169-b3ad145a-5311-481c-bcba-e2b8b7510581.png)
 ## Users Collection:
+* username (string)
+* password (object)
+	* salt (string) - used to verify hash sent on login.
+	* hash (hex string) - this is what is actually compared on login.
+	* iterations (integer) - used to verify hash sent on login.
+* time (number) - time account created.
+* chatRooms (array), This array is used for the dropdown of chats for each user and to keep track of which chatrooms they're a part of. Each element has...
+	* name (string)
+	* lastActivity (number) - used to keep track of last user activity in a chatroom, if they've left, just arrived, etc.
+* sessionID (string) - validates session in all server communication. Is used to detect if the user is logged in elsewhere.
+* color (string) - color of the chats.
+* base (string) - stored for a VERY short time because its ephemeral in Diffie-Hellman exchange. Used for storage between original negociation and when server responds with public DHE result.
+* mod (string) - same idea as base.
+* sharedSecret (string) - Used for AES encrypting private key before sending it to client.
+* privKey (string) - private key for client. Sent upon successful login.
+* pubKey (string) - public key of client. Sent to all other users.
+
 ![image](https://user-images.githubusercontent.com/58751387/173197273-28f8c960-aedc-4716-89fb-f443eef1378d.png)
 ## Chat Collection:
+**These are specific to each chatroom**
+* time (number) - time message sent
+* text (array) - holds encrypted versions of the message for all users selected. Each one has...
+	* Recipient (string) - name of user that can decrypt this message
+	* text (string) - encrypted message
+* username (string) - user who sent the message
+* color (string) - color of message
+* guid (string) - ID number of message
+
 ![image](https://user-images.githubusercontent.com/58751387/160726347-e32e066d-9896-4e00-9a74-b189d563b3d5.png)
 
 * * *
