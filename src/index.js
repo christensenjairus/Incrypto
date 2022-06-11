@@ -71,6 +71,19 @@ app.on('window-all-closed', function() {
     }
 })
 
+function deleteKeys() {
+    try {
+        fs.rm(require('path').join(__dirname, '../keys'), { recursive: true })
+        console.log("Keys deleted")
+    } catch (e) {
+        console.log("Could not delete keys directory")
+    }
+}
+
+app.on('before-quit', function() {
+    deleteKeys()
+})
+
 app.on('activate', function() {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
@@ -160,6 +173,10 @@ function createWindow(width, height) {
         mainWindow.show();
     });
 
+    mainWindow.on('close', (e) => {
+        deleteKeys();
+    })
+
     // Open the DevTools.
     // mainWindow.webContents.openDevTools(); // uncomment this for DevTools
 
@@ -192,7 +209,7 @@ function createWindow(width, height) {
                         click() {
                             store.clear();
                             try {
-                                fs.rmdir(require('path').join(__dirname, '../keys'), { recursive: true }, (err) => {
+                                fs.rm(require('path').join(__dirname, '../keys'), { recursive: true }, (err) => {
                                     if (err) {
                                         throw err;
                                     }
@@ -682,3 +699,20 @@ ipcMain.handle('setBadgeCnt', async (event, count) => {
 ipcMain.handle('changeMessageE_Type', (event, nameOfNewE_Type) => {
     changeMessageEncryptionType(nameOfNewE_Type);
 })
+
+// what to do if app exits
+
+process.on("SIGTERM", async () => {
+    deleteKeys()
+    app.exit();
+});
+
+process.on("SIGINT", async () => {
+    deleteKeys()
+    app.exit();
+});
+
+process.on("exit", async () => {
+    deleteKeys()
+    app.exit();
+});
