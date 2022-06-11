@@ -8,7 +8,8 @@ function ping() {
 async function login(chunk) {
 	var user = await getUser(chunk)
 	if (user != null) {
-		if (user.password == chunk.password) {
+		// if (user.password == chunk.password) {
+		if (isPasswordCorrect(user.password, user.password.salt, user.password.iterations, chunk.password)) {
 			var sessionID = createGuid();
 			user.sessionID = sessionID;
 			if (await updateUser(user)) {
@@ -32,6 +33,7 @@ async function register(chunk) {
 	chunk.color = "#0000FF"
 	if (chunk.username == "") return { type:'AuthResponse', result: "failure", sessionID:"no username" };
 	if (chunk.password == "") return { type:'AuthResponse', result: "failure", sessionID:"no password" };
+	chunk.password = hashNewPassword(chunk.password);
 	if (await createUser(chunk)) {
 		logEvent("Successful registration for username: '" + chunk.username + "'")
 		await saveLoginDataToMongo(chunk.username, sessionID);
@@ -140,10 +142,10 @@ async function negociate(chunk) {
 	try {
 	// generate base and mod prime numbers to use in diffie hellman exchange
 	const getlargePrime = require('get-large-prime');
-	let mod = await getlargePrime(1024);
+	let mod = await getlargePrime(100); // has to be smaller than the exponents to obfuscate what they are better.
 	mod = mod.toString();
 	if (debug) logEvent("Mod for " + chunk.username + ": " + mod)
-	let base = await getlargePrime(1024);
+	let base = await getlargePrime(3); // three digits is plenty for the base
 	base = base.toString();
 	if (debug) logEvent("Base for " + chunk.username + ": " + base)
 
@@ -166,7 +168,7 @@ async function diffieHellman(chunk) {
 
 	// create server's prime number to be it's secret
 	const getlargePrime = require('get-large-prime');
-	let serverExponent = await getlargePrime(1024);
+	let serverExponent = await getlargePrime(309); // number of digits necessary to represent largest 1024-bit number
 	serverExponent = serverExponent.toString();
 	if (debug) logEvent("serverExponent for " + user.username + ": " + serverExponent)
 
@@ -465,6 +467,30 @@ function compute(base, exponent, modulo){
     res = JSONbig.stringify(res)
 	// console.log("Result: " + res)
 	return res;
+}
+
+function hashNewPassword(password) {
+    var salt = crypto.randomBytes(128).toString('base64');
+    var iterations = 10000;
+    var hash = crypto.pbkdf2Sync(password, salt, iterations, 64, "sha512");
+    return {
+        salt: salt,
+        hash: hash.toString('hex'),
+        iterations: iterations
+    };
+}
+
+function hashPassword(password, salt, iterations) {
+    var hash = crypto.pbkdf2Sync(password, salt, iterations, 64, "sha512");
+    return {
+        salt: salt,
+        hash: hash.toString('hex'),
+        iterations: iterations
+    };
+}
+
+function isPasswordCorrect(savedHash, savedSalt, savedIterations, passwordAttempt) {
+    return savedHash.hash == hashPassword(passwordAttempt, savedSalt, savedIterations).hash;
 }
 
 // exports

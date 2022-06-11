@@ -12,7 +12,7 @@ async function login(username, password, serverName) {
         ipcRenderer.invoke('logout');
         return false;
     }
-    password = crypto.createHash('sha256').update(password).digest('hex');
+    password = crypto.createHash('sha512').update(password).digest('hex');
     var time = (new Date()).getTime()
     try {
         axios.post('http://' + serverName + "/api/login", {
@@ -81,7 +81,7 @@ async function register(username, password, password2, serverName) {
         ipcRenderer.invoke('toregister');
         return false;
     }
-    password = crypto.createHash('sha256').update(password).digest('hex');
+    password = crypto.createHash('sha512').update(password).digest('hex');
     var time = (new Date()).getTime();
     if (serverName === "") {
         ipcRenderer.invoke('alert',"", "Please enter a valid server name", "error", false);
@@ -341,7 +341,7 @@ async function generateSharedKey(username, serverName, sessionID) {
 
     // create client prime number for diffie-hellman math
     const getlargePrime = require('get-large-prime');
-	let clientExponent = await getlargePrime(1024);
+	let clientExponent = await getlargePrime(309); // number of digits necessary to represent largest 1024-bit number
     clientExponent = clientExponent.toString();
 
     // do math, sent diffie-hellman data to server
