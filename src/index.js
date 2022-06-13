@@ -67,22 +67,23 @@ app.on('window-all-closed', function() {
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== 'darwin') {
+        deleteKeys();
         app.quit()
     }
 })
 
 function deleteKeys() {
     try {
-        fs.rm(require('path').join(__dirname, '../keys'), { recursive: true })
+        fs.rmdirSync(require('path').join(__dirname, '../keys'), { recursive: true })
         console.log("Keys deleted")
     } catch (e) {
         console.log("Could not delete keys directory")
     }
 }
 
-app.on('before-quit', function() {
-    deleteKeys()
-})
+// app.on('before-quit', function() {
+//     deleteKeys()
+// })
 
 app.on('activate', function() {
     // On OS X it's common to re-create a window in the app when the
@@ -173,9 +174,9 @@ function createWindow(width, height) {
         mainWindow.show();
     });
 
-    mainWindow.on('close', (e) => {
-        deleteKeys();
-    })
+    // mainWindow.on('close', (e) => {
+    //     deleteKeys();
+    // })
 
     // Open the DevTools.
     // mainWindow.webContents.openDevTools(); // uncomment this for DevTools
@@ -209,7 +210,7 @@ function createWindow(width, height) {
                         click() {
                             store.clear();
                             try {
-                                fs.rm(require('path').join(__dirname, '../keys'), { recursive: true }, (err) => {
+                                fs.rmdir(require('path').join(__dirname, '../keys'), { recursive: true }, (err) => {
                                     if (err) {
                                         throw err;
                                     }
@@ -237,7 +238,8 @@ function createWindow(width, height) {
                     //     }},
                     {label: "Quit",
                         click() {
-                            app.quit();}}
+                            deleteKeys()
+                            app.quit()}}
                 ]
             },{
                 label: 'Edit',
@@ -585,6 +587,7 @@ ipcMain.handle('toregister', (event) => {
 })
 
 ipcMain.handle('forceLogout', (event) => {
+    deleteKeys();
     app.relaunch();
     app.exit();
 })
@@ -702,17 +705,17 @@ ipcMain.handle('changeMessageE_Type', (event, nameOfNewE_Type) => {
 
 // what to do if app exits
 
-process.on("SIGTERM", async () => {
+process.on("SIGTERM", async function () {
     deleteKeys()
     app.exit();
 });
 
-process.on("SIGINT", async () => {
+process.on("SIGINT", async function () {
     deleteKeys()
     app.exit();
 });
 
-process.on("exit", async () => {
+process.on("exit", async function () {
     deleteKeys()
     app.exit();
 });
